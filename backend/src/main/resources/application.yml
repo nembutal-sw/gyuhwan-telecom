@@ -1,0 +1,71 @@
+# 공통 실행 설정. 비밀 값은 환경 변수로 받으며 기본 바인딩은 로컬 확인용 루프백이다.
+server:
+  port: ${PORT:8080}
+  address: ${BIND_ADDRESS:127.0.0.1}
+  # 전달 헤더는 기본적으로 신뢰하지 않는다. 배포 프록시의 실제 주소를 제한한 뒤 native를 사용한다.
+  forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:none}
+  tomcat:
+    max-http-form-post-size: 1MB
+    remoteip:
+      internal-proxies: ${TRUSTED_PROXY_REGEX:127\.0\.0\.1|::1}
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  # 현재 도메인 모델의 com.fasterxml.jackson 자료형과 HTTP JSON 변환기를 일치시킨다.
+  # Jackson 3로 이전할 때 POM의 호환 모듈과 이 설정을 함께 검토한다.
+  http:
+    converters:
+      preferred-json-mapper: jackson2
+  # 운영 자료는 MySQL/MariaDB에 저장한다. H2는 test scope에서만 사용한다.
+  datasource:
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/gyuhwan?connectionTimeZone=Asia/Seoul&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:gyuhwan}
+    password: ${DB_PASSWORD:}
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
+      timeout: 2s
+      connect-timeout: 2s
+      ssl:
+        enabled: ${REDIS_SSL:false}
+  jackson2:
+    deserialization:
+      fail-on-unknown-properties: true
+      accept-float-as-int: false
+app:
+  admin-user: ${ADMIN_USERNAME:admin}
+  admin-password: ${ADMIN_PASSWORD:}
+  # 모든 앱 인스턴스가 같은 JWT 키와 Redis 접두사를 공유해야 로그아웃/제한이 함께 반영된다.
+  auth:
+    jwt-secret: ${JWT_SECRET:}
+    ttl-seconds: ${JWT_TTL_SECONDS:1800}
+    cookie-secure: ${COOKIE_SECURE:false}
+    redis-prefix: ${REDIS_PREFIX:gyuhwan:auth:}
+  import-path: ${IMPORT_PATH:}
+  # 여러 인스턴스를 실행할 때는 모두 같은 영구 저장소 경로를 사용한다.
+  media-path: ${MEDIA_PATH:./data/media}
+  retention-cron: ${RETENTION_CRON:0 0 * * * *}
+# 공개 상태 확인은 세부 연결 정보 없이 UP/DOWN만 제공한다.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+      group:
+        readiness:
+          include: readinessState,db,redis
+logging:
+  level:
+    root: WARN
+    kr.gyuhwan: INFO

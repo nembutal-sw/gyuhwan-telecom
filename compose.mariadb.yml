@@ -1,0 +1,19 @@
+# Run together with compose.yml. The database directory is separate from MySQL.
+# DB 이미지와 JDBC 프로토콜을 함께 바꾸는 override. MySQL 데이터 볼륨을 MariaDB에 재사용하지 않는다.
+services:
+  database:
+    image: mariadb:11.8
+    environment:
+      MARIADB_DATABASE: gyuhwan
+      MARIADB_USER: gyuhwan
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD}
+    volumes:
+      - database_mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+  admin:
+    environment:
+      DB_URL: jdbc:mariadb://database:3306/gyuhwan
+volumes:
+  database_mariadb:

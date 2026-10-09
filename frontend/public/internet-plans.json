@@ -1,0 +1,136 @@
+{
+  "SKT": {
+    "internet": [
+      22000,
+      33000,
+      38500
+    ],
+    "withTV": [
+      19800,
+      27500,
+      33000
+    ],
+    "tv": [
+      [
+        "TV 선택 안 함",
+        0
+      ],
+      [
+        "B tv 이코노미",
+        9900
+      ],
+      [
+        "B tv 스탠다드",
+        13200
+      ],
+      [
+        "B tv All",
+        16500
+      ]
+    ],
+    "description": "100M 광랜 / 500M 기가라이트 / 1G 기가 인터넷. B tv는 선택한 채널 상품에 따라 요금이 달라집니다.",
+    "bundle": "요즘가족결합: SK 휴대폰과 인터넷·B tv를 함께 이용할 때 회선 수와 인터넷 속도에 따라 할인됩니다. 모바일 할인과 집 인터넷·TV 할인은 청구 대상이 다릅니다.",
+    "sources": [
+      [
+        "인터넷 요금",
+        "https://www.bworld.co.kr/product/internet/charge.do?menu_id=P02010500"
+      ],
+      [
+        "B tv 요금",
+        "https://www.bworld.co.kr/product/btv/charge.do?menu_id=P03010300"
+      ],
+      [
+        "요즘가족결합",
+        "https://cdnw.shop.tworld.co.kr/pimg/plan_html/202310/P00000274_web.html"
+      ]
+    ]
+  },
+  "KT": {
+    "internet": [
+      22000,
+      33000,
+      38500
+    ],
+    "withTV": [
+      22000,
+      27500,
+      33000
+    ],
+    "tv": [
+      [
+        "TV 선택 안 함",
+        0
+      ],
+      [
+        "지니 TV 슬림",
+        11000
+      ],
+      [
+        "지니 TV 라이트",
+        13200
+      ],
+      [
+        "지니 TV 에센스",
+        16500
+      ]
+    ],
+    "description": "인터넷 슬림 100M / 베이직 500M / 에센스 1G. 지니 TV와 결합한 서비스 요금 기준이며 셋톱박스는 별도 선택입니다.",
+    "bundle": "총액 결합할인: 가족 휴대폰의 월정액 합계와 인터넷 상품에 따라 인터넷·모바일 할인이 나뉘어 적용됩니다. 상담 시 가족의 요금제명과 결합할 회선을 알려주세요.",
+    "sources": [
+      [
+        "인터넷·TV 요금",
+        "https://product.kt.com/wDic/productDetail.do?ItemCode=2"
+      ],
+      [
+        "총액 결합할인",
+        "https://product.kt.com/wDic/productDetail.do?ItemCode=1133"
+      ]
+    ]
+  },
+  "LG U+": {
+    "internet": [
+      22000,
+      33000,
+      38500
+    ],
+    "withTV": [
+      null,
+      null,
+      null
+    ],
+    "tv": [
+      [
+        "TV 선택 안 함",
+        0
+      ],
+      [
+        "U+tv 실속형",
+        15400
+      ],
+      [
+        "U+tv 기본형",
+        16500
+      ],
+      [
+        "U+tv 프리미엄",
+        18700
+      ]
+    ],
+    "description": "와이파이기본 인터넷과 U+tv 구성입니다. TV는 공식 일반 요금이며, 인터넷+TV 결합 시 인터넷 적용 요금은 상담 확인 후 합산합니다.",
+    "bundle": "참 쉬운 가족 결합: 가족의 U+휴대폰과 인터넷을 묶는 상품입니다. 인터넷 속도·휴대폰 회선 수와 요금제에 따라 할인 조건이 달라집니다. 기존 결합과 중복 적용 여부를 먼저 확인해 주세요.",
+    "sources": [
+      [
+        "인터넷 요금",
+        "https://www.lguplus.com/internet/plan"
+      ],
+      [
+        "U+tv 요금",
+        "https://www.lguplus.com/iptv/plan"
+      ],
+      [
+        "참 쉬운 가족 결합",
+        "https://www.lguplus.com/benefit-uplus/combined-discount/B200000016"
+      ]
+    ]
+  }
+}

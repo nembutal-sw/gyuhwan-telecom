@@ -1,0 +1,11 @@
+**/node_modules
+**/target
+**/data
+.runtime
+**/.runtime
+**/.env
+**/*-export.json
+**/*.log
+.git
+deploy/secrets
+deploy/*.env

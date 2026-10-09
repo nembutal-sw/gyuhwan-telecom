@@ -1,0 +1,131 @@
+[
+  {
+    "name": "아이폰18 PRO",
+    "id": 38,
+    "brand": "Apple",
+    "variants": {
+      "256": 38,
+      "512": 39
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "아이폰18 PRO MAX",
+    "id": 40,
+    "brand": "Apple",
+    "variants": {
+      "256": 40,
+      "512": 42
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "아이폰17",
+    "id": 33,
+    "brand": "Apple",
+    "variants": {
+      "256": 33,
+      "512": 34
+    },
+    "isNew": true,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 S26",
+    "id": 16,
+    "brand": "삼성",
+    "variants": {
+      "256": 16,
+      "512": 17
+    },
+    "isNew": true,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 S26+",
+    "id": 18,
+    "brand": "삼성",
+    "variants": {
+      "256": 18,
+      "512": 19
+    },
+    "isNew": true,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 S26 울트라",
+    "id": 20,
+    "brand": "삼성",
+    "variants": {
+      "256": 20,
+      "512": 21
+    },
+    "isNew": true,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 플립8",
+    "id": 8,
+    "brand": "삼성",
+    "variants": {
+      "256": 8,
+      "512": 9
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 폴드8 와이드",
+    "id": 10,
+    "brand": "삼성",
+    "variants": {
+      "256": 10,
+      "512": 11
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 폴드8 울트라",
+    "id": 12,
+    "brand": "삼성",
+    "variants": {
+      "256": 12,
+      "512": 13
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "갤럭시 A175",
+    "id": 23,
+    "brand": "삼성",
+    "variants": {
+      "128": 23
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "효도폰",
+    "id": 24,
+    "brand": "ALT",
+    "variants": {
+      "문의": 24
+    },
+    "isNew": false,
+    "inquiryOnly": false
+  },
+  {
+    "name": "키즈폰",
+    "id": 47,
+    "brand": "키즈폰",
+    "variants": {
+      "문의": 47
+    },
+    "isNew": false,
+    "inquiryOnly": true
+  }
+]

@@ -1,0 +1,4 @@
+# 자동 검사 전용의 고정 서명 키. test 프로필은 MemoryTokenRegistry를 사용한다.
+app:
+  auth:
+    jwt-secret: dGVzdC1vbmx5LXNpZ25pbmcta2V5LTMyLWJ5dGVzLW5vdC1wcm9kdWN0aW9u

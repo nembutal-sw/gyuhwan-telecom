@@ -1,0 +1,93 @@
+# 앱 복제본은 DB·Redis·JWT 키·NFS 사진 경로를 공유한다. DB/Redis는 단일 상태 저장 노드 예시다.
+# 공개 8080 포트 대신 외부 edge overlay에 연결한 TLS 프록시 또는 Tunnel을 진입점으로 사용한다.
+version: "3.8"
+services:
+  database:
+    image: mysql:8.4
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MYSQL_DATABASE: gyuhwan
+      MYSQL_USER: gyuhwan
+      MYSQL_PASSWORD_FILE: /run/secrets/gyuhwan_db_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/gyuhwan_db_root_password
+    secrets: [gyuhwan_db_password, gyuhwan_db_root_password]
+    volumes: [database_mysql:/var/lib/mysql]
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$(cat /run/secrets/gyuhwan_db_password)\" mysql --protocol=TCP -h127.0.0.1 -ugyuhwan gyuhwan -e 'SELECT 1' >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 20
+    deploy:
+      replicas: 1
+      placement: {constraints: ["node.labels.gyuhwan-stateful == true"]}
+      restart_policy: {condition: on-failure, delay: 10s}
+  redis:
+    image: redis:8-alpine
+    command: ["sh", "-c", "exec docker-entrypoint.sh redis-server --appendonly yes --requirepass \"$$(cat /run/secrets/gyuhwan_redis_password)\""]
+    secrets: [gyuhwan_redis_password]
+    volumes: [redis:/data]
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$(cat /run/secrets/gyuhwan_redis_password)\" redis-cli ping | grep -qx PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    deploy:
+      replicas: 1
+      placement: {constraints: ["node.labels.gyuhwan-stateful == true"]}
+      restart_policy: {condition: on-failure, delay: 10s}
+  admin:
+    image: ${APP_IMAGE:?Set APP_IMAGE to a registry image accessible from every Swarm node}
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      BIND_ADDRESS: 0.0.0.0
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD_FILE: /run/secrets/gyuhwan_admin_password
+      DB_URL: jdbc:mysql://database:3306/gyuhwan?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      DB_USERNAME: gyuhwan
+      DB_PASSWORD_FILE: /run/secrets/gyuhwan_db_password
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD_FILE: /run/secrets/gyuhwan_redis_password
+      REDIS_SSL: "false"
+      REDIS_DATABASE: "0"
+      REDIS_PREFIX: "gyuhwan:auth:"
+      JWT_SECRET_FILE: /run/secrets/gyuhwan_jwt_secret
+      JWT_TTL_SECONDS: "1800"
+      COOKIE_SECURE: "true"
+      MEDIA_PATH: /app/data/media
+    secrets: [gyuhwan_admin_password, gyuhwan_db_password, gyuhwan_redis_password, gyuhwan_jwt_secret]
+    volumes: [media_shared:/app/data/media]
+    networks: [backend, edge]
+    deploy:
+      replicas: 2
+      update_config: {parallelism: 1, order: start-first, failure_action: rollback, monitor: 120s}
+      rollback_config: {parallelism: 1, order: stop-first}
+      restart_policy: {condition: on-failure, delay: 10s}
+      resources:
+        limits: {memory: 1G}
+networks:
+  backend:
+    driver: overlay
+    driver_opts: {encrypted: ""}
+  edge:
+    external: true
+    name: gyuhwan_edge
+volumes:
+  database_mysql:
+  redis:
+  # 서로 다른 노드의 앱이 같은 업로드 파일을 제공할 수 있도록 NFS를 연결한다.
+  media_shared:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=${MEDIA_NFS_SERVER:?Set MEDIA_NFS_SERVER},rw,nfsvers=4"
+      device: ":${MEDIA_NFS_EXPORT:?Set MEDIA_NFS_EXPORT}"
+secrets:
+  gyuhwan_admin_password: {external: true}
+  gyuhwan_db_password: {external: true}
+  gyuhwan_db_root_password: {external: true}
+  gyuhwan_redis_password: {external: true}
+  gyuhwan_jwt_secret: {external: true}

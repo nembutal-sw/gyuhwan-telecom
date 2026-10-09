@@ -1,0 +1,7 @@
+# Apply with compose.yml when a same-host Cloudflare Tunnel or HTTPS reverse proxy
+# publishes this service. The base Compose port remains bound to 127.0.0.1.
+# 외부 브라우저의 HTTPS를 기준으로 Secure 쿠키를 설정한다. 이 파일이 Tunnel이나 인증서를 생성하지는 않는다.
+services:
+  admin:
+    environment:
+      COOKIE_SECURE: "true"

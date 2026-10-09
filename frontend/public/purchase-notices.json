@@ -1,0 +1,21 @@
+{
+  "carrierPolicies": {
+    "SKT": {
+      "source": "https://www.tworld.co.kr/poc/html/product/TS3.5.1T.4.html",
+      "choiceSource": "https://www.tworld.co.kr/poc/html/product/TS3.5.1T.1.html",
+      "plan": "프리미엄패스 적용 시 181일 이상 유지 후 요금제 변경에 따른 차액정산금 면제 조건을 확인하세요. 2023년 3월 30일 이후 가입 기준 5G 월 42,000원 이상, LTE 월 20,000원 이상입니다. 대상 요금제·가입 여부에 따라 달라집니다."
+    },
+    "KT": {
+      "source": "https://shop.kt.com/m/smart/supportAmtList.do",
+      "choiceSource": "https://product.kt.com/wDic/productDetail.do?ItemCode=1657",
+      "plan": "심플코스는 가입 180일 경과 후 5G 월 47,000원 이상(또는 지정 시니어 요금제), LTE·3G 월 20,000원 이상으로 변경하면 차액정산금 면제 대상입니다. 180일 이내 하향 변경 시 변경 전후 공통 지원금 차액이 청구됩니다."
+    },
+    "LG U+": {
+      "source": "https://www.lguplus.com/benefit-event/ongoing/82175",
+      "choiceSource": "https://www.lguplus.com/benefit-uplus/price-discount/B400000003",
+      "plan": "식스플랜은 개통 요금제 180일 유지 후 요금제 변경 시 차액정산금 면제 조건을 적용합니다. 변경 가능한 요금제와 제외 대상은 가입한 약정에서 확인하세요. 베이직플랜은 24개월 내 요금제 변경 시 차액정산금이 발생할 수 있습니다."
+    }
+  },
+  "addonGuideText": "부가서비스 가입 및 유지 조건은 매장 제공 안내표 기준입니다. M은 가입월이며 M+ 뒤의 숫자는 가입월로부터 몇 개월 뒤인지를 뜻합니다. 유지기간 이후 해지를 가정한 예상 견적이며 자동 해지되지 않습니다. 실제 가입일·해지 가능일·일할 요금은 개통 시 확인하세요.",
+  "addonReturnNotice": "유지기간 내 해지 및 미유치 시, 판매점지원금 일부를 반환해야 해요."
+}

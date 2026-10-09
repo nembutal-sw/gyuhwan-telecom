@@ -1,0 +1,102 @@
+{
+  "checkedAt": "2026-10-09",
+  "carriers": {
+    "SKT": [
+      {
+        "id": "SKT-store-0",
+        "name": "마이스마트콜3",
+        "fee": 3500,
+        "period": "M+2개월",
+        "from": false,
+        "insurance": false,
+        "description": "V 컬러링과 통화 편의 부가서비스를 함께 이용하는 상품입니다.",
+        "note": "가입 및 유지 조건은 매장 제공 안내표 기준입니다.",
+        "source": "https://www.tworld.co.kr/web/product/callplan/NA00008715",
+        "officialName": "마이스마트콜3"
+      },
+      {
+        "id": "SKT-store-1",
+        "name": "T All 케어 보험",
+        "fee": 6500,
+        "period": "M+1개월",
+        "from": true,
+        "insurance": true,
+        "description": "가입 상품에 따라 파손·분실 보장과 케어 서비스를 제공합니다. 상품 종류, 자기부담금 및 보상 한도는 개통 시 확인하세요.",
+        "note": "보험료는 매장 견적용 안내 금액이며 실제 가입 상품·단말기·보장 조건에 따라 달라질 수 있습니다.",
+        "source": "https://www.tallcare.co.kr/",
+        "officialName": "T 올케어 보험"
+      }
+    ],
+    "KT": [
+      {
+        "id": "KT-store-0",
+        "name": "필수팩L",
+        "fee": 9900,
+        "period": "M+4개월",
+        "from": false,
+        "insurance": false,
+        "description": "음악·전자책·웹소설/웹툰과 V컬러링, 듀얼번호 Lite 등 콘텐츠·통화 편의 서비스를 제공하는 상품입니다.",
+        "note": "가입 및 유지 조건은 매장 제공 안내표 기준입니다.",
+        "source": "https://product.kt.com/wDic/productDetail.do?ItemCode=1544",
+        "officialName": "필수팩 L"
+      },
+      {
+        "id": "KT-store-2",
+        "name": "폰 보험",
+        "fee": 5900,
+        "period": "M+3개월",
+        "from": true,
+        "insurance": true,
+        "description": "가입 유형에 따라 분실·도난·파손 등 보장과 케어 서비스를 제공합니다. 자기부담금·보상 한도·가입 대상은 상품별로 확인하세요.",
+        "note": "보험료는 매장 견적용 안내 금액이며 실제 가입 상품·단말기·보장 조건에 따라 달라질 수 있습니다.",
+        "source": "https://product.kt.com/wDic/productDetail.do?ItemCode=1604",
+        "officialName": "KT 365 폰케어"
+      }
+    ],
+    "LG U+": [
+      {
+        "id": "LG U+-store-0",
+        "name": "교보 SAM+구글 원",
+        "fee": 16500,
+        "period": "3개월",
+        "from": false,
+        "insurance": false,
+        "description": "교보문고 전자책 sam과 구글 클라우드 저장 공간을 함께 이용하는 상품입니다.",
+        "note": "가입 및 유지 조건은 매장 제공 안내표 기준입니다.",
+        "source": "https://www.lguplus.com/mobile/plan/addon/addon-digitalcontent/LRZ1007311?tab=INTRODUCE",
+        "officialName": "교보문고 sam + 구글 원"
+      },
+      {
+        "id": "LG U+-store-1",
+        "name": "V컬러링음악감상+벨링팩",
+        "fee": 15400,
+        "period": "3개월",
+        "from": false,
+        "insurance": false,
+        "description": "V컬러링·지니뮤직 음악감상 상품과 벨소리·통화연결음·MP3 콘텐츠 상품을 함께 적용합니다. 월 8.800원 + 6.600원 기준입니다.",
+        "note": "가입 및 유지 조건은 매장 제공 안내표 기준입니다.",
+        "source": "https://www.lguplus.com/mobile/plan/addon/addon-digitalcontent/LRZ1005266",
+        "officialName": "V컬러링 음악감상 플러스 + 벨링콘텐츠팩",
+        "extraSources": [
+          {
+            "name": "벨링콘텐츠팩",
+            "url": "https://www.lguplus.com/mobile/plan/addon/addon-ringtones-callertunes/LRZ1007002"
+          }
+        ]
+      },
+      {
+        "id": "LG U+-store-2",
+        "name": "폰 보험",
+        "fee": 6200,
+        "period": "3개월",
+        "from": true,
+        "insurance": true,
+        "description": "가입 유형과 단말기 가격에 따라 보험료·보장 범위·자기부담금이 달라집니다. 실제 가입 상품은 개통 시 확인하세요.",
+        "note": "보험료는 매장 견적용 안내 금액이며 실제 가입 상품·단말기·보장 조건에 따라 달라질 수 있습니다.",
+        "source": "https://www.lguplus.com/mobile/plan/addon/addon-safe/C000180903",
+        "officialName": "휴대폰 분실/파손 보험"
+      }
+    ]
+  },
+  "sourceType": "merchant-conditions-with-official-product-references"
+}

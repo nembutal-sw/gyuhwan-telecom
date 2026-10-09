@@ -1,0 +1,8 @@
+/* 서버 마지막 저장 시각과 현재 화면에서 읽은 시각을 구별해 표시한다. */
+.saved-data-info{display:grid;gap:3px;min-width:235px;max-width:380px;background:#edf3ff;border:1px solid #dce5fa;border-radius:10px;padding:10px 14px;color:#526580;font-size:13px}.saved-data-info strong{font-size:14px;color:#2454ef}.saved-data-info small{font-size:12px;color:#71819b}.saved-data-info time{font-variant-numeric:tabular-nums}
+/* 가격표를 다시 불러올 때 어떤 저장 데이터를 가져오는지 보여 주는 안내. */
+.stored-data-panel{background:#fff;border:1px solid #dce4f2;border-radius:12px;padding:18px;margin:16px 0}.stored-data-panel h2{font-size:18px;margin-bottom:6px}.stored-data-panel p{font-size:14px;margin:6px 0;color:#64738a}.stored-data-panel strong{color:#263955}.stored-data-panel .stored-data-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}.stored-data-panel .stored-data-actions>button{font-size:14px}
+/* 이전 저장본 목록의 시각·범위 표시. 내부 revision은 화면에 노출하지 않는다. */
+.saved-snapshot{display:grid;gap:4px}.saved-snapshot>strong{font-size:14px}.saved-snapshot>small{font-size:12px;color:#64738a}.saved-history-empty{font-size:14px;color:#64738a}
+/* 현재 필터의 모델 수와 표시 행 수를 표 바로 앞에 요약한다. */
+.price-model-summary{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 8px;font-size:13px;color:#64738a}.price-model-summary>strong{color:#263955;font-size:15px}.price-model-summary>span:last-child{margin-left:auto}.price-model-summary button{font-size:12px;min-height:32px;padding:4px 8px}@media(max-width:760px){.saved-data-info{width:100%;max-width:none;min-width:0}.price-model-summary>span:last-child{margin-left:0;width:100%}.stored-data-panel{padding:14px}}

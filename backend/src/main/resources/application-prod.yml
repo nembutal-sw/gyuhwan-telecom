@@ -1,0 +1,10 @@
+# 공개 HTTPS 배포의 기본값. 로컬 HTTP Compose 시험은 COOKIE_SECURE=false를 명시한다.
+# DB 주소/계정/암호를 요구해 운영 프로필이 의도하지 않은 기본 DB로 연결되지 않게 한다.
+app:
+  auth:
+    cookie-secure: ${COOKIE_SECURE:true}
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}

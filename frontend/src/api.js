@@ -1,0 +1,12 @@
+// 관리자 API 공통 입구. JWT는 서버의 HttpOnly 쿠키에 있고, 여기에는 변경 요청용 CSRF 토큰만 메모리로 보관한다.
+let csrf;
+function requestError(status,data){const e=Error(data?.error||(status===401?'로그인 정보를 확인하거나 다시 로그인해 주세요.':status===403?'요청 권한 또는 보안 토큰을 확인해 주세요.':status===409?'저장된 설정이 변경되었습니다. 최신 설정을 불러온 뒤 다시 시도해 주세요.':status===429?'로그인 요청이 많습니다. 잠시 후 다시 시도해 주세요.':'요청을 처리하지 못했습니다. 입력값을 보관해 주세요.'));e.status=status;return e;}
+// 로그인 전후 서버가 CSRF 상태를 바꾸므로 새 토큰을 받아야 한다.
+export async function refreshCsrf(){const r=await fetch('/api/auth/csrf',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw Error('보안 연결을 확인하지 못했습니다.');csrf=await r.json();}
+// 모든 관리 요청은 같은 출처의 쿠키를 사용하며 GET 외 요청에 CSRF 헤더를 붙인다.
+export async function api(path,{method='GET',body,form}={}){if(method!=='GET'&&!csrf)await refreshCsrf();const headers={};if(method!=='GET')headers[csrf.headerName]=csrf.token;if(body!==undefined)headers['Content-Type']='application/json';if(form)headers['Content-Type']='application/x-www-form-urlencoded';const r=await fetch(path,{method,credentials:'same-origin',cache:'no-store',headers,body:form?new URLSearchParams(form):body===undefined?undefined:JSON.stringify(body)});let data=null;if(r.status!==204){const text=await r.text();try{data=JSON.parse(text);}catch{}}if(!r.ok)throw requestError(r.status,data);return data;}
+// 파일 응답이 로그인 HTML로 바뀌었는지도 검사하고 같은 출처 다운로드만 허용한다.
+export async function downloadFile(path,filename){const url=new URL(path,window.location.origin);if(url.origin!==window.location.origin)throw Error('같은 서버에서 내려받는 파일만 지원합니다.');const r=await fetch(url.pathname+url.search,{credentials:'same-origin',cache:'no-store'});if(!r.ok){let data=null;try{data=await r.json()}catch{}throw requestError(r.status,data);}if(r.headers.get('content-type')?.includes('text/html'))throw requestError(401,null);const blob=await r.blob(),objectUrl=URL.createObjectURL(blob),link=document.createElement('a');link.href=objectUrl;link.download=String(filename||'policies').replace(/[\\/:*?"<>|\u0000-\u001F]/g,'_');document.body.append(link);try{link.click()}finally{link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000)}}
+// 인증 성공 뒤 다시 CSRF를 읽어 이후 저장 요청이 이전 토큰을 쓰지 않게 한다.
+export async function login(username,password){await refreshCsrf();await api('/api/auth/login',{method:'POST',form:{username,password}});await refreshCsrf();return api('/api/auth/me');}
+export async function logout(){await api('/api/auth/logout',{method:'POST'});csrf=undefined;}

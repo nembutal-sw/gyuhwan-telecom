@@ -1,0 +1,4 @@
+ALTER TABLE quote_config MODIFY payload LONGTEXT NOT NULL;
+ALTER TABLE config_history MODIFY payload LONGTEXT NOT NULL;
+ALTER TABLE site_content MODIFY payload LONGTEXT NOT NULL;
+ALTER TABLE site_content_history MODIFY payload LONGTEXT NOT NULL;

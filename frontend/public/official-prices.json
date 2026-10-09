@@ -1,0 +1,1257 @@
+{
+  "16|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S942N",
+    "retail": 1254000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "17|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S942N_512G",
+    "retail": 1507000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "14|SKT": {
+    "retail": 1155000,
+    "common": null,
+    "newAndMnp": 500000,
+    "change": 500000,
+    "alternative": 490000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 490,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "38|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "IP18P_256GB",
+    "retail": 1991000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "39|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "IP18P_512GB",
+    "retail": 2299000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "35|SKT": {
+    "retail": 1782000,
+    "common": null,
+    "newAndMnp": 450000,
+    "change": 450000,
+    "alternative": 430000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 430,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "23|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2025-11-07",
+    "modelCode": "SM-A175N",
+    "retail": 319000,
+    "planName": "T플랜 세이브",
+    "planFee": 33000,
+    "subsidies": {
+      "신규가입": 88000,
+      "기기변경": 88000,
+      "번호이동": 88000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "23|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-05-01",
+    "modelCode": "SM-A175N",
+    "retail": 319000,
+    "planName": "추걱요 데이터 69",
+    "planFee": 69000,
+    "subsidies": {
+      "신규가입": 319000,
+      "기기변경": 319000,
+      "번호이동": 319000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "39|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "UIP18PR-512",
+    "retail": 2299000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "33|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "UIP17-256-NP",
+    "retail": 1452000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 550000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "17|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S942N512",
+    "retail": 1507000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "16|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S942N256",
+    "retail": 1254000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "38|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "UIP18PR-256",
+    "retail": 1991000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "16|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S942NK",
+    "retail": 1254000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "17|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S942NK512",
+    "retail": 1507000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "23|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-01-20",
+    "modelCode": "SM-A175NK",
+    "retail": 319000,
+    "planName": "LTE 데이터 On 비디오 플러스",
+    "planFee": 69000,
+    "subsidies": {
+      "신규가입": 278000,
+      "기기변경": 127000,
+      "번호이동": 127000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "14|KT": {
+    "retail": null,
+    "common": null,
+    "source": "https://shop.kt.com/accessory/accsProductView.do?prodNo=AC00073473",
+    "subsidySource": "https://shop.kt.com/smart/supportAmtList.do",
+    "note": "공식 자급제 소비자가 참고값입니다. 통신사 출고가로 계산하지 않습니다.",
+    "date": "2026-10-06",
+    "referenceRetail": 1155000
+  },
+  "38|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "AIP18P-256",
+    "retail": 1991000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "39|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "AIP18P-512",
+    "retail": 2299000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "35|KT": {
+    "retail": null,
+    "common": null,
+    "source": "https://shop.kt.com/main.do",
+    "subsidySource": "https://shop.kt.com/smart/supportAmtList.do",
+    "note": "통신사 출고가·지원금 확인 필요",
+    "date": "2026-10-06"
+  },
+  "33|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-22",
+    "modelCode": "AIP17-256-NEW",
+    "retail": 1452000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "34|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-22",
+    "modelCode": "AIP17-512-NEW",
+    "retail": 1760000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "0|SKT": {
+    "retail": 374000,
+    "common": null,
+    "newAndMnp": 293000,
+    "change": 293000,
+    "alternative": 293000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 293,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "1|SKT": {
+    "retail": 469700,
+    "common": null,
+    "newAndMnp": 170000,
+    "change": 170000,
+    "alternative": 154000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 154,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "2|SKT": {
+    "retail": 499000,
+    "common": null,
+    "newAndMnp": 400000,
+    "change": 400000,
+    "alternative": 400000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 400,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "3|SKT": {
+    "retail": 598400,
+    "common": null,
+    "newAndMnp": 170000,
+    "change": 170000,
+    "alternative": 154000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 154,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "4|SKT": {
+    "retail": 618200,
+    "common": null,
+    "newAndMnp": 357000,
+    "change": 357000,
+    "alternative": 340000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 340,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "5|SKT": {
+    "retail": 717200,
+    "common": null,
+    "newAndMnp": 357000,
+    "change": 357000,
+    "alternative": 340000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 340,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "6|SKT": {
+    "retail": 1199000,
+    "common": null,
+    "newAndMnp": 500000,
+    "change": 500000,
+    "alternative": 490000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 490,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "7|SKT": {
+    "retail": 2379000,
+    "common": null,
+    "newAndMnp": 500000,
+    "change": 500000,
+    "alternative": 490000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 490,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "8|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F776N",
+    "retail": 1683000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "9|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F776N_512G",
+    "retail": 1936000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "10|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F971N",
+    "retail": 2278100,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "11|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F971N_512G",
+    "retail": 2531100,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "12|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F976N",
+    "retail": 2577300,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "13|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F976N_512G",
+    "retail": 2830300,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "15|SKT": {
+    "retail": 1496000,
+    "common": null,
+    "newAndMnp": 680000,
+    "change": 680000,
+    "alternative": 680000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 680,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "18|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S947N",
+    "retail": 1452000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "19|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S947N_512G",
+    "retail": 1705000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "20|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S948N",
+    "retail": 1797400,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "21|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S948N_512G",
+    "retail": 2050400,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "22|SKT": {
+    "retail": 1045000,
+    "common": null,
+    "newAndMnp": 500000,
+    "change": 500000,
+    "alternative": 490000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 490,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "24|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2025-01-24",
+    "modelCode": "AT-M140S",
+    "retail": 237600,
+    "planName": "T플랜 세이브",
+    "planFee": 33000,
+    "subsidies": {
+      "신규가입": 50000,
+      "기기변경": 50000,
+      "번호이동": 50000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "25|SKT": {
+    "retail": 1540000,
+    "common": null,
+    "newAndMnp": 470000,
+    "change": 470000,
+    "alternative": 470000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 470,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "26|SKT": {
+    "retail": 1694000,
+    "common": null,
+    "newAndMnp": 470000,
+    "change": 470000,
+    "alternative": 470000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 470,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "27|SKT": {
+    "retail": 1892000,
+    "common": null,
+    "newAndMnp": 470000,
+    "change": 470000,
+    "alternative": 470000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 470,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "28|SKT": {
+    "retail": 1243000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "29|SKT": {
+    "retail": 1397000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "30|SKT": {
+    "retail": 1694000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "31|SKT": {
+    "retail": 1892000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "32|SKT": {
+    "retail": 990000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "33|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-10-01",
+    "modelCode": "IP17_256GB_NEW",
+    "retail": 1452000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "34|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-10-01",
+    "modelCode": "IP17_512GB_NEW",
+    "retail": 1760000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 450000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "36|SKT": {
+    "retail": 1980000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "37|SKT": {
+    "retail": 1584000,
+    "common": null,
+    "newAndMnp": 450000,
+    "change": 450000,
+    "alternative": 430000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 430,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "40|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "IP18PM_256GB",
+    "retail": 2200000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 220000,
+      "기기변경": 220000,
+      "번호이동": 220000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "41|SKT": {
+    "retail": 3091000,
+    "common": null,
+    "newAndMnp": 220000,
+    "change": 220000,
+    "alternative": 180000,
+    "sourceType": "merchant",
+    "date": "2026-10-06",
+    "note": "매장 제공표 · 5G 109 기준. 베스트99 참고 지원금 180,000원 (가입 유형 확인 필요 · 계산 미적용)"
+  },
+  "40|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "AIP18PM-256",
+    "retail": 2200000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 201000,
+      "기기변경": 201000,
+      "번호이동": 201000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "42|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "AIP18PM-512",
+    "retail": 2497000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 201000,
+      "기기변경": 201000,
+      "번호이동": 201000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "18|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S947N256",
+    "retail": 1452000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "19|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S947N512",
+    "retail": 1705000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "20|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S948N256",
+    "retail": 1797400,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "42|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "IP18PM_512GB",
+    "retail": 2497000,
+    "planName": "베스트 109(T 우주)",
+    "planFee": 109000,
+    "subsidies": {
+      "신규가입": 220000,
+      "기기변경": 220000,
+      "번호이동": 220000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "47|SKT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": null,
+    "modelCode": null,
+    "retail": null,
+    "planName": null,
+    "planFee": null,
+    "subsidies": {
+      "신규가입": null,
+      "기기변경": null,
+      "번호이동": null
+    },
+    "note": "키즈폰의 정확한 모델명·용량을 확인해 주세요."
+  },
+  "18|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S947NK",
+    "retail": 1452000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "19|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S947NK512",
+    "retail": 1705000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "20|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S948NK",
+    "retail": 1797400,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "21|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S948NK512",
+    "retail": 2050400,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "8|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F776NK",
+    "retail": 1683000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "9|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F776NK512",
+    "retail": 1936000,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "10|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F971NK",
+    "retail": 2278100,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "11|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F971NK512",
+    "retail": 2531100,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "12|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F976NK",
+    "retail": 2577300,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "13|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F976NK512",
+    "retail": 2830300,
+    "planName": "초이스110 폰케어",
+    "planFee": 110000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "24|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": null,
+    "modelCode": null,
+    "retail": null,
+    "planName": null,
+    "planFee": null,
+    "subsidies": {
+      "신규가입": null,
+      "기기변경": null,
+      "번호이동": null
+    },
+    "note": "스타일폴더2의 KT 동일 모델이 조회되지 않았습니다. 다른 세대의 가격을 적용하지 않습니다."
+  },
+  "47|KT": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": null,
+    "modelCode": null,
+    "retail": null,
+    "planName": null,
+    "planFee": null,
+    "subsidies": {
+      "신규가입": null,
+      "기기변경": null,
+      "번호이동": null
+    },
+    "note": "키즈폰의 정확한 모델명·용량을 확인해 주세요."
+  },
+  "40|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "UIP18PM-256",
+    "retail": 2200000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 204000,
+      "기기변경": 204000,
+      "번호이동": 204000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "42|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-12",
+    "modelCode": "UIP18PM-512",
+    "retail": 2497000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 204000,
+      "기기변경": 204000,
+      "번호이동": 204000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "34|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "UIP17-512-NP",
+    "retail": 1760000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 450000,
+      "기기변경": 450000,
+      "번호이동": 550000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "21|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-09-24",
+    "modelCode": "SM-S948N512",
+    "retail": 2050400,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 600000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "8|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F776N256",
+    "retail": 1683000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "9|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F776N512",
+    "retail": 1936000,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "10|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F971N256",
+    "retail": 2278100,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "11|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F971N512",
+    "retail": 2531100,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "12|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F976N256",
+    "retail": 2577300,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "13|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2026-07-28",
+    "modelCode": "SM-F976N512",
+    "retail": 2830300,
+    "planName": "플러스플랜115",
+    "planFee": 115000,
+    "subsidies": {
+      "신규가입": 500000,
+      "기기변경": 500000,
+      "번호이동": 500000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "24|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": "2025-01-24",
+    "modelCode": "AT-M140L",
+    "retail": 237600,
+    "planName": "추걱요 데이터 69",
+    "planFee": 69000,
+    "subsidies": {
+      "신규가입": 206000,
+      "기기변경": 206000,
+      "번호이동": 206000
+    },
+    "note": "제로노트 대표 요금제 조회 기준. 공시일과 조회일은 다르며 최종 개통 조건은 재확인합니다."
+  },
+  "47|LG U+": {
+    "sourceType": "xeronote",
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "date": "2026-10-07",
+    "publishedAt": null,
+    "modelCode": null,
+    "retail": null,
+    "planName": null,
+    "planFee": null,
+    "subsidies": {
+      "신규가입": null,
+      "기기변경": null,
+      "번호이동": null
+    },
+    "note": "키즈폰의 정확한 모델명·용량을 확인해 주세요."
+  }
+}

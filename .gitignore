@@ -1,0 +1,37 @@
+# 의존성 및 재생성 가능한 빌드 결과
+node_modules/
+dist/
+target/
+release/
+*.jar
+*.class
+backend/src/main/resources/static/
+
+# 로컬 실행 자료, DB, 업로드 사진, 내보내기
+.runtime/
+data/
+*.log
+*.db
+*.db-*
+*.bak
+*-export.json
+docs/*.xlsx
+
+# 실제 비밀 값은 커밋하지 않고 빈 예시 설정만 공유한다.
+.env
+.env.*
+!.env.example
+deploy/secrets/
+deploy/*.env
+credentials*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# 개인 편집기 및 OS 설정
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+{
+  "id": "iphone-duo-upcoming",
+  "name": "아이폰 듀오",
+  "brand": "Apple",
+  "network": "준비중",
+  "code": "판매 조건 준비중",
+  "image": "official/iphone-duo-colors.jpg",
+  "upcoming": true
+}

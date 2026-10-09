@@ -1,0 +1,12 @@
+# 운영 Linux와 Windows 개발 환경에서 소스의 줄바꿈을 동일하게 유지한다.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.xlsx binary

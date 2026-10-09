@@ -1,0 +1,115 @@
+/* 고객 화면의 최종 간격·카드·모바일 보정. site.html에서 마지막에 로드되므로 앞선 스타일을 조정한다. */
+/* Shared spacing and accents, preserving the existing section and quote structure. */
+:root{--shop-accent:#2454ef;--shop-line:#dfe5ef;--shop-ink:#182338;--shop-radius:18px}
+*,*::before,*::after{box-sizing:border-box}
+body{color:var(--shop-ink);line-height:1.65}
+.wrap{max-width:1240px}
+section[id]{scroll-margin-top:24px}
+header{gap:20px;padding-block:20px;align-items:center}
+header nav{gap:6px 12px;font-size:18px;flex:1;justify-content:center;min-width:0}
+header nav a{min-height:48px;padding:10px 12px}
+.button,button,select{font-family:inherit}
+.button{min-height:48px;line-height:1.5;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;padding:12px 18px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #2454ef;outline-offset:4px}
+.section{padding-block:64px}
+.section-top{gap:16px;align-items:flex-start;margin-bottom:28px}
+.section h2,.section-top h2,.store-title h2{font-size:clamp(28px,3vw,36px);line-height:1.35;letter-spacing:-.035em}
+.section-top p,.section>p{font-size:16px;line-height:1.8;color:#55627a}
+.eyebrow{font-size:14px;font-weight:800;letter-spacing:.12em;color:var(--shop-accent)}
+.best-grid,.product-grid,.contact-grid{gap:24px}
+.best-card,.product-card{border-radius:var(--shop-radius);border:1px solid var(--shop-line);padding:24px;box-shadow:0 4px 18px #18233806;min-width:0}
+.product-card{display:flex;flex-direction:column}
+.product-card:hover{border-color:#b4c5fa;box-shadow:0 8px 24px #2454ef0d;transform:none}
+.product-card-top{flex-wrap:wrap;row-gap:10px;align-items:center}
+.product-card-top .card-brand-logo{max-width:100px;flex:0 1 100px}
+.product-card-tags{margin-left:auto;max-width:100%;flex-wrap:wrap}
+.product-card .product-image{height:220px;display:flex;align-items:center;justify-content:center;margin-block:20px}
+.product-card .product-image img{max-width:100%;max-height:100%;object-fit:contain}
+.product-card h3{font-size:23px;line-height:1.45;min-height:67px;margin-block:8px 12px;word-break:keep-all;overflow-wrap:anywhere}
+.product-card .product-code,.product-card .card-quote-note,.product-card .price-rise{font-size:15px;line-height:1.7;margin-block:6px;color:#56637b}
+.product-card>.button{margin-top:auto;padding-block:14px;min-height:52px;font-size:17px;font-weight:800}
+.best-card h3{line-height:1.45;margin-block:12px;font-size:26px}
+.best-card .best-rank{color:var(--shop-accent);font-weight:800}
+.best-card .button{min-height:50px;margin-top:20px}
+.catalog-toolbar,.catalog-meta{gap:12px;align-items:center;flex-wrap:wrap}
+.brand-tabs{gap:10px;flex-wrap:wrap}.brand-tabs button{min-height:48px;border-radius:12px}
+.special-offer{border-radius:var(--shop-radius);gap:24px;padding:28px}
+.net-builder{gap:28px;border-radius:var(--shop-radius)}
+.net-builder label,.net-builder p{line-height:1.7}
+#contact .contact-card,.prepare-card{border-radius:var(--shop-radius);padding:26px;border:1px solid var(--shop-line)}
+#contact .contact-card{gap:16px}
+#contact .contact-card h3{font-size:23px;white-space:normal;word-break:keep-all}
+#contact .contact-card p{font-size:15px;line-height:1.8}
+#contact .contact-card .button{white-space:normal;min-height:50px;font-size:16px;margin-top:8px}
+#contact .contact-card.kakao{border-color:#eadb8e;background:#fffdf3}
+#contact .contact-card.kakao .button{background:#fee500;color:#191919;border-color:#fee500;font-weight:800}
+.store-details,.map-footer{gap:20px}.store-details p,.faq p{font-size:16px;line-height:1.8}
+.store-hours strong{font-variant-numeric:tabular-nums}.faq summary{padding-block:20px;line-height:1.6}
+.business-details,.legal-footer-links{line-height:1.8;font-size:14px;overflow-wrap:anywhere}
+.legal-footer-links{display:flex;flex-wrap:wrap;gap:12px 24px;padding-block:20px}
+.quote-dialog{padding:32px;max-height:calc(100dvh - 24px);width:min(1280px,calc(100% - 24px))}
+.quote-layout{gap:28px}.quote-layout>.quote-result{padding:24px}
+.quote-options fieldset{margin-bottom:24px;padding-bottom:24px}
+.quote-options legend{font-size:20px;line-height:1.5;margin-bottom:12px}
+.quote-options .dialog-options:not(.color-options)>label{min-height:50px;padding:12px;font-size:16px;border-radius:12px}
+.model-switch-label select{min-height:52px;font-size:16px;padding:12px}
+.quote-dialog .amount-row{gap:12px;line-height:1.6;align-items:baseline}
+.quote-dialog .amount-row>span{min-width:0;word-break:keep-all;overflow-wrap:anywhere}
+.quote-dialog .amount-row>strong{font-variant-numeric:tabular-nums;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#quote-values .compact-grand-total{border:1px solid #f1c9c9;border-radius:14px;background:#fff6f6;padding:16px;margin-top:20px}
+#quote-values .compact-grand-total .amount-row{border-bottom:0;padding-block:6px}
+#quote-values .compact-grand-total .amount-row>span{font-size:18px}
+#quote-values .compact-grand-total .amount-row>strong{font-size:30px;color:#ff0000}
+#quote-values .applied-plan-note{white-space:normal;font-size:14px;padding:10px 12px;background:#f3f6fc;border-radius:10px;overflow:visible}
+.quote-actions{gap:12px;margin-top:20px}.quote-consult-actions.quote-consult-single{grid-template-columns:1fr}
+.quote-result #copy-inquiry{min-height:56px;padding:14px 12px;font-size:17px;line-height:1.6;border-radius:12px}
+.quote-dialog .field-hint{font-size:14px;line-height:1.8}
+.member-dialog{width:min(860px,calc(100% - 24px));max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;border-radius:20px}
+#consultation-dialog{padding:32px}#consultation-dialog h2{padding-right:32px;line-height:1.45}
+.kakao-quote-actions{gap:12px}.kakao-quote-actions .button{min-height:52px;font-size:16px;font-weight:700}
+#quote-image-results img{max-width:100%;height:auto;border-radius:10px}
+@media(max-width:950px){header{gap:16px}header nav{order:3;flex-basis:100%;justify-content:center}.quote-layout{grid-template-columns:minmax(0,1fr)}.quote-layout>.quote-result{position:static;max-height:none;overflow:visible}}
+@media(max-width:600px){.wrap,header{width:calc(100% - 32px)}header{padding-block:16px;gap:12px}.brand{font-size:24px}.brand .brand-logo{width:48px;height:48px;flex-basis:48px}header>.button{font-size:14px;padding:10px 12px;margin-left:auto}header nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%;font-size:15px}header nav a{padding:10px 6px;min-height:44px;background:#f6f8fc}.section{padding-block:44px}.section-top{margin-bottom:22px}.section-top p,.section>p{font-size:15px}.best-grid,.product-grid,.contact-grid{gap:16px}.best-card,.product-card{padding:20px}.product-card .product-image{height:200px}.product-card h3{font-size:22px}.special-offer{padding:22px;gap:20px}.net-builder{gap:20px}#contact .contact-card,.prepare-card{padding:22px}#contact .contact-card h3{font-size:21px}.quote-dialog{padding:24px 16px;border-radius:18px}.quote-layout{gap:20px}.quote-layout>.quote-result{padding:20px 16px}.quote-options legend{font-size:18px}.quote-dialog .amount-row>span{flex-basis:110px}.quote-dialog .amount-row>strong{font-size:16px}#quote-values .compact-grand-total .amount-row>strong{font-size:28px}#quote-values .compact-grand-total .amount-row>span{font-size:17px}#consultation-dialog{padding:26px 20px}.member-dialog{padding:26px 20px}.store-details p{font-size:15px}}
+@media(max-width:540px){.product-grid{grid-template-columns:minmax(0,1fr)}.product-card h3{min-height:0}.product-card .product-image{height:210px}.product-card>.button{margin-top:18px}}
+@media(max-width:360px){.wrap,header{width:calc(100% - 24px)}.brand{font-size:22px;gap:8px}.brand .brand-logo{width:42px;height:42px;flex-basis:42px}header>.button{margin-left:0}.quote-dialog{padding:22px 12px}.quote-layout>.quote-result{padding:16px 12px}.dialog-product{gap:12px}.product-card-top .card-brand-logo{max-width:90px}.quote-dialog .amount-row{flex-wrap:wrap}.quote-dialog .amount-row>strong{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Right-aligned primary navigation requested by the owner. */
+header nav{margin-left:auto;justify-content:flex-end;gap:6px 8px;font-size:17px;font-weight:700;line-height:1.5}
+header nav a{min-height:46px;padding:10px 12px;border-radius:10px;white-space:normal;word-break:keep-all}
+header nav a[data-channel-link]{background:#fff7c2;color:#322a0b}
+header nav a[data-channel-link]:hover{background:#fee500;color:#191919}
+@media(max-width:950px){header nav{width:100%;flex-basis:100%;justify-content:flex-end;margin-left:auto;gap:6px 10px;font-size:16px}}
+@media(max-width:600px){
+  header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 10px;height:auto;padding-block:16px}
+  header .brand{min-width:0;gap:8px;font-size:clamp(20px,5.8vw,24px);letter-spacing:-.04em}
+  header .brand .brand-logo{width:44px;height:44px;flex:0 0 44px;object-fit:contain}
+  header .brand>span{min-width:0;white-space:nowrap}
+  header .brand small{font-size:10px;letter-spacing:.07em;line-height:1.4;margin-top:4px}
+  header>.button{grid-column:2;grid-row:1;margin-left:0;min-height:44px;padding:10px 12px;font-size:14px;white-space:nowrap}
+  header nav{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;margin:0;justify-content:stretch;gap:8px;font-size:15px}
+  header nav a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:46px;padding:10px 8px;line-height:1.5;border:1px solid #e4e8ee;border-radius:12px;white-space:normal;overflow-wrap:break-word}
+}
+@media(max-width:360px){header{gap:12px 8px}header .brand{font-size:20px;gap:6px}header .brand .brand-logo{width:38px;height:38px;flex-basis:38px}header .brand small{font-size:10px;letter-spacing:0}header>.button{padding:10px;font-size:14px}header nav{font-size:14px;gap:8px}header nav a{padding:10px 6px}}
+
+/* User-provided location image, without iframe loading restrictions or cropping. */
+.store-map-image-link{display:block;width:100%;line-height:0;background:#f3f5f7;overflow:hidden}.store-map-image{display:block;width:100%;height:auto;max-width:100%;object-fit:contain}.store-map .map-footer{gap:20px;flex-wrap:wrap}.store-map .map-footer p{font-size:15px;line-height:1.8}.store-map .map-footer .button{flex-shrink:0}@media(max-width:600px){.store-map .map-footer{padding:20px;gap:16px}.store-map .map-footer .button{width:100%;font-size:15px}}
+
+/* 부가서비스 공지: 기존 견적 공지 안에서 상품별 정보 정렬 */
+#addon-details .addon-notice-card{margin:0 0 18px;padding:16px;background:#f5f7fb;border-radius:12px;overflow-wrap:anywhere}
+#addon-details .addon-notice-title{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+#addon-details .addon-notice-title h4{margin:0;font-size:16px;color:#263f66}
+#addon-details .addon-notice-title>span{font-size:14px;background:#fff;border:1px solid #d8e1ed;border-radius:5px;padding:3px 7px;color:#4b6487}
+#addon-details .notice-facts{padding:0;background:transparent}
+#addon-details .notice-facts>div{align-items:flex-start;flex-wrap:wrap}
+#addon-details .notice-facts dd{margin-left:auto;text-align:right}
+#addon-details .addon-notice-card p{font-size:14px;line-height:1.8;color:#455b78}
+#addon-details .addon-notice-card a{margin-bottom:4px;line-height:1.7}
+#addon-details .addon-return-notice{font-size:15px;font-weight:700;color:#253f65;line-height:1.8;margin:14px 0}
+@media(max-width:400px){#addon-details .notice-facts>div{display:block}#addon-details .notice-facts dd{text-align:left;margin:6px 0 0}}
+
+/* 매장 지도: 비율을 유지하면서 PC에서 과도한 크기를 제한 */
+#store-map-slot .store-map{width:100%;max-width:820px;margin-left:auto;margin-right:auto}
+#store-map-slot .store-map-image-link{padding:12px;background:#f3f5f7;box-sizing:border-box}
+#store-map-slot .store-map-image{width:100%;height:auto;max-width:100%;object-fit:contain;border-radius:8px}
+@media(max-width:600px){#store-map-slot .store-map-image-link{padding:8px}}

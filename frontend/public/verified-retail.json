@@ -1,0 +1,356 @@
+{
+  "38|KT": {
+    "retail": 1991000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "39|KT": {
+    "retail": 2299000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "40|KT": {
+    "retail": 2200000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "42|KT": {
+    "retail": 2497000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "16|SKT": {
+    "retail": 1254000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "18|SKT": {
+    "retail": 1452000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "20|SKT": {
+    "retail": 1797400,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "8|SKT": {
+    "retail": 1683000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "9|SKT": {
+    "retail": 1936000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "18|LG U+": {
+    "retail": 1452000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "19|LG U+": {
+    "retail": 1705000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "20|LG U+": {
+    "retail": 1797400,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "10|SKT": {
+    "retail": 2278100,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "11|SKT": {
+    "retail": 2531100,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "12|SKT": {
+    "retail": 2577300,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "13|SKT": {
+    "retail": 2830300,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "38|SKT": {
+    "retail": 1991000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "39|SKT": {
+    "retail": 2299000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "40|SKT": {
+    "retail": 2200000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "42|SKT": {
+    "retail": 2497000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "33|SKT": {
+    "retail": 1452000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "34|SKT": {
+    "retail": 1760000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "17|SKT": {
+    "retail": 1507000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "19|SKT": {
+    "retail": 1705000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "21|SKT": {
+    "retail": 2050400,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "23|SKT": {
+    "retail": 319000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "24|SKT": {
+    "retail": 237600,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "33|KT": {
+    "retail": 1452000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "34|KT": {
+    "retail": 1760000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "16|KT": {
+    "retail": 1254000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "17|KT": {
+    "retail": 1507000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "18|KT": {
+    "retail": 1452000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "19|KT": {
+    "retail": 1705000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "20|KT": {
+    "retail": 1797400,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "21|KT": {
+    "retail": 2050400,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "8|KT": {
+    "retail": 1683000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "9|KT": {
+    "retail": 1936000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "10|KT": {
+    "retail": 2278100,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "11|KT": {
+    "retail": 2531100,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "12|KT": {
+    "retail": 2577300,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "13|KT": {
+    "retail": 2830300,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "23|KT": {
+    "retail": 319000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "38|LG U+": {
+    "retail": 1991000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "39|LG U+": {
+    "retail": 2299000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "40|LG U+": {
+    "retail": 2200000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "42|LG U+": {
+    "retail": 2497000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "33|LG U+": {
+    "retail": 1452000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "34|LG U+": {
+    "retail": 1760000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "16|LG U+": {
+    "retail": 1254000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "17|LG U+": {
+    "retail": 1507000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "21|LG U+": {
+    "retail": 2050400,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "8|LG U+": {
+    "retail": 1683000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "9|LG U+": {
+    "retail": 1936000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "10|LG U+": {
+    "retail": 2278100,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "11|LG U+": {
+    "retail": 2531100,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "12|LG U+": {
+    "retail": 2577300,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "13|LG U+": {
+    "retail": 2830300,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "23|LG U+": {
+    "retail": 319000,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  },
+  "24|LG U+": {
+    "retail": 237600,
+    "source": "https://www.xeronote.co.kr/consult/mobile.php",
+    "checkedAt": "2026-10-07",
+    "sourceName": "제로노트"
+  }
+}

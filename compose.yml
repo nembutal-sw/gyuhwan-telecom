@@ -1,0 +1,72 @@
+# 로컬 확인용 기본 Compose. DB/Redis 포트는 게시하지 않고 앱 포트만 루프백에 연결한다.
+# 공개 HTTPS 배포는 deploy/compose.cloudflare.yml 또는 배포 안내의 TLS 프록시 설정을 적용한다.
+services:
+  database:
+    image: mysql:8.4
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MYSQL_DATABASE: gyuhwan
+      MYSQL_USER: gyuhwan
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD}
+    volumes:
+      - database_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$${MYSQL_PASSWORD}\" mysql --protocol=TCP -h127.0.0.1 -u\"$${MYSQL_USER}\" \"$${MYSQL_DATABASE}\" -e 'SELECT 1' >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 20
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD}
+    command: ["sh", "-c", "exec docker-entrypoint.sh redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$${REDIS_PASSWORD}\" redis-cli ping | grep -qx PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  admin:
+    image: ${APP_IMAGE:-gyuhwan-admin:local}
+    build: .
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD with at least 16 characters}
+      DB_URL: jdbc:mysql://database:3306/gyuhwan?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      DB_USERNAME: gyuhwan
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD}
+      REDIS_SSL: "false"
+      REDIS_DATABASE: "0"
+      REDIS_PREFIX: "gyuhwan:auth:"
+      JWT_SECRET: ${JWT_SECRET:?Set a base64 JWT_SECRET containing at least 32 random bytes}
+      JWT_TTL_SECONDS: ${JWT_TTL_SECONDS:-1800}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      BIND_ADDRESS: 0.0.0.0
+      MEDIA_PATH: /app/data/media
+    # 컨테이너 교체 후에도 DB와 연결된 사진 URL이 유효하도록 영구 볼륨을 사용한다.
+    volumes:
+      - media:/app/data/media
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+    ports:
+      - "${PUBLIC_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8080}:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+volumes:
+  database_mysql:
+  redis:
+  media:

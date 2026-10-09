@@ -1,0 +1,35 @@
+{
+  "SKT": {
+    "internetOnly": 36300,
+    "internetWithTV": 34100,
+    "tvFirst": 22000,
+    "tvAdditional": 17600,
+    "sources": [
+      "https://www.bworld.co.kr/product/internet/charge.do?menu_id=P02010300",
+      "https://www.bworld.co.kr/product/btv/charge.do?menu_id=P03010300"
+    ],
+    "promotion": "현재 이 매장 견적에 적용할 설치비 전액 면제 기간은 확인되지 않았습니다. 기존 AI 5 출시 행사(2026.04.30까지)는 종료되어 자동 적용하지 않습니다."
+  },
+  "KT": {
+    "internetOnly": 36000,
+    "internetWithTV": 32000,
+    "tvFirst": 24200,
+    "tvAdditional": 15400,
+    "sources": [
+      "https://m.product.kt.com/static/prodetail/1505/mobile/m_htmlUploadType_20230207153539.html",
+      "https://m.product.kt.com/static/prodetail/common/mobile/genie_tv/m_genieTvCommon_20260821.html"
+    ],
+    "promotion": "현재 이 매장 견적에 적용할 설치비 전액 면제 행사와 종료일은 확인되지 않았습니다. 인터넷과 Wi-Fi 동시 설치 시 Wi-Fi 출동비 할인은 인터넷 설치비 전체 면제와 다릅니다."
+  },
+  "LG U+": {
+    "internetOnly": 36300,
+    "internetWithTV": 34100,
+    "tvFirst": 22000,
+    "tvAdditional": 22000,
+    "sources": [
+      "https://www.lguplus.com/support/service/notice/2000015956",
+      "https://www.lguplus.com/support/service/notice/2000029002"
+    ],
+    "promotion": "현재 이 매장 견적에 적용할 설치비 전액 면제 기간은 확인되지 않았습니다. 공식 올인원 할인은 2026.08.31부터 프로모션 종료로 안내되어 자동 적용하지 않습니다."
+  }
+}

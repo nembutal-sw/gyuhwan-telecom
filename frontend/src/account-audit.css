@@ -1,0 +1,33 @@
+
+/* 안내문이 서로 달라도 두 비밀번호 입력칸의 시작 위치를 맞춘다. */
+/* 비밀번호 두 칸의 안내문 길이가 달라도 제목과 입력 높이를 맞춘다. */
+.account-form label{align-content:start}
+.account-form input{height:48px;min-height:48px}
+.account-password-fields{align-items:start}
+.account-password-fields>label{grid-template-rows:max-content 48px auto}
+.account-field-label{line-height:1.65}
+.account-record-details{margin-top:8px;color:#687790;font-size:12px}
+.account-record-details>summary,.audit-record-details>summary{padding:3px 0;font-size:12px;font-weight:400}
+.account-record-details .account-record-id{margin-top:5px}
+.audit-field-details{margin-top:8px;font-weight:400}
+.audit-field-details>summary{padding:0;color:#687790;font-size:11px;font-weight:400}
+.audit-field-path{font-family:inherit;white-space:pre-wrap}
+.audit-record-details{margin-top:12px;color:#687790}
+/* 수정 기록의 긴 설명과 중첩 값을 잘리지 않게 감싸고 내부 스크롤한다. */
+.audit-value-text{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;font-variant-numeric:tabular-nums;max-height:260px;overflow:auto;line-height:1.7}
+.audit-value-list{margin:0;padding-left:20px}
+.audit-value-list>li{margin-bottom:6px}
+.audit-value-list>li:last-child{margin-bottom:0}
+.audit-value-object{margin:0}
+.audit-value-object>div{padding:7px 0;border-bottom:1px solid #e4eaf3}
+.audit-value-object>div:first-child{padding-top:0}
+.audit-value-object>div:last-child{border-bottom:0;padding-bottom:0}
+.audit-value-object dt{font-size:12px;font-weight:600;color:#63738c;margin-bottom:2px}
+.audit-value-object dd{margin:0}
+.audit-empty-value{color:#687790}
+/* 관리자 계정·수정 기록의 공통 패널과 계정 목록. */
+.account-manager,.audit-viewer{min-width:0}.account-panel,.audit-panel{background:#fff;border:1px solid #e0e6f0;border-radius:16px;padding:24px;margin-bottom:22px;min-width:0}.account-current{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}.account-current>div{min-width:0}.account-current strong{font-size:22px;overflow-wrap:anywhere}.account-current>.hint{max-width:470px;margin:0}.account-role{display:inline-block;margin-left:12px;padding:3px 9px;border-radius:6px;font-size:13px;background:#edf3ff;color:#2454ef}.account-record-id,.audit-record-id{font-size:12px;color:#687790;overflow-wrap:anywhere;margin:10px 0 0}.account-status,.audit-status{font-size:14px;color:#526480;overflow-wrap:anywhere}.account-error,.audit-error{padding:14px 16px;color:#a6192e;background:#fff3f4;border:1px solid #ebc8d0;border-radius:10px;font-size:14px;overflow-wrap:anywhere}.account-section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.account-section-heading h2{margin:0}.account-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.account-list button{display:grid;gap:4px;text-align:left;padding:14px 16px;min-width:0}.account-list strong{overflow-wrap:anywhere}.account-list span{font-size:13px;color:#64738b}.account-list button[aria-pressed=true]{background:#edf3ff;border-color:#b8caf7;color:#2454ef}.account-form .hint{font-weight:400;margin:0}.account-form>h2{overflow-wrap:anywhere}.account-password-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}.account-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.account-review{background:#f8faff;border-color:#afc4fa;scroll-margin-top:24px}.account-review-values{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}.account-review-values>div{padding:14px 16px;border:1px solid #d7e2fa;border-radius:10px;background:#fff;min-width:0}.account-review-values span{display:block;font-size:13px;color:#687790;margin-bottom:6px}.account-review-values strong{overflow-wrap:anywhere}.account-review-values>div:last-child strong{color:#2454ef}.account-review>.hint{margin-top:8px}
+/* 기록 검색, 변경 전후 표, 페이지 추가 조회. */
+.audit-filters{display:grid;grid-template-columns:minmax(220px,2fr) minmax(200px,1fr) auto;gap:16px;align-items:end}.audit-filters label{margin:0}.audit-filter-actions{display:flex;gap:10px}.audit-empty{padding:28px 20px;border:1px dashed #cbd7e9;background:#f8faff;border-radius:12px;text-align:center;color:#62728c}.audit-entry-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.audit-entry-heading>div{min-width:0}.audit-entry-heading h2{font-size:20px;margin:10px 0 8px;overflow-wrap:anywhere}.audit-entry-heading p{font-size:14px;color:#63738c;margin:0}.audit-entry-heading p strong{color:#283b58;overflow-wrap:anywhere}.audit-entry-heading time{white-space:nowrap}.audit-action,.audit-change-count{display:inline-block;font-size:12px;background:#edf3ff;color:#2454ef;padding:4px 8px;border-radius:6px}.audit-change-count{flex:none;color:#63738c;background:#f2f5fa}.audit-changes{margin-top:16px}.audit-changes summary{font-size:14px}.audit-table-wrap{max-height:600px;overflow:auto;margin:8px 0 16px;border:1px solid #dce4f2;border-radius:10px}.audit-table-wrap table{width:100%;min-width:640px;border-collapse:collapse;table-layout:fixed;font-size:14px}.audit-table-wrap th,.audit-table-wrap td{border-right:1px solid #dce4f2;border-bottom:1px solid #dce4f2;padding:12px;vertical-align:top;text-align:left;overflow-wrap:anywhere}.audit-table-wrap th:first-child{width:26%}.audit-table-wrap thead th{background:#f1f5fd;position:sticky;top:0;z-index:1}.audit-table-wrap td:last-child{background:#f6faff}.audit-table-wrap pre{font-family:inherit;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;background:none;font-size:13px;padding:0;margin:0;max-height:220px;overflow:auto}.audit-field-path{display:block;font-size:11px;font-weight:400;color:#71809a;margin-top:8px}.audit-pagination{text-align:center;margin:22px 0}.audit-pagination button{min-width:220px}
+/* 좁은 화면은 계정 비밀번호 칸과 기록 필터를 한 열로 재배치한다. */
+@media(max-width:1100px){.audit-filters{grid-template-columns:1fr 1fr}.audit-filter-actions{grid-column:1/-1}}@media(max-width:760px){.account-panel,.audit-panel{padding:20px}.account-current{display:block}.account-current>.hint{margin-top:16px}.account-password-fields,.account-review-values{grid-template-columns:1fr;gap:12px}.audit-filters{grid-template-columns:1fr}.audit-filter-actions{grid-column:auto}.audit-filter-actions>button,.account-actions>button{flex:1 1 150px}.audit-entry-heading{flex-wrap:wrap;gap:12px}.audit-entry-heading h2{font-size:18px}.audit-entry-heading time{white-space:normal}.account-section-heading{flex-wrap:wrap}.account-role{margin:8px 0 0 12px}}@media(max-width:400px){.account-panel,.audit-panel{padding:16px}.account-list{grid-template-columns:1fr}.account-role{display:block;width:max-content;margin-left:0}.audit-table-wrap table{min-width:580px}}

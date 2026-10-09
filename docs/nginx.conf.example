@@ -1,0 +1,17 @@
+# Replace server_name and use a real TLS certificate before public access.
+# 원본 HTTPS를 종료하고 같은 호스트의 Spring 루프백 HTTP로 전달하는 예시.
+# 앱의 전달 헤더 신뢰 범위를 이 프록시로 제한하고 COOKIE_SECURE=true를 설정한다.
+# Cloudflare 일반 프록시 배포는 Full (strict) 모드와 원본 직접 접근 제한을 함께 구성한다.
+server {
+  listen 443 ssl;
+  server_name admin.example.com;
+  ssl_certificate /etc/letsencrypt/live/admin.example.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/admin.example.com/privkey.pem;
+  client_max_body_size 3m;
+  location / {
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}

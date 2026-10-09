@@ -1,0 +1,61 @@
+/* 메인페이지 직접 편집 화면: 상단 모드·구역 선택과 저장 상태. */
+.visual-content-editor .page-heading{margin-bottom:16px}
+.visual-content-editor .page-heading h1{margin-bottom:6px}
+.visual-content-editor .page-heading p:last-child{margin:0;font-size:15px}
+.visual-editor-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:#fff;border:1px solid #dae2ef;border-radius:12px;padding:12px;margin-bottom:8px}
+.visual-editor-toolbar button{font-size:13px;white-space:nowrap}
+.visual-edit-toggle{display:flex;gap:4px;padding:3px;background:#f1f4f9;border-radius:9px}
+.visual-edit-toggle button{border-color:transparent;background:transparent;min-height:38px;padding:7px 12px}
+.visual-edit-toggle button[aria-pressed=true]{background:#2454ef;color:#fff}
+.visual-content-editor .visual-region-picker{display:flex;align-items:center;gap:8px;margin:0;font-size:13px;white-space:nowrap}
+.visual-region-picker select{max-width:230px;min-height:40px;padding:7px 9px;font-size:13px}
+.visual-save-tools{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-left:auto}
+.visual-save-tools>span{font-size:12px}
+.visual-dirty-count{font-weight:700;color:#a94c08}
+.visual-editor-status{font-size:13px;color:#62728a;min-height:26px;margin:0 0 10px;padding:0 4px}
+/* 고객페이지 iframe과 선택한 항목 편집 서랍을 나란히 놓는다. */
+.visual-editor-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.visual-editor-workspace.has-drawer{grid-template-columns:minmax(0,1fr) 340px}
+.visual-page-canvas.draft-main-preview{position:relative;top:auto;padding:0;overflow:hidden;border-color:#c8d5e8;border-radius:12px;box-shadow:0 4px 24px #22345009}
+.visual-page-canvas .draft-preview-tools{margin:0;padding:10px 14px;border-bottom:1px solid #dfe6f1;background:#fff}
+.visual-page-canvas .draft-preview-tools button{min-height:36px;padding:6px 11px}
+.visual-canvas-hint{margin-left:auto;font-size:12px;color:#60718c}
+.visual-page-canvas .draft-preview-viewport{height:calc(100vh - 315px);min-height:470px;max-height:none;border:0;border-radius:0;background:#e8ecf3}
+.visual-page-canvas>.error{padding:10px 14px;margin:0}
+/* 항목 서랍은 긴 페이지를 편집할 때도 화면 안에 고정하고 내부만 스크롤한다. */
+.visual-edit-drawer.panel{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding:18px;margin:0;border-color:#b4c8f8;box-shadow:0 6px 24px #2842710c}
+.visual-drawer-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.visual-drawer-heading h2{font-size:19px;margin:0}
+.visual-drawer-heading p{font-size:12px;color:#2454ef;font-weight:700;margin:0 0 4px}
+.visual-drawer-heading button{font-size:13px;min-height:36px;padding:6px 10px}
+.visual-edit-drawer>.hint{font-size:12px;line-height:1.7;margin-bottom:16px}
+.visual-edit-drawer label{font-size:13px;margin-bottom:10px}
+.visual-edit-drawer input,.visual-edit-drawer textarea,.visual-edit-drawer select{font-size:14px}
+.visual-edit-drawer .content-field{padding:12px;margin-bottom:12px}
+.visual-edit-drawer .content-field-label{font-size:13px;line-height:1.65;margin-bottom:8px}
+.visual-edit-drawer .content-image-preview{max-height:170px}
+.visual-edit-drawer .content-upload,.visual-edit-drawer .content-upload input{font-size:12px}
+.visual-edit-drawer .content-upload .hint{font-size:11px}
+.visual-drawer-footer{position:sticky;bottom:-18px;background:#fff;border-top:1px solid #e1e7f1;padding:12px 0 0;margin-top:6px;display:grid;gap:6px}
+.visual-drawer-footer>.hint{font-size:11px;text-align:center;margin:0}
+.visual-editor-bottom{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;font-size:12px}
+.visual-editor-bottom button{font-size:12px;min-height:34px;padding:6px 10px}
+.visual-editor-bottom>.hint{font-size:12px;margin:0}
+/* 이전 저장본은 필요할 때만 펼쳐 운영 화면의 복잡도를 낮춘다. */
+.visual-history{position:relative;margin-left:auto}
+.visual-history summary{font-size:12px;padding:8px 0;color:#64738a}
+.visual-history>.panel{position:absolute;right:0;z-index:8;width:360px;max-width:80vw;max-height:340px;overflow:auto;box-shadow:0 8px 32px #2343;border-color:#ced9eb;padding:16px}
+/* 저장·되돌리기는 모달에서 변경 전후를 확인한 뒤 확정한다. */
+.visual-save-dialog{border:1px solid #c3d3f1;border-radius:16px;width:min(820px,calc(100vw - 32px));max-height:90vh;padding:24px;color:#182338;background:#fff}
+.visual-save-dialog::backdrop{background:#15233a99}
+.visual-save-dialog-heading{display:flex;justify-content:space-between;gap:18px}
+.visual-save-dialog-heading h2{font-size:23px;margin-bottom:7px}
+.visual-save-dialog-heading p{font-size:14px;color:#64738a}
+.visual-save-dialog-heading button{align-self:flex-start;font-size:13px}
+.visual-save-dialog .content-review-list{max-height:55vh}
+.visual-save-dialog-actions{display:flex;justify-content:flex-end;gap:10px}
+.visual-confirm-dialog{max-width:520px}.visual-confirm-dialog p{font-size:15px;color:#64738a;margin:12px 0 24px}
+/* 넓은 화면은 편집 iframe을 확장하고, 좁은 화면은 서랍을 아래로 보낸다. */
+@media(min-width:1650px){.app-layout:has(.visual-content-editor){max-width:1900px}.app-layout:has(.visual-content-editor)>main{padding:24px}}
+@media(max-width:1250px){.visual-editor-workspace.has-drawer{grid-template-columns:minmax(0,1fr)}.visual-edit-drawer.panel{position:fixed;right:18px;top:120px;bottom:18px;width:360px;max-height:calc(100vh - 138px);z-index:20;box-shadow:0 12px 48px #17315840}.visual-page-canvas .draft-preview-viewport{height:calc(100vh - 340px)}.visual-canvas-hint{margin-left:0;width:100%}}
+@media(max-width:760px){.visual-editor-toolbar{gap:8px;padding:10px}.visual-save-tools{margin-left:0;width:100%;justify-content:flex-end}.visual-save-tools>span{margin-right:auto}.visual-content-editor .visual-region-picker{flex:1;min-width:0}.visual-region-picker select{flex:1;width:100%;max-width:none}.visual-edit-toggle{width:100%}.visual-edit-toggle button{flex:1}.visual-editor-toolbar>button{font-size:12px}.visual-page-canvas .draft-preview-viewport{height:620px;min-height:420px}.visual-edit-drawer.panel{top:auto;left:8px;right:8px;bottom:8px;width:auto;height:auto;max-height:68dvh;padding:16px;border-radius:16px;z-index:20}.visual-drawer-footer{bottom:-16px}.visual-editor-bottom .visual-history{margin-left:0}.visual-save-dialog{padding:18px}.visual-save-dialog-heading{gap:8px}.visual-save-dialog-heading h2{font-size:19px}.visual-save-dialog .content-review-values{grid-template-columns:1fr}.visual-save-dialog-actions>button{flex:1}.visual-content-editor button{min-height:44px}}

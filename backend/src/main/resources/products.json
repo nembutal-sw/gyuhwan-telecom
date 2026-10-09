@@ -1,0 +1,621 @@
+[
+  {
+    "id": 0,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-M166S",
+    "name": "와이드8",
+    "image": null
+  },
+  {
+    "id": 1,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-M176S",
+    "name": "와이드9",
+    "image": null
+  },
+  {
+    "id": 2,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-A366N",
+    "name": "A36",
+    "image": null
+  },
+  {
+    "id": 3,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-A376N",
+    "name": "A37",
+    "image": null
+  },
+  {
+    "id": 4,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-A566S",
+    "name": "퀀텀6",
+    "image": null
+  },
+  {
+    "id": 5,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-A576S",
+    "name": "퀀텀7",
+    "image": null
+  },
+  {
+    "id": 6,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F761N",
+    "name": "Z플립7_FE",
+    "image": null
+  },
+  {
+    "id": 7,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F966N",
+    "name": "Z폴드7",
+    "image": null
+  },
+  {
+    "id": 8,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F776N",
+    "name": "Z플립8_256G",
+    "image": "official/KT-flip8.png",
+    "carrierImages": {
+      "KT": "official/KT-flip8.png",
+      "LG U+": "official/LGU-flip8.png"
+    },
+    "imageAlt": "Z플립8_256G 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "SM-F776N",
+      "KT": "SM-F776NK",
+      "LG U+": "SM-F776N256"
+    }
+  },
+  {
+    "id": 9,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F776N_512G",
+    "name": "Z플립8_512G",
+    "image": "official/KT-flip8.png",
+    "carrierImages": {
+      "KT": "official/KT-flip8.png",
+      "LG U+": "official/LGU-flip8.png"
+    },
+    "imageAlt": "Z플립8_512G 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "SM-F776N_512G",
+      "KT": "SM-F776NK512",
+      "LG U+": "SM-F776N512"
+    }
+  },
+  {
+    "id": 10,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F971N",
+    "name": "Z폴드8_256G",
+    "image": "official/fold8-graphite.png",
+    "imageAlt": "삼성 갤럭시 Z 폴드8 그라파이트 공식 제품 사진",
+    "carrierCodes": {
+      "SKT": "SM-F971N",
+      "KT": "SM-F971NK",
+      "LG U+": "SM-F971N256"
+    }
+  },
+  {
+    "id": 11,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F971N_512G",
+    "name": "Z폴드8_512G",
+    "image": "official/fold8-graphite.png",
+    "imageAlt": "삼성 갤럭시 Z 폴드8 그라파이트 공식 제품 사진",
+    "carrierCodes": {
+      "SKT": "SM-F971N_512G",
+      "KT": "SM-F971NK512",
+      "LG U+": "SM-F971N512"
+    }
+  },
+  {
+    "id": 12,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F976N",
+    "name": "Z폴드8 울트라_256G",
+    "image": "official/fold8-ultra-graphite.png",
+    "imageAlt": "삼성 갤럭시 Z 폴드8 울트라 그라파이트 공식 제품 사진",
+    "carrierCodes": {
+      "SKT": "SM-F976N",
+      "KT": "SM-F976NK",
+      "LG U+": "SM-F976N256"
+    }
+  },
+  {
+    "id": 13,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-F976N_512G",
+    "name": "Z폴드8 울트라_512G",
+    "image": "official/fold8-ultra-graphite.png",
+    "imageAlt": "삼성 갤럭시 Z 폴드8 울트라 그라파이트 공식 제품 사진",
+    "carrierCodes": {
+      "SKT": "SM-F976N_512G",
+      "KT": "SM-F976NK512",
+      "LG U+": "SM-F976N512"
+    }
+  },
+  {
+    "id": 14,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S931N",
+    "name": "S25 256G",
+    "image": "official/SKT-s25-256G.png",
+    "imageAlt": "S25 256G 공식 대표 이미지",
+    "carrierImages": {
+      "SKT": "official/SKT-s25-256G.png",
+      "KT": "official/KT-galaxy-s25.jpg"
+    }
+  },
+  {
+    "id": 15,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S937N",
+    "name": "S25 엣지",
+    "image": null
+  },
+  {
+    "id": 16,
+    "sourceBrand": "5G",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S942N",
+    "name": "S26 256G",
+    "image": "official/SKT-s26-256.png",
+    "imageAlt": "S26 256G 공식 대표 이미지",
+    "carrierImages": {
+      "SKT": "official/SKT-s26-256.png",
+      "LG U+": "official/LGU+-s26.png",
+      "KT": "official/KT-galaxy-s26.png"
+    },
+    "carrierCodes": {
+      "SKT": "SM-S942N",
+      "KT": "SM-S942NK",
+      "LG U+": "SM-S942N256"
+    }
+  },
+  {
+    "id": 17,
+    "sourceBrand": "5G",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S942N_512G",
+    "name": "S26 512G",
+    "image": "official/SKT-s26-256.png",
+    "imageAlt": "S26 512G 공식 모델 대표 이미지",
+    "carrierImages": {
+      "SKT": "official/SKT-s26-256.png",
+      "LG U+": "official/LGU+-s26.png",
+      "KT": "official/KT-galaxy-s26.png"
+    },
+    "carrierCodes": {
+      "SKT": "SM-S942N_512G",
+      "KT": "SM-S942NK512",
+      "LG U+": "SM-S942N512"
+    }
+  },
+  {
+    "id": 18,
+    "sourceBrand": "5G",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S947N",
+    "name": "S26+ 256G",
+    "image": "official/KT-s26-plus.png",
+    "carrierImages": {
+      "KT": "official/KT-s26-plus.png",
+      "LG U+": "official/LGU-s26-plus.png"
+    },
+    "imageAlt": "S26+ 256G 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "SM-S947N",
+      "KT": "SM-S947NK",
+      "LG U+": "SM-S947N256"
+    }
+  },
+  {
+    "id": 19,
+    "sourceBrand": "5G",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S947N_512G",
+    "name": "S26+ 512G",
+    "image": "official/KT-s26-plus.png",
+    "carrierImages": {
+      "KT": "official/KT-s26-plus.png",
+      "LG U+": "official/LGU-s26-plus.png"
+    },
+    "imageAlt": "S26+ 512G 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "SM-S947N_512G",
+      "KT": "SM-S947NK512",
+      "LG U+": "SM-S947N512"
+    }
+  },
+  {
+    "id": 20,
+    "sourceBrand": "5G",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S948N",
+    "name": "S26 울트라 256G",
+    "image": "official/KT-s26-ultra.png",
+    "imageAlt": "S26 울트라 256G 공식 모델 대표 이미지",
+    "carrierImages": {
+      "KT": "official/KT-s26-ultra.png"
+    },
+    "carrierCodes": {
+      "SKT": "SM-S948N",
+      "KT": "SM-S948NK",
+      "LG U+": "SM-S948N256"
+    }
+  },
+  {
+    "id": 21,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S948N_512G",
+    "name": "S26 울트라 512G",
+    "image": "official/KT-s26-ultra.png",
+    "imageAlt": "S26 울트라 512G 공식 모델 대표 이미지",
+    "carrierImages": {
+      "KT": "official/KT-s26-ultra.png"
+    },
+    "carrierCodes": {
+      "SKT": "SM-S948N_512G",
+      "KT": "SM-S948NK512",
+      "LG U+": "SM-S948N512"
+    }
+  },
+  {
+    "id": 22,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "5G",
+    "code": "SM-S741N",
+    "name": "S26 FE",
+    "image": null
+  },
+  {
+    "id": 23,
+    "sourceBrand": "삼성",
+    "brand": "삼성",
+    "network": "LTE",
+    "code": "SM-A175N",
+    "name": "A17",
+    "image": "official/SKT-a17.png",
+    "carrierImages": {
+      "SKT": "official/SKT-a17.png",
+      "LG U+": "official/LGU+-a17.png",
+      "KT": "official/KT-galaxy-a17.jpg"
+    },
+    "imageAlt": "A17 공식 대표 이미지",
+    "carrierCodes": {
+      "SKT": "SM-A175N",
+      "KT": "SM-A175NK",
+      "LG U+": "SM-A175N"
+    }
+  },
+  {
+    "id": 24,
+    "sourceBrand": "ALT",
+    "brand": "ALT",
+    "network": "LTE",
+    "code": "AT-M140S",
+    "name": "스타일폴더2",
+    "image": null,
+    "carrierCodes": {
+      "SKT": "AT-M140S",
+      "KT": "동일 모델 확인 필요",
+      "LG U+": "AT-M140L"
+    }
+  },
+  {
+    "id": 25,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP15P_128GB",
+    "name": "아이폰15 PRO 128GB",
+    "image": null
+  },
+  {
+    "id": 26,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP15P_256GB",
+    "name": "아이폰15 PRO 256GB",
+    "image": null
+  },
+  {
+    "id": 27,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP15PM_256GB",
+    "name": "아이폰15 PRO MAX   256GB",
+    "image": null
+  },
+  {
+    "id": 28,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP16_128GB",
+    "name": "아이폰16 128GB",
+    "image": "products/iphone16.webp",
+    "imageAlt": "Apple 아이폰16 틸"
+  },
+  {
+    "id": 29,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP16_256GB",
+    "name": "아이폰16 256GB",
+    "image": "products/iphone16.webp",
+    "imageAlt": "Apple 아이폰16 틸"
+  },
+  {
+    "id": 30,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP16P_256GB",
+    "name": "아이폰16 PRO 256GB",
+    "image": null
+  },
+  {
+    "id": 31,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP16PM_256GB",
+    "name": "아이폰16 PRO MAX   256GB",
+    "image": null
+  },
+  {
+    "id": 32,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP16E_128GB",
+    "name": "아이폰16E 128GB",
+    "image": null
+  },
+  {
+    "id": 33,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP17_256GB_NEW",
+    "name": "아이폰17_NEW 256GB",
+    "image": "products/iphone17.webp",
+    "imageAlt": "Apple 아이폰17 라벤더",
+    "carrierImages": {
+      "LG U+": "official/LGU+-ip17.png",
+      "KT": "official/KT-iphone17.png"
+    },
+    "carrierCodes": {
+      "SKT": "IP17_256GB_NEW",
+      "KT": "AIP17-256-NEW",
+      "LG U+": "UIP17-256-NP"
+    }
+  },
+  {
+    "id": 34,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP17_512GB_NEW",
+    "name": "아이폰17_NEW 512GB",
+    "image": "products/iphone17.webp",
+    "imageAlt": "아이폰17_NEW 512GB 공식 모델 대표 이미지",
+    "carrierImages": {
+      "LG U+": "official/LGU+-ip17.png",
+      "KT": "official/KT-iphone17.png"
+    },
+    "carrierCodes": {
+      "SKT": "IP17_512GB_NEW",
+      "KT": "AIP17-512-NEW",
+      "LG U+": "UIP17-512-NP"
+    }
+  },
+  {
+    "id": 35,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP17P_256GG",
+    "name": "아이폰17 PRO 256GB",
+    "image": "official/SKT-iphone17pro.png",
+    "imageAlt": "아이폰17 PRO 256GB 공식 대표 이미지",
+    "carrierImages": {
+      "SKT": "official/SKT-iphone17pro.png",
+      "KT": "official/KT-iphone17-pro.png"
+    }
+  },
+  {
+    "id": 36,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP17PM_256GG",
+    "name": "아이폰17 PRO Max   256GB",
+    "image": null
+  },
+  {
+    "id": 37,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IPA_256GB",
+    "name": "아이폰17 Air 256GB",
+    "image": "products/iphoneair.webp",
+    "imageAlt": "Apple iPhone Air 스카이 블루"
+  },
+  {
+    "id": 38,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP18P_256GB",
+    "name": "아이폰18 PRO 256GB",
+    "image": "official/SKT-iphone18pro-256.png",
+    "carrierImages": {
+      "SKT": "official/SKT-iphone18pro-256.png",
+      "LG U+": "official/LGU+-ip18pro256.png",
+      "KT": "official/KT-iphone18-pro.png"
+    },
+    "imageAlt": "아이폰18 PRO 256GB 공식 대표 이미지",
+    "carrierCodes": {
+      "SKT": "IP18P_256GB",
+      "KT": "AIP18P-256",
+      "LG U+": "UIP18PR-256"
+    }
+  },
+  {
+    "id": 39,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP18P_512GB",
+    "name": "아이폰18 PRO 512GB",
+    "image": "official/SKT-iphone18pro-256.png",
+    "carrierImages": {
+      "SKT": "official/SKT-iphone18pro-256.png",
+      "LG U+": "official/LGU+-ip18pro256.png",
+      "KT": "official/KT-iphone18-pro.png"
+    },
+    "imageAlt": "아이폰18 PRO 512GB 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "IP18P_512GB",
+      "KT": "AIP18P-512",
+      "LG U+": "UIP18PR-512"
+    }
+  },
+  {
+    "id": 40,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP18PM_256GB",
+    "name": "아이폰18 PRO MAX   256GB",
+    "image": "official/KT-iphone18-max.png",
+    "carrierImages": {
+      "KT": "official/KT-iphone18-max.png"
+    },
+    "imageAlt": "아이폰18 PRO MAX   256GB 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "IP18PM_256GB",
+      "KT": "AIP18PM-256",
+      "LG U+": "UIP18PM-256"
+    }
+  },
+  {
+    "id": 41,
+    "sourceBrand": "Apple",
+    "brand": "Apple",
+    "network": "5G",
+    "code": "IP18PM_1TB",
+    "name": "아이폰18 PRO MAX 1TB",
+    "image": null
+  },
+  {
+    "id": 42,
+    "brand": "Apple",
+    "network": "5G",
+    "name": "아이폰18 Pro Max 512GB",
+    "code": "IP18PM_512GB",
+    "image": "official/KT-iphone18-max.png",
+    "carrierImages": {
+      "KT": "official/KT-iphone18-max.png"
+    },
+    "imageAlt": "아이폰18 Pro Max 512GB 공식 모델 대표 이미지",
+    "carrierCodes": {
+      "SKT": "IP18PM_512GB",
+      "KT": "AIP18PM-512",
+      "LG U+": "UIP18PM-512"
+    }
+  },
+  {
+    "id": 43,
+    "brand": "삼성",
+    "network": "5G",
+    "name": "갤럭시 폴드8 와이드 256GB",
+    "code": "정확한 모델명 확인 필요",
+    "image": null
+  },
+  {
+    "id": 44,
+    "brand": "삼성",
+    "network": "5G",
+    "name": "갤럭시 폴드8 와이드 512GB",
+    "code": "정확한 모델명 확인 필요",
+    "image": null
+  },
+  {
+    "id": 45,
+    "brand": "삼성",
+    "network": "5G",
+    "name": "갤럭시 폴드8 울트라 256GB",
+    "code": "정확한 모델명 확인 필요",
+    "image": null
+  },
+  {
+    "id": 46,
+    "brand": "삼성",
+    "network": "5G",
+    "name": "갤럭시 폴드8 울트라 512GB",
+    "code": "정확한 모델명 확인 필요",
+    "image": null
+  },
+  {
+    "id": 47,
+    "brand": "키즈폰",
+    "network": "확인 필요",
+    "name": "키즈폰",
+    "code": "상담 후 모델 선택",
+    "image": null
+  }
+]

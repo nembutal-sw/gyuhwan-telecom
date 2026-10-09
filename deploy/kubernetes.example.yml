@@ -1,0 +1,204 @@
+# Replace the app image and the media RWX storage class before applying.
+# Create gyuhwan-secrets from generated local files; no secret values belong in this manifest.
+# 앱은 2개 Pod 예시이며 DB·Redis·서명 키·사진 저장소를 공유한다. 외부 HTTPS Ingress는 별도 구성한다.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gyuhwan
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gyuhwan-config
+  namespace: gyuhwan
+data:
+  SPRING_PROFILES_ACTIVE: prod
+  BIND_ADDRESS: "0.0.0.0"
+  ADMIN_USERNAME: admin
+  DB_URL: "jdbc:mysql://mysql:3306/gyuhwan?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
+  DB_USERNAME: gyuhwan
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_SSL: "false"
+  REDIS_DATABASE: "0"
+  REDIS_PREFIX: "gyuhwan:auth:"
+  JWT_TTL_SECONDS: "1800"
+  COOKIE_SECURE: "true"
+  MEDIA_PATH: /app/data/media
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gyuhwan-media
+  namespace: gyuhwan
+spec:
+  # 다른 노드의 Pod에서도 같은 사진을 읽고 써야 하므로 RWX 저장소가 필요하다.
+  accessModes: [ReadWriteMany]
+  storageClassName: rwx-storage
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: gyuhwan
+spec:
+  selector: {app: gyuhwan-mysql}
+  ports: [{port: 3306, targetPort: 3306}]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gyuhwan-mysql
+  namespace: gyuhwan
+spec:
+  serviceName: mysql
+  replicas: 1
+  selector:
+    matchLabels: {app: gyuhwan-mysql}
+  template:
+    metadata:
+      labels: {app: gyuhwan-mysql}
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.4
+          args: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+          ports: [{containerPort: 3306}]
+          env:
+            - {name: MYSQL_DATABASE, value: gyuhwan}
+            - {name: MYSQL_USER, value: gyuhwan}
+            - name: MYSQL_PASSWORD
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: db_password}}
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: db_root_password}}
+          volumeMounts: [{name: data, mountPath: /var/lib/mysql}]
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql --protocol=TCP -h127.0.0.1 -u\"$MYSQL_USER\" \"$MYSQL_DATABASE\" -e 'SELECT 1' >/dev/null"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 250m, memory: 512Mi}
+            limits: {memory: 2Gi}
+  volumeClaimTemplates:
+    - metadata: {name: data}
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: {requests: {storage: 20Gi}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: gyuhwan
+spec:
+  selector: {app: gyuhwan-redis}
+  ports: [{port: 6379, targetPort: 6379}]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gyuhwan-redis
+  namespace: gyuhwan
+spec:
+  serviceName: redis
+  replicas: 1
+  selector:
+    matchLabels: {app: gyuhwan-redis}
+  template:
+    metadata:
+      labels: {app: gyuhwan-redis}
+    spec:
+      containers:
+        - name: redis
+          image: redis:8-alpine
+          command: ["sh", "-c", "exec docker-entrypoint.sh redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\""]
+          ports: [{containerPort: 6379}]
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: redis_password}}
+          volumeMounts: [{name: data, mountPath: /data}]
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "REDISCLI_AUTH=\"$REDIS_PASSWORD\" redis-cli ping | grep -qx PONG"]
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {memory: 512Mi}
+  volumeClaimTemplates:
+    - metadata: {name: data}
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: {requests: {storage: 2Gi}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gyuhwan-admin
+  namespace: gyuhwan
+spec:
+  selector: {app: gyuhwan-admin}
+  ports: [{port: 8080, targetPort: 8080}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gyuhwan-admin
+  namespace: gyuhwan
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: gyuhwan-admin}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxUnavailable: 0, maxSurge: 1}
+  template:
+    metadata:
+      labels: {app: gyuhwan-admin}
+    spec:
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        fsGroup: 10001
+      containers:
+        - name: app
+          image: registry.example.invalid/gyuhwan-admin:replace-tag
+          ports: [{containerPort: 8080}]
+          envFrom: [{configMapRef: {name: gyuhwan-config}}]
+          env:
+            - name: ADMIN_PASSWORD
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: admin_password}}
+            - name: DB_PASSWORD
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: db_password}}
+            - name: REDIS_PASSWORD
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: redis_password}}
+            - name: JWT_SECRET
+              valueFrom: {secretKeyRef: {name: gyuhwan-secrets, key: jwt_secret}}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: media, mountPath: /app/data/media}
+            - {name: tmp, mountPath: /tmp}
+          startupProbe:
+            httpGet: {path: /actuator/health/liveness, port: 8080}
+            failureThreshold: 60
+            periodSeconds: 5
+          # DB/Redis까지 준비됐을 때만 트래픽을 받고, liveness는 프로세스 생존만 검사한다.
+          readinessProbe:
+            httpGet: {path: /actuator/health/readiness, port: 8080}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /actuator/health/liveness, port: 8080}
+            periodSeconds: 20
+          resources:
+            requests: {cpu: 250m, memory: 256Mi}
+            limits: {memory: 1Gi}
+      volumes:
+        - {name: media, persistentVolumeClaim: {claimName: gyuhwan-media}}
+        - {name: tmp, emptyDir: {sizeLimit: 128Mi}}
