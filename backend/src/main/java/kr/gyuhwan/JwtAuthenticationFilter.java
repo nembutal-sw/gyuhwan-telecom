@@ -26,6 +26,7 @@ final class JwtAuthenticationFilter extends OncePerRequestFilter {
   if(token!=null&&!token.isBlank()&&(existing==null||!existing.isAuthenticated())){
    try{
     AdminPrincipal principal=tokens.authenticate(token);
+    if(!principal.isEnabled())throw new ApiException(401,"사용이 중지된 계정입니다. 대표 관리자에게 문의하세요.");
     // 검증 뒤 비밀번호 해시가 나머지 요청 처리 과정에 남지 않도록 한다.
     principal.eraseCredentials();
     var authentication=UsernamePasswordAuthenticationToken.authenticated(principal,null,principal.getAuthorities());

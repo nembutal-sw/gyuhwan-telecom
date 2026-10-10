@@ -1,0 +1,596 @@
+{
+  "source": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/",
+  "capturedAt": "2026-10-09T11:22:23.539Z",
+  "count": 58,
+  "totalBytes": 6286789,
+  "assets": [
+    {
+      "path": "carrier-kt-official.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/carrier-kt-official.png",
+      "bytes": 8591,
+      "contentType": "image/png",
+      "sha256": "05da30bb2ad07d241884377dd955045cf2138b381e4cec4b8975328f65fb9b8b",
+      "referencedBy": [
+        "/",
+        "/offline.js"
+      ]
+    },
+    {
+      "path": "carrier-lgu-supplied.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/carrier-lgu-supplied.png",
+      "bytes": 29892,
+      "contentType": "image/png",
+      "sha256": "1d998170f5ee4bd10121f549b0e71deb81731d6aa6ca8feba351362e3bbdba69",
+      "referencedBy": [
+        "/responsive.css"
+      ]
+    },
+    {
+      "path": "carrier-lgu-transparent.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/carrier-lgu-transparent.png",
+      "bytes": 36026,
+      "contentType": "image/png",
+      "sha256": "ce14418b20d3c213861d9a844d8f39be2537035486f33e889b9f10676582228f",
+      "referencedBy": [
+        "/",
+        "/offline.js"
+      ]
+    },
+    {
+      "path": "carrier-skt-official.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/carrier-skt-official.png",
+      "bytes": 500,
+      "contentType": "image/png",
+      "sha256": "0ad758347683bf32b1476aeddee53dbdd5e8c9396bf52675da546f03a779875b",
+      "referencedBy": [
+        "/",
+        "/offline.js"
+      ]
+    },
+    {
+      "path": "color-swatches/그라파이트.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EA%B7%B8%EB%9D%BC%ED%8C%8C%EC%9D%B4%ED%8A%B8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "fd6106a1e6fa92a48f1b37c5f0eaef1b44f6b2ddb79b337890cfbdabbd4c8262",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/그레이.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EA%B7%B8%EB%A0%88%EC%9D%B4.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "23085d9b5a7a0c53d5a4f95d35e47e6c0cf9c3bd696d268f0fe9a1fb7678d895",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/글레이셔.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EA%B8%80%EB%A0%88%EC%9D%B4%EC%85%94.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "5da4eb317473f528573570f2a155003ed7ec7ec4c9bf04f20fa00ec03e3a4b52",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/네이비.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%84%A4%EC%9D%B4%EB%B9%84.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "1cb354ff74bf8268b3bfbf60b6f1cf7fea8845a5cb5aaa344a47fb974d6e3971",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/라벤더.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%9D%BC%EB%B2%A4%EB%8D%94.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "c490c5088095a41699785acf1db3a4f82dff0fac190cd74ac66c2321240055c4",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/라이트 블루.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%9D%BC%EC%9D%B4%ED%8A%B8%20%EB%B8%94%EB%A3%A8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "dee993ddfd1e2d708e9bca3a7754e4f9a41a10b87588379db81ea019659bafca",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/미스트 블루.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%AF%B8%EC%8A%A4%ED%8A%B8%20%EB%B8%94%EB%A3%A8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "b6d7d144c3c7811e81c6b1e94418345477f0cc9317d459d8b00afee040ea0615",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/민트.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%AF%BC%ED%8A%B8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "47db9085e1ad4349105db667309dff8e1bdf3ecbf8190fa02a2030ffd71b824e",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/바이올렛 쉐도우.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%B0%94%EC%9D%B4%EC%98%AC%EB%A0%9B%20%EC%89%90%EB%8F%84%EC%9A%B0.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "3910a5a1def2368aa575479bf84f73e43d1cce5730c5fdc624d137e4bc55c2de",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/버건디.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%B2%84%EA%B1%B4%EB%94%94.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "afee0c69ec1e0e01b08f1b3fbe21f68b9ab4e00b30d6866152f421fc26eff4b7",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/블랙.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EB%B8%94%EB%9E%99.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "04f8b0faac3186a1882926d1d6188c8a69e31b132c70700cddbfacb689b16fb9",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/세이지.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EC%84%B8%EC%9D%B4%EC%A7%80.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "9f1bb0b5945bab660524b8c7aba40c8de4710bdb7dec30120fa8f6bb175e4c49",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/스카이 블루.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EC%8A%A4%EC%B9%B4%EC%9D%B4%20%EB%B8%94%EB%A3%A8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "44d2f5000f60d7e828ea097cc14fa937006b465dabf9204971af6f7e7e578108",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/실버 쉐도우.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EC%8B%A4%EB%B2%84%20%EC%89%90%EB%8F%84%EC%9A%B0.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "be31c37af81e3698ec496443e94c91a30a0287bd9deaac2e1177dada0387db4d",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/실버.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EC%8B%A4%EB%B2%84.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "43c01c2f5fda7422b26ef40bc4b56cfb425d0ecb4c988febd320496286be332b",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/아이스 블루.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EC%95%84%EC%9D%B4%EC%8A%A4%20%EB%B8%94%EB%A3%A8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "aeea7d95b060ea1ca8cd8d5efcffcc29e08051a97c44ecc9d0e5b5bdd4a2686d",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/코발트 바이올렛.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%EC%BD%94%EB%B0%9C%ED%8A%B8%20%EB%B0%94%EC%9D%B4%EC%98%AC%EB%A0%9B.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "b49ae8ca660dbe87b313d782cf278d538f1da0027107957308fe151fcd67bc38",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/크림.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%ED%81%AC%EB%A6%BC.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "080ae335a990c4105e4375738f0f457a628ca2dab28fd54876a5a01bc6ba586f",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/핑크.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%ED%95%91%ED%81%AC.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "c898e6d0b3bb0e89dfbb36a1d1d72e9aff0c7787935c87dda8d448f1f70d8a82",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "color-swatches/화이트.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/color-swatches/%ED%99%94%EC%9D%B4%ED%8A%B8.svg",
+      "bytes": 153,
+      "contentType": "image/svg+xml",
+      "sha256": "1209c9feb3ffae173bd3e38d6a596b9e9011969af89079268b67cb19b64dfa1f",
+      "referencedBy": [
+        "/model-colors.json"
+      ]
+    },
+    {
+      "path": "favicon.svg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/#inline-favicon",
+      "bytes": 204,
+      "contentType": "image/svg+xml",
+      "sha256": "7b59db81f4116302c4558abb66ccacb844196c220f7805b950a44c8651065338",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "gyuhwan-logo.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/gyuhwan-logo.png",
+      "bytes": 108584,
+      "contentType": "image/png",
+      "sha256": "92dbda70f6b40388bca4f5109f99f417817e93b57018ea3a1208a18a7f141182",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "gyuhwan-site-qr.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/gyuhwan-site-qr.png",
+      "bytes": 2135,
+      "contentType": "image/png",
+      "sha256": "f9a383799222633499807d8377c21b143097adc883f0e67018be05a758fdbe0a",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "gyuhwan-store-map.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/gyuhwan-store-map.png",
+      "bytes": 494273,
+      "contentType": "image/png",
+      "sha256": "7778961b718c7c36b3876115c21d20c4f21dbf50da2f371750d17d884a630653",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "manufacturer-apple-user.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/manufacturer-apple-user.png?v=20261009a",
+      "bytes": 1632,
+      "contentType": "image/png",
+      "sha256": "9fbae1118cfa02b14c99963ba8f25c3fef95c15bd34a514932c9a158dda95335",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "manufacturer-samsung-user.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/manufacturer-samsung-user.png?v=20261009a",
+      "bytes": 44612,
+      "contentType": "image/png",
+      "sha256": "13ecae76a0f69d9e8cb23eb3d7fc9955973def69f3920bd1656aa117deb06e6d",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "official/fold8-graphite.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/fold8-graphite.png",
+      "bytes": 997415,
+      "contentType": "image/png",
+      "sha256": "bfa63ee9f130877af456a0adc5e9211b5f4bf8734e939d93440ddc67c4789851",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/fold8-ultra-graphite.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/fold8-ultra-graphite.png",
+      "bytes": 894098,
+      "contentType": "image/png",
+      "sha256": "9250dbcb2b1782a7cf62d9e66ca656b92403f2726c18a08111ad85f1c73754b8",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/iphone-duo-colors.jpg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/iphone-duo-colors.jpg",
+      "bytes": 42173,
+      "contentType": "image/jpeg",
+      "sha256": "5a28616fadcc7550dc587526093e3bab5153d54f85a5eaf446f1815168c5a0c8",
+      "referencedBy": [
+        "/",
+        "/offline.js"
+      ]
+    },
+    {
+      "path": "official/iphone-duo-hero.jpg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/iphone-duo-hero.jpg",
+      "bytes": 464313,
+      "contentType": "image/jpeg",
+      "sha256": "2855977ab730bb48dba7ac2573c884604fd99f7c66f276b8ce0fc1d7a41947a3",
+      "referencedBy": [
+        "/"
+      ]
+    },
+    {
+      "path": "official/KT-flip8.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-flip8.png",
+      "bytes": 160220,
+      "contentType": "image/png",
+      "sha256": "1e2457c1d11e230d01394633639bbfffbfc0ae8488a528ca77a971ca83cdafde",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-galaxy-a17.jpg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-galaxy-a17.jpg",
+      "bytes": 205945,
+      "contentType": "image/jpeg",
+      "sha256": "3014e82fddd2caf2dcf20abd0ba6253d3cf7c69a88f4eca9593bfb4118c0328e",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-galaxy-s25.jpg",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-galaxy-s25.jpg",
+      "bytes": 156721,
+      "contentType": "image/jpeg",
+      "sha256": "4ad703d1ee4a321db2bcd1afdc8c18b3d3554e3d5b46cccb059c8816a7e8bef3",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-galaxy-s26.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-galaxy-s26.png",
+      "bytes": 95793,
+      "contentType": "image/png",
+      "sha256": "a1a77a0bb3b1d8518c7c577d6008213b86edb387b9804b036c535331f2d3cdfa",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-iphone17-pro.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-iphone17-pro.png",
+      "bytes": 142685,
+      "contentType": "image/png",
+      "sha256": "6e04c775eeb30c79acda7188eac5969491b57f2b548cabcc07ee187fb48f4115",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-iphone17.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-iphone17.png",
+      "bytes": 61710,
+      "contentType": "image/png",
+      "sha256": "e8d67b41da226c2a6bba2378911d6505e22b3b48aa1ba9484e29ee2a8697ef1d",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-iphone18-max.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-iphone18-max.png",
+      "bytes": 251494,
+      "contentType": "image/png",
+      "sha256": "61b01a85806cf03e4960700600ae27ff30d90a3e74a9ae814c3ee0632950c296",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-iphone18-pro.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-iphone18-pro.png",
+      "bytes": 150702,
+      "contentType": "image/png",
+      "sha256": "011239b4771227e5b4ffb47d948c8d62f45f6a65edeb40aa34167b0ce9482a5d",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-s26-plus.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-s26-plus.png",
+      "bytes": 41630,
+      "contentType": "image/png",
+      "sha256": "cec49ea33b3af6cf6cf9a4a0d736e6f1c1c7cf4b1ca1b856063adfb10b447a66",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/KT-s26-ultra.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/KT-s26-ultra.png",
+      "bytes": 47157,
+      "contentType": "image/png",
+      "sha256": "bf347920c98b91f1e7c887fc2799de997aba35ca7e6e6f8cc3556c9482b0f1b5",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/LGU-flip8.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/LGU-flip8.png",
+      "bytes": 205908,
+      "contentType": "image/png",
+      "sha256": "33249a4c18c1b1c14eaa36a464ac697c440bc09d40d2796a0da50d4d07a0012c",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/LGU-s26-plus.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/LGU-s26-plus.png",
+      "bytes": 149838,
+      "contentType": "image/png",
+      "sha256": "0298154ad1372addec4ec2b6ab2be95c6ae732422611f1acf8aa92e6b71509b8",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/LGU+-a17.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/LGU+-a17.png",
+      "bytes": 155093,
+      "contentType": "image/png",
+      "sha256": "4c56e53ab72f91a62584baa7c4c1b49f4836befa32283262673ec97f32519c62",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/LGU+-ip17.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/LGU+-ip17.png",
+      "bytes": 247323,
+      "contentType": "image/png",
+      "sha256": "709a4692306060be22e6ae68f26745645e6e72a2bb1cf18ccc83da7ee70fc44a",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/LGU+-ip18pro256.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/LGU+-ip18pro256.png",
+      "bytes": 307062,
+      "contentType": "image/png",
+      "sha256": "dfe8c7a352d7bf1d8df8e00a78405dbe9d66b9a4997d1dac81dd6d083392c030",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/LGU+-s26.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/LGU+-s26.png",
+      "bytes": 151687,
+      "contentType": "image/png",
+      "sha256": "77de9dc43519cc8c98bcca3c3e3dd7cb07f0144ea6a0dbb29aa354cd1ebbd90c",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/SKT-a17.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/SKT-a17.png",
+      "bytes": 85144,
+      "contentType": "image/png",
+      "sha256": "82f77fe472d3656574de00c8c301bfbb32d13e6ce209058029464bdacf8f5539",
+      "referencedBy": [
+        "/",
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/SKT-iphone17pro.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/SKT-iphone17pro.png",
+      "bytes": 155673,
+      "contentType": "image/png",
+      "sha256": "5d3c5989e3ed3845bb62964395697ca23e4dd4d030df73db239b71d5da518d56",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/SKT-iphone18pro-256.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/SKT-iphone18pro-256.png",
+      "bytes": 154481,
+      "contentType": "image/png",
+      "sha256": "2c2b8e1f514a6f6f4ec67a7962cf20edbc09d92e25e52248330af429793ff703",
+      "referencedBy": [
+        "/",
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/SKT-s25-256G.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/SKT-s25-256G.png",
+      "bytes": 96514,
+      "contentType": "image/png",
+      "sha256": "f15e7eb9cdb9ee0ba896f416d0a52d420887c58a9f3524d04f6ce2dfa789c22c",
+      "referencedBy": [
+        "/",
+        "/products.json"
+      ]
+    },
+    {
+      "path": "official/SKT-s26-256.png",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/official/SKT-s26-256.png",
+      "bytes": 98231,
+      "contentType": "image/png",
+      "sha256": "cd500bc17a71364b0a547b6473eeee47592527b924970c3c836b2bc83cb19c60",
+      "referencedBy": [
+        "/",
+        "/products.json"
+      ]
+    },
+    {
+      "path": "products/iphone16.webp",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/products/iphone16.webp",
+      "bytes": 12614,
+      "contentType": "image/webp",
+      "sha256": "96230e7ac2fecc013d7fefd9f5cdaec4ccf29f972db2eee058be0d4a15d8a800",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "products/iphone17.webp",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/products/iphone17.webp",
+      "bytes": 14722,
+      "contentType": "image/webp",
+      "sha256": "c42f9b5c2ab1154b010f0e0b4e296602c53363e7a421709421182e0cdd56bf27",
+      "referencedBy": [
+        "/products.json"
+      ]
+    },
+    {
+      "path": "products/iphoneair.webp",
+      "sourceUrl": "https://gyuhwan-telecom.destiny7845120.chatgpt.site/products/iphoneair.webp",
+      "bytes": 10934,
+      "contentType": "image/webp",
+      "sha256": "2b15355200d7c4aa339cbebc6f577dab2f808f5e9866d7e332a5bd4b6ad451bd",
+      "referencedBy": [
+        "/products.json"
+      ]
+    }
+  ]
+}

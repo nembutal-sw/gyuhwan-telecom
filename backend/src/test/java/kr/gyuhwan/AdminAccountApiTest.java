@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -172,6 +173,54 @@ class AdminAccountApiTest {
    assertStableCsrfCookie(write);
   }
   assertEquals(3,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
+ }
+
+ // 조회 전용 직원은 화면을 읽어도 직접 API를 호출해 내용을 공개하거나 권한을 올릴 수 없다.
+ @Test void readOnlyStaffCanReadButCannotMutateContentPricesMediaCatalogOrOwnPermissions()throws Exception{
+  Cookie owner=login("admin",OWNER_PASSWORD);
+  var created=mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","viewer","password",STAFF_PASSWORD,"permissions",List.of(),"enabled",true,"currentPassword",OWNER_PASSWORD)))).andExpect(status().isOk()).andExpect(jsonPath("$.permissions.length()").value(0)).andReturn();
+  String id=mapper.readTree(created.getResponse().getContentAsByteArray()).path("id").asText();Cookie viewer=login("viewer",STAFF_PASSWORD);
+  mvc.perform(get("/api/auth/me").cookie(viewer)).andExpect(status().isOk()).andExpect(jsonPath("$.enabled").value(true)).andExpect(jsonPath("$.permissions.length()").value(0));
+  for(String path:List.of("/api/admin/config","/api/admin/content","/api/admin/catalog"))mvc.perform(get(path).cookie(viewer)).andExpect(status().isOk());
+  for(String path:List.of("/api/admin/config","/api/admin/content"))mvc.perform(put(path).cookie(viewer).with(realCsrf()).contentType("application/json").content("{}")).andExpect(status().isForbidden());
+  for(String path:List.of("/api/admin/config/restore","/api/admin/content/restore","/api/admin/content/images","/api/admin/policies/import-excel","/api/admin/catalog/models","/api/admin/schedules"))mvc.perform(post(path).cookie(viewer).with(realCsrf()).contentType("application/json").content("{}")).andExpect(status().isForbidden());
+  for(String path:List.of("/api/admin/audit","/api/admin/interest"))mvc.perform(get(path).cookie(viewer)).andExpect(status().isForbidden());
+  mvc.perform(patch("/api/admin/accounts/me").cookie(viewer).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","viewer","currentPassword",STAFF_PASSWORD,"permissions",AdminAccess.ALL)))).andExpect(status().isForbidden());
+  assertEquals(1,accounts.principalById(id).revision());
+  mvc.perform(get("/api/auth/me").cookie(owner)).andExpect(status().isOk()).andExpect(jsonPath("$.permissions.length()").value(AdminAccess.ALL.size()));
+ }
+
+ @Test void ownerPermissionChangeRequiresCurrentPasswordAndInvalidatesStaffJwt()throws Exception{
+  Cookie owner=login("admin",OWNER_PASSWORD);String id=create(owner,"price-staff",STAFF_PASSWORD).path("id").asText();Cookie old=login("price-staff",STAFF_PASSWORD);
+  mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","price-staff","currentPassword","wrong-current-password","permissions",List.of("PRICE_EDIT"))))).andExpect(status().isBadRequest());
+  assertEquals(1,accounts.principalById(id).revision());
+  mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","price-staff","currentPassword",OWNER_PASSWORD,"permissions",List.of("UNKNOWN"))))).andExpect(status().isBadRequest());
+  mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","price-staff","currentPassword",OWNER_PASSWORD,"permissions",List.of("PRICE_EDIT"))))).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(2));
+  mvc.perform(get("/api/auth/me").cookie(old)).andExpect(status().isUnauthorized());
+  Cookie changed=login("price-staff",STAFF_PASSWORD);
+  mvc.perform(get("/api/auth/me").cookie(changed)).andExpect(status().isOk()).andExpect(jsonPath("$.permissions[0]").value("PRICE_EDIT"));
+  mvc.perform(put("/api/admin/config").cookie(changed).with(realCsrf()).contentType("application/json").content("{}")).andExpect(status().isBadRequest());
+  mvc.perform(put("/api/admin/content").cookie(changed).with(realCsrf()).contentType("application/json").content("{}")).andExpect(status().isForbidden());
+  mvc.perform(get("/api/admin/audit").cookie(changed)).andExpect(status().isForbidden());
+  mvc.perform(get("/api/auth/me").cookie(owner)).andExpect(status().isOk());
+ }
+
+ @Test void disablingStaffEndsAllLoginsBlocksNewLoginsAndCanBeReenabled()throws Exception{
+  Cookie owner=login("admin",OWNER_PASSWORD);String id=create(owner,"departed",STAFF_PASSWORD).path("id").asText();Cookie first=login("departed",STAFF_PASSWORD),second=login("departed",STAFF_PASSWORD);
+  mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","departed","currentPassword",OWNER_PASSWORD,"enabled",false)))).andExpect(status().isOk()).andExpect(jsonPath("$.enabled").value(false));
+  mvc.perform(get("/api/auth/me").cookie(first)).andExpect(status().isUnauthorized());mvc.perform(get("/api/admin/config").cookie(second)).andExpect(status().isUnauthorized());rejectedLogin("departed",STAFF_PASSWORD);
+  assertFalse(accounts.current(accounts.principalById(id)));
+  mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",2,"username","departed","currentPassword",OWNER_PASSWORD,"enabled",true)))).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(3));
+  mvc.perform(get("/api/auth/me").cookie(login("departed",STAFF_PASSWORD))).andExpect(status().isOk());
+  var log=mvc.perform(get("/api/admin/audit").cookie(owner).param("q",id)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+  assertTrue(log.contains("계정 사용"));assertTrue(log.contains("사용 중지"));assertFalse(log.contains(OWNER_PASSWORD));assertFalse(log.contains(STAFF_PASSWORD));
+ }
+
+ @Test void ownerCannotDisableOwnAccountOrRemoveOwnerPermissions()throws Exception{
+  Cookie owner=login("admin",OWNER_PASSWORD);
+  mvc.perform(patch("/api/admin/accounts/me").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","admin","currentPassword",OWNER_PASSWORD,"enabled",false)))).andExpect(status().isForbidden());
+  mvc.perform(patch("/api/admin/accounts/me").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("revision",1,"username","admin","currentPassword",OWNER_PASSWORD,"permissions",List.of())))).andExpect(status().isForbidden());
+  mvc.perform(get("/api/auth/me").cookie(owner)).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(1)).andExpect(jsonPath("$.enabled").value(true));
  }
 
  private static void assertStableCsrfCookie(MvcResult result){

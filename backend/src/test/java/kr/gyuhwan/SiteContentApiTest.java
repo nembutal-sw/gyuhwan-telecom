@@ -20,7 +20,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 /** 사이트 콘텐츠와 미디어 API의 권한, 버전·이력, 입력 검증 및 공개 리소스 동작을 검증한다. */
 class SiteContentApiTest {
  @Autowired MockMvc mvc;@Autowired JdbcTemplate db;@Autowired ObjectMapper mapper;@Autowired SiteContentService service;@Autowired ConfigService configs;@Autowired SiteMediaController media;
- @BeforeEach void clean()throws Exception{db.update("DELETE FROM site_content_history");db.update("DELETE FROM site_content");service.seed();}
+ @BeforeEach void clean()throws Exception{db.update("DELETE FROM catalog_model");db.update("UPDATE catalog_state SET revision=1,next_id=48 WHERE id='main'");db.update("DELETE FROM site_content_history");db.update("DELETE FROM site_content");service.seed();}
  JsonNode field(String kind){for(JsonNode section:mapper.valueToTree(service.read()).path("sections"))for(JsonNode field:section.path("fields"))if(field.path("kind").asText().equals(kind))return field;throw new AssertionError("Missing "+kind);}
  JsonNode resourceField(String resource,String pointer){for(JsonNode section:mapper.valueToTree(service.read()).path("sections"))for(JsonNode field:section.path("fields"))if(field.path("resource").asText().equals(resource)&&field.path("pointer").asText().equals(pointer))return field;throw new AssertionError("Missing resource field "+resource+pointer);}
  JsonNode publicResource(String name)throws Exception{return mapper.readTree(mvc.perform(get("/api/public/content/data/"+name).with(anonymous())).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray());}
@@ -33,7 +33,7 @@ class SiteContentApiTest {
   mvc.perform(get("/api/admin/content/history")).andExpect(status().isUnauthorized());
  }
  // 현재 응답은 새 저장 시각을, 이력은 이전 버전의 저장 시각을 유지하며 둘 다 파싱 가능해야 한다.
- @Test @WithMockUser(roles="ADMIN") void currentAndHistoryMetadataUseConsistentSavedTimestamps()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void currentAndHistoryMetadataUseConsistentSavedTimestamps()throws Exception{
   Map<String,Object> priceBefore=configs.read(true),contentBefore=service.read();
   long priceRevision=((Number)priceBefore.get("revision")).longValue(),contentRevision=((Number)contentBefore.get("revision")).longValue();
   com.fasterxml.jackson.databind.node.ObjectNode next=((JsonNode)priceBefore.get("config")).deepCopy();
@@ -53,7 +53,7 @@ class SiteContentApiTest {
   for(JsonNode timestamp:List.of(savedPrice.path("updatedAt"),savedContent.path("updatedAt"),priceHistory.path("updatedAt"),contentHistory.path("updatedAt")))assertDoesNotThrow(()->java.time.Instant.parse(timestamp.asText()));
  }
  // 한 필드만 수정해 나머지를 보존하고, 오래된 버전은 거부하며 복원은 새 버전으로 저장한다.
- @Test @WithMockUser(roles="ADMIN") void sectionPatchPreservesOtherSectionsAndCanRestore()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void sectionPatchPreservesOtherSectionsAndCanRestore()throws Exception{
   JsonNode original=mapper.valueToTree(service.read());JsonNode text=field("text");String id=text.path("id").asText();
   mvc.perform(put("/api/admin/content").with(csrf()).contentType("application/json").content(save(1,Map.of(id,"새 안내 내용")))).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(2));
   JsonNode edited=mapper.valueToTree(service.read());int changed=0;
@@ -67,7 +67,7 @@ class SiteContentApiTest {
   assertEquals(original.path("sections"),mapper.valueToTree(service.read()).path("sections"));
  }
  // 유효하지 않은 이미지나 수정 불가 스타일이 섞이면 전체 변경을 거부하고 CSRF도 요구한다.
- @Test @WithMockUser(roles="ADMIN") void invalidPatchIsAtomicAndScriptsAndStyleChangesAreRejected()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void invalidPatchIsAtomicAndScriptsAndStyleChangesAreRejected()throws Exception{
   String text=field("text").path("id").asText(),image=field("image").path("id").asText();
   mvc.perform(put("/api/admin/content").with(csrf()).contentType("application/json").content(save(1,Map.of(text,"반영되면 안 되는 내용",image,"javascript:alert(1)")))).andExpect(status().isBadRequest());
   mvc.perform(put("/api/admin/content").with(csrf()).contentType("application/json").content(save(1,Map.of("fontSize","30px")))).andExpect(status().isBadRequest());
@@ -75,7 +75,7 @@ class SiteContentApiTest {
   mvc.perform(put("/api/admin/content").contentType("application/json").content(save(1,Map.of(text,"내용")))).andExpect(status().isForbidden());
  }
  // 여러 구역과 리소스 이미지를 함께 수정할 때 잘못된 값 하나로 전체 요청을 거부한다.
- @Test @WithMockUser(roles="ADMIN") void multiplePageSectionsAndResourcePhotoSaveInOneAtomicRequest()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void multiplePageSectionsAndResourcePhotoSaveInOneAtomicRequest()throws Exception{
   JsonNode original=mapper.valueToTree(service.read());
   List<JsonNode> texts=new ArrayList<>();
   for(JsonNode section:original.path("sections")){
@@ -106,7 +106,7 @@ class SiteContentApiTest {
   assertEquals(audits+1,db.queryForObject("SELECT COUNT(*) FROM audit_log WHERE action='CONTENT_UPDATE'",Integer.class));
  }
  // 스크립트·인라인 데이터·우회 경로 등 위험한 미디어 주소는 저장 내용을 바꾸지 않는다.
- @Test @WithMockUser(roles="ADMIN") void invalidImageLinkAndVideoUrisDoNotChangeSavedContent()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void invalidImageLinkAndVideoUrisDoNotChangeSavedContent()throws Exception{
   Map<String,Object> before=service.read();
   String[] invalid={"javascript:alert(1)","data:image/png;base64,AAAA","//example.com/media","https://user:password@example.com/media","https://example.com/media\n","https:example.com/media","/../media"};
   for(String kind:List.of("image","url","video")){
@@ -121,7 +121,7 @@ class SiteContentApiTest {
   assertEquals(before,service.read());
  }
  // 동영상은 허용된 HTTPS 임베드 주소만 받아들이고 다른 호스트·포트·계정 정보를 거부한다.
- @Test @WithMockUser(roles="ADMIN") void videoAcceptsOnlySupportedHttpsEmbeds()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void videoAcceptsOnlySupportedHttpsEmbeds()throws Exception{
   String id=field("video").path("id").asText();
   Map<String,Object> before=service.read();
   for(String invalid:List.of("https://example.com/login","https://youtube.com.evil.invalid/watch?v=3vvJeRHe3sk","https://youtube.com:444/embed/3vvJeRHe3sk","https://someone@youtube.com/embed/3vvJeRHe3sk","https://player.vimeo.com/video/1234?h=bad%2Fhash","https://example.com/demo.mp4")){
@@ -132,13 +132,19 @@ class SiteContentApiTest {
   mvc.perform(put("/api/admin/content").with(csrf()).contentType("application/json").content(save(2,Map.of(id,"https://player.vimeo.com/video/12345678?h=abc123")))).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(3));
  }
  // 공개 JSON 갱신 시 숫자·null 형식을 유지하고 보호된 모델 식별자는 수정할 수 없게 한다.
- @Test @WithMockUser(roles="ADMIN") void publicResourcesPreserveTypedNumbersNullsAndProtectedIdentifiers()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void publicResourcesPreserveTypedNumbersNullsAndProtectedIdentifiers()throws Exception{
   JsonNode amount=resourceField("internet-plans.json","/SKT/internet/0"),nullable=resourceField("internet-plans.json","/LG U+/withTV/0");
   JsonNode name=resourceField("products.json","/0/name"),image=resourceField("products.json","/0/image");
   JsonNode originalPlans;try(var in=getClass().getResourceAsStream("/static/internet-plans.json")){originalPlans=mapper.readTree(in);}
   JsonNode originalProducts;try(var in=getClass().getResourceAsStream("/static/products.json")){originalProducts=mapper.readTree(in);}
   assertEquals(originalPlans,publicResource("internet-plans.json"));
-  assertEquals(originalProducts,publicResource("products.json"));
+  JsonNode publishedProducts=publicResource("products.json");assertEquals(originalProducts.size(),publishedProducts.size());
+  // 판매 상태는 공개 상품에 덧붙지만 원본 ID·문구·사진·통신사 매핑은 동일해야 한다.
+  for(int index=0;index<originalProducts.size();index++){
+   JsonNode originalProduct=originalProducts.get(index),published=publishedProducts.get(index);
+   originalProduct.fields().forEachRemaining(entry->assertEquals(entry.getValue(),published.path(entry.getKey()),"원본 상품 필드 보존: "+originalProduct.path("id")+" / "+entry.getKey()));
+   assertEquals("selling",published.path("sellingStatus").asText());assertFalse(published.path("hidden").asBoolean());assertTrue(published.path("colorStatuses").isObject());assertTrue(published.path("colors").isArray());
+  }
   assertTrue(nullable.path("nullable").asBoolean());assertTrue(image.path("nullable").asBoolean());
   for(JsonNode section:mapper.valueToTree(service.read()).path("sections"))for(JsonNode field:section.path("fields"))assertFalse(field.path("resource").asText().equals("products.json")&&field.path("pointer").asText().equals("/0/id"),"Logical model IDs must remain protected");
   mvc.perform(put("/api/admin/content").with(csrf()).contentType("application/json").content(save(1,Map.of(amount.path("id").asText(),"23000",nullable.path("id").asText(),"33000",name.path("id").asText(),"수정한 모델 이름",image.path("id").asText(),"/gyuhwan-logo.png")))).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(2));
@@ -160,7 +166,7 @@ class SiteContentApiTest {
   mvc.perform(post("/api/admin/content/images").with(csrf()).contentType("application/json").content(payload)).andExpect(status().isUnauthorized());
  }
  // 관리자 업로드는 CSRF를 요구하고, 저장된 이미지는 픽셀 손실 없이 공개 제공한다.
- @Test @WithMockUser(roles="ADMIN") void uploadedImageIsStoredAsBytesAndServedWithoutLogin()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void uploadedImageIsStoredAsBytesAndServedWithoutLogin()throws Exception{
   byte[] bytes;try(var in=getClass().getResourceAsStream("/static/gyuhwan-logo.png")){bytes=in.readAllBytes();}
   String payload=mapper.writeValueAsString(Map.of("fileName","내 사진.png","base64",Base64.getEncoder().encodeToString(bytes)));
   mvc.perform(post("/api/admin/content/images").contentType("application/json").content(payload)).andExpect(status().isForbidden());
@@ -179,7 +185,7 @@ class SiteContentApiTest {
   mvc.perform(post("/api/admin/content/images").with(csrf()).contentType("application/json").content(fake)).andExpect(status().isBadRequest());
  }
  // PNG에 삽입한 텍스트 메타데이터가 공개 이미지에서 제거되는지 확인한다.
- @Test @WithMockUser(roles="ADMIN") void uploadedPngLosesEmbeddedTextMetadata()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void uploadedPngLosesEmbeddedTextMetadata()throws Exception{
   byte[] original;try(var in=getClass().getResourceAsStream("/static/gyuhwan-logo.png")){original=in.readAllBytes();}
   byte[] comment="Comment\0private-location-marker".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
   byte[] type="tEXt".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
@@ -200,7 +206,7 @@ class SiteContentApiTest {
   assertNotNull(javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(served)));
  }
  // WebP의 EXIF 청크와 메타데이터 플래그를 제거하고 원본 파일 크기를 복원한다.
- @Test @WithMockUser(roles="ADMIN") void uploadedWebpLosesExifChunkAndFeatureFlag()throws Exception{
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void uploadedWebpLosesExifChunkAndFeatureFlag()throws Exception{
   byte[] source;try(var in=getClass().getResourceAsStream("/static/products/iphone16.webp")){source=in.readAllBytes();}
   assertEquals("VP8X",new String(source,12,4,java.nio.charset.StandardCharsets.US_ASCII));
   byte[] marker="private-webp-location".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
@@ -219,8 +225,8 @@ class SiteContentApiTest {
   assertEquals(source[20],served[20]);
   assertFalse(new String(served,java.nio.charset.StandardCharsets.ISO_8859_1).contains("private-webp-location"));
  }
- // 정리 작업은 오래된 미참조 이미지만 삭제하고 콘텐츠가 참조하는 이미지는 남긴다.
- @Test @WithMockUser(roles="ADMIN") void cleanupKeepsReferencedImageAndRemovesOldOrphan()throws Exception{
+ // 보관함 사진은 미사용 상태라도 운영자가 직접 삭제하기 전까지 유지한다.
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void libraryKeepsReferencedAndOldUnusedPhotos()throws Exception{
   byte[] logo;try(var in=getClass().getResourceAsStream("/static/gyuhwan-logo.png")){logo=in.readAllBytes();}
   String body=mapper.writeValueAsString(Map.of("fileName","logo.png","base64",Base64.getEncoder().encodeToString(logo)));
   String kept=mapper.readTree(mvc.perform(post("/api/admin/content/images").with(csrf()).contentType("application/json").content(body)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).path("url").asText();
@@ -232,6 +238,6 @@ class SiteContentApiTest {
   java.nio.file.Files.setLastModifiedTime(folder.resolve(orphan.substring("/media/".length())),older);
   media.scheduledPrune();
   mvc.perform(get(kept).with(anonymous())).andExpect(status().isOk());
-  mvc.perform(get(orphan).with(anonymous())).andExpect(status().isNotFound());
+  mvc.perform(get(orphan).with(anonymous())).andExpect(status().isOk());
  }
 }

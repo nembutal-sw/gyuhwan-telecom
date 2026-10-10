@@ -95,7 +95,7 @@ test('addon schedule survives text/unchanged amounts and is removed only when fe
 });
 
 test('invalid drafts block the compiled config, report field errors, and retain valid rows and original drafts', () => {
-  for (const [field, raw] of [['retail','1.5'],['retail','1,00'],['retail','원'],['retail','100000001'],['retail','-1'],['addonMonths','25'],['addonMonths','0'],['planFee',true],['planName','x'.repeat(6001)],['addonSchedule',Array(24).fill(1)],['installmentFee','99'],['unknown','x'],['supportInquiry','false']]) {
+  for (const [field, raw] of [['retail','1.5'],['retail','1,00'],['retail','원'],['retail','100000001'],['retail','-1'],['addonMonths','25'],['addonMonths','0'],['planFee',true],['planName','x'.repeat(6001)],['addonSchedule',Array(23).fill(1)],['installmentFee','99'],['unknown','x'],['supportInquiry','false']]) {
     const drafts = { [a]: { [field]: raw }, [b]: { planName: '정상 수정 유지' } }, prior=structuredClone(drafts);
     const result=compilePriceDrafts(base,drafts,products);
     assert.equal(result.config,null,`${field}=${String(raw)}`); assert(result.errors.some(error=>error.key===a&&error.field===field),`${field}: ${JSON.stringify(result.errors)}`);

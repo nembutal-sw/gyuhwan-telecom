@@ -1,5 +1,18 @@
 
 /* 안내문이 서로 달라도 두 비밀번호 입력칸의 시작 위치를 맞춘다. */
+/* 권한 체크박스는 텍스트 입력의 높이 규칙에서 분리해 직원별 업무 범위를 읽기 쉽게 표시한다. */
+.account-access-summary{padding:12px 16px;background:#edf3ff;border-radius:10px;color:#34517c;font-size:14px;overflow-wrap:anywhere}
+.account-state{display:inline-block!important;margin-left:10px;padding:2px 7px;background:#eaf7f0;color:#217248!important;border-radius:6px;font-size:11px!important;font-weight:500}
+.account-state.is-disabled{background:#fff0f2;color:#a9253e!important}
+.account-permissions{padding:18px;background:#f7f9fd;border:1px solid #e0e6f0;border-radius:12px;margin:4px 0 20px}
+.account-permissions h3{margin:0 0 8px}
+.account-presets{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.account-presets button{padding:8px 12px;font-size:13px}
+.account-permission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:10px}
+.account-form .account-permission-option,.account-form .account-enabled-option{display:flex;align-items:flex-start;gap:10px;margin:0;padding:12px;border:1px solid #dce4f0;border-radius:10px;background:#fff}
+.account-form .account-permission-option input,.account-form .account-enabled-option input{height:18px;min-height:18px;width:18px;flex:none;margin:3px 0 0;accent-color:#2454ef}
+.account-permission-option>span,.account-enabled-option>span{display:grid;gap:4px;min-width:0}
+.account-form .account-enabled-option{margin-top:14px}
 /* 비밀번호 두 칸의 안내문 길이가 달라도 제목과 입력 높이를 맞춘다. */
 .account-form label{align-content:start}
 .account-form input{height:48px;min-height:48px}

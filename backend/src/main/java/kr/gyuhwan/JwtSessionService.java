@@ -47,7 +47,7 @@ public class JwtSessionService {
   try{active=registry.get(jwt.getId());}catch(org.springframework.dao.DataAccessException e){throw unavailable();}
   if(!jwt.getSubject().equals(active))throw invalid();
   AdminPrincipal principal;try{principal=accounts.principalById(jwt.getSubject());}catch(UsernameNotFoundException e){throw invalid();}
-  Object revision=jwt.getClaim("revision");if(!(revision instanceof Long||revision instanceof Integer)||((Number)revision).longValue()<1||principal.revision()!=((Number)revision).longValue())throw invalid();return principal;
+  Object revision=jwt.getClaim("revision");if(!principal.isEnabled()||!(revision instanceof Long||revision instanceof Integer)||((Number)revision).longValue()<1||principal.revision()!=((Number)revision).longValue())throw invalid();return principal;
  }
  // 로그아웃은 Redis 등록을 제거한다. 서명이 틀리거나 이미 만료된 토큰은 무시한다.
  public void revoke(String token){

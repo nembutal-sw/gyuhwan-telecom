@@ -12,6 +12,11 @@ Spring Boot가 고객 정적 페이지와 React 관리자 앱을 같은 서버�
 | 가격 저장·이전 저장본·검증 | `ConfigService`, `QuoteValidator` |
 | 엑셀 미리보기·적용·내보내기 | `PolicyImportService`, `PolicyWorkbookExporter`, `frontend/src/PolicyTransfer.jsx` |
 | 가격표 셀 편집·필터·붙여넣기 | `frontend/src/PriceGridEditor.jsx`, `frontend/src/core/price-grid.mjs` |
+| 임시 작업·선택 행 일괄 수정 | `WorkspaceService`, `frontend/src/useServerDraft.jsx`, `core/price-bulk.mjs` |
+| 가격 정책 예약·다중 서버 실행 | `PolicyScheduleService`, `PolicyScheduleRunner`, `PolicySchedulePanel.jsx` |
+| 신규 모델·색상·판매 상태 | `CatalogService`, `ModelManager.jsx`, `public/catalog-core.mjs` |
+| 사진 보관함·참조 삭제 보호 | `MediaLibraryService`, `MediaReferencesValidator`, `MediaLibrary.jsx` |
+| 익명 관심 집계·요청 제한 | `InterestService`, `interest-tracking.js`, `InterestStats.jsx` |
 | 홈페이지 내용 저장·사진 업로드 | `SiteContentService`, `SiteMediaController` |
 | 실제 페이지 직접 편집 | `frontend/src/MainContentEditor.jsx`, `MainPagePreview.jsx`, `frontend/public/preview.js`, `preview-bindings.js` |
 | 고객 페이지 자료·임시 입력 반영 | `frontend/public/site-content.js`, `content-data.js`, `offline.js`, `internet.js` |
@@ -24,7 +29,9 @@ Spring Boot가 고객 정적 페이지와 React 관리자 앱을 같은 서버�
 
 가격과 메인 내용 저장 요청에는 읽을 때 받은 revision을 보냅니다. 서비스는 해당 revision에만 조건부 UPDATE를 수행하고 이전 값과 감사 기록을 같은 트랜잭션에 남깁니다. 오래된 입력은 409로 거부합니다. 이 숫자는 운영자에게 보여주는 파일 이름이 아니라 덮어쓰기 충돌을 막는 내부 값입니다. 화면은 저장 시각으로 저장본을 구분합니다.
 
-메인 편집의 임시 값은 React 상태와 iframe 안의 메모리 객체에만 반영합니다. `MainPagePreview`가 같은 origin의 iframe에 메시지를 보내고 `preview.js`가 출처와 부모 창을 검사합니다. `content-data.js`는 기존 객체 참조를 유지하며 값을 바꿔 원본 고객 모듈이 같은 계산·렌더링 함수를 사용하게 합니다. 실제 저장은 변경 확인 후 관리자 API 호출에서만 일어납니다.
+메인 편집의 임시 값은 React 상태와 iframe에 반영하며, 입력을 멈추면 `admin_workspaces`에 계정별로 저장합니다. 공개본은 공개 확인 요청에서만 바뀝니다. `MainPagePreview`가 같은 origin의 iframe에 메시지를 보내고 `preview.js`가 출처와 부모 창을 검사합니다. `content-data.js`는 기존 객체 참조를 유지하며 값을 바꿔 원본 고객 모듈이 같은 계산·렌더링 함수를 사용하게 합니다. 초안 저장도 revision으로 두 창의 덮어쓰기를 막습니다.
+
+예약 실행은 가격 현재 행의 DB 잠금으로 시작·종료를 직렬화합니다. 시작 시 기준 내용과 예약자의 현재 권한을 확인하고, 종료 시 적용했던 revision이 유지될 때만 복귀합니다. 모델 변경은 관련 가격·메인 revision도 갱신해 다른 편집기의 충돌 검사가 작동하게 합니다. 사진은 공개본뿐 아니라 초안·예약·이력에서도 참조하므로 삭제 전에 참조와 파일 잠금을 확인합니다.
 
 엑셀은 업로드 즉시 저장되지 않습니다. 파일을 읽고 모든 행을 검증한 미리보기 결과에서 변경 전후를 확인한 뒤 적용합니다. 가격 계산에서 빈 금액은 미등록(`null`)이며 0원과 의미가 다릅니다. 문의 표시, 음수 추가지원금 처리, 월별 부가요금과 자동 계산 할부이자 규칙은 표 편집·고객 견적·서버 검증을 함께 확인해야 합니다.
 
@@ -49,6 +56,10 @@ Spring Boot가 고객 정적 페이지와 React 관리자 앱을 같은 서버�
 | V3 | 관리자 계정, 대소문자 무시 아이디 키, 대표 관리자 제약, 계정 revision |
 | V4 | 감사 기록과 조회 인덱스 |
 | V5 | 가격·내용 JSON 컬럼을 LONGTEXT로 확장 |
+| V6 | 직원 권한·계정 사용 상태 |
+| V7 | 모델 ID 할당·신규 모델·판매 상태 |
+| V8 | 사진 메타데이터·삭제 상태, 익명 일별 관심 통계 |
+| V9 | 계정별 임시 작업·기간 예약 가격표 |
 
 이전 문의/상담 조회 코드는 과거 데이터 이전·보존기간 정리를 위해 남아 있습니다. 현재 고객 화면은 전화·카카오톡 상담을 사용합니다. `IMPORT_PATH`를 지정하면 `ImportRunner`가 시작 시 가져오기를 수행하므로 이전 완료 후 값을 비웁니다. `MigrateLocalData.java`는 새 seed DB만 대상으로 하는 일회성 H2 이전 도구입니다.
 
@@ -60,6 +71,8 @@ Spring Boot가 고객 정적 페이지와 React 관리자 앱을 같은 서버�
 
 ```sh
 node scripts/test-price-grid.mjs
+node scripts/test-price-bulk.mjs
+node scripts/test-catalog-status.mjs
 node scripts/test-main-preview.mjs
 node scripts/test-video-urls.mjs
 ```

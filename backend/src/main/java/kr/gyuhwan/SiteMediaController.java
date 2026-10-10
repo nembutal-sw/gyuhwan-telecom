@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
@@ -28,19 +30,13 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -49,23 +45,21 @@ import java.util.stream.Stream;
 public class SiteMediaController {
  private static final Logger log=LoggerFactory.getLogger(SiteMediaController.class);
  private static final int MAX_IMAGE_BYTES=1_500_000;
- private static final Duration ORPHAN_GRACE=Duration.ofDays(7);
  private static final Pattern MEDIA_NAME=Pattern.compile("[a-f0-9-]{36}\\.(?:png|jpg|webp)");
- private static final Pattern MEDIA_REFERENCE=Pattern.compile("/media/([a-f0-9-]{36}\\.(?:png|jpg|webp))");
  private final Path directory;
  private final long maxStoredBytes;
  private final AuditLogService audit;
- private final JdbcTemplate db;
  private final TokenRegistry registry;
+ private final MediaLibraryService library;
  private final Semaphore decoder=new Semaphore(1);
  private final Object fileLock=new Object();
 
  public SiteMediaController(@Value("${app.media-path:./data/media}") String path,
                             @Value("${app.media-max-bytes:268435456}") long maxStoredBytes,
-                            AuditLogService audit,JdbcTemplate db,TokenRegistry registry){
+                            AuditLogService audit,TokenRegistry registry,MediaLibraryService library){
   directory=Path.of(path).toAbsolutePath().normalize();
   if(maxStoredBytes<MAX_IMAGE_BYTES)throw new IllegalArgumentException("Media storage limit is too small");
-  this.maxStoredBytes=maxStoredBytes;this.audit=audit;this.db=db;this.registry=registry;
+  this.maxStoredBytes=maxStoredBytes;this.audit=audit;this.registry=registry;this.library=library;
  }
 
  record Upload(String fileName,String base64){}
@@ -74,6 +68,7 @@ public class SiteMediaController {
  // 본문·픽셀 수·동시 디코딩·저장 용량을 각각 제한하고 기록 실패 시 파일도 지운다.
  @PostMapping("/api/admin/content/images") Map<String,String> upload(@RequestBody Upload input,Authentication authentication,HttpServletResponse response)throws IOException{
   if(authentication==null||!authentication.isAuthenticated())throw new ApiException(401,"다시 로그인하세요.");
+  AdminAccess.require(authentication,"MEDIA_EDIT");
   Object actor=authentication.getPrincipal();
   String accountId=actor instanceof AdminPrincipal principal?principal.id():authentication.getName();
   if(!registry.uploadAllowed(accountId)){
@@ -102,10 +97,15 @@ public class SiteMediaController {
    enforceStorageLimit(bytes.length);
    Files.write(saved,bytes,StandardOpenOption.CREATE_NEW);
   }
-  try{audit.record("IMAGE_UPLOAD","메인 페이지 사진 · "+name,List.of(AuditLogService.change("image","업로드 사진",null,Map.of("url","/media/"+name,"bytes",bytes.length))));}
-  catch(RuntimeException error){Files.deleteIfExists(saved);throw error;}
+  try{library.register(name,input.fileName(),bytes.length);audit.record("IMAGE_UPLOAD","사진 보관함 · "+name,List.of(AuditLogService.change("image","업로드 사진",null,Map.of("url","/media/"+name,"bytes",bytes.length))));}
+  catch(RuntimeException error){library.unregister(name);Files.deleteIfExists(saved);throw error;}
   return Map.of("url","/media/"+name,"fileName",name);
  }
+
+ @GetMapping("/api/admin/media") Map<String,Object> media(@RequestParam(defaultValue="") String search,@RequestParam(defaultValue="all") String source)throws IOException{return library.list(search,source);}
+ record Rename(String title){}
+ @PatchMapping("/api/admin/media/{id}") Map<String,Boolean> rename(@PathVariable String id,@RequestBody Rename input,Authentication authentication){AdminAccess.require(authentication,"MEDIA_EDIT");if(input==null)throw new IllegalArgumentException("사진 이름을 입력하세요.");library.rename(id,input.title());return Map.of("saved",true);}
+ @DeleteMapping("/api/admin/media/{id}") Map<String,Boolean> remove(@PathVariable String id,Authentication authentication)throws IOException{AdminAccess.require(authentication,"MEDIA_EDIT");synchronized(fileLock){library.delete(id);}return Map.of("deleted",true);}
 
  // PNG/JPEG를 새 픽셀 버퍼와 새 인코더로 작성해 EXIF·GPS·XMP·텍스트 메타데이터를 공개 파일에서 제거한다.
  private static byte[] reencodeImage(byte[] bytes,String extension)throws IOException{
@@ -175,11 +175,10 @@ public class SiteMediaController {
   byte[] clean=out.toByteArray();putLittle(clean,4,clean.length-8);return clean;
  }
 
- // MEDIA_PATH의 업로드 파일 총량을 제한한다. 공간이 부족하면 오래된 미참조 파일부터 정리한다.
+ // 보관함 사진은 사용하지 않아도 남긴다. 공간 부족 시 운영자가 미사용 사진을 명시적으로 삭제한다.
  private void enforceStorageLimit(long upcoming)throws IOException{
   long used=storedBytes();
-  if(used>maxStoredBytes-upcoming){pruneUnusedImagesLocked();used=storedBytes();}
-  if(used>maxStoredBytes-upcoming)throw new ApiException(507,"사진 저장 공간이 가득 찼습니다. 운영자에게 저장 공간을 확인해 달라고 요청해 주세요.");
+  if(used>maxStoredBytes-upcoming)throw new ApiException(507,"사진 저장 공간이 가득 찼습니다. 사진 보관함에서 사용하지 않는 사진을 삭제하거나 저장 공간을 늘려 주세요.");
  }
  private long storedBytes()throws IOException{
   long used=0;
@@ -191,42 +190,16 @@ public class SiteMediaController {
   }
   return used;
  }
- // 매일 정리하되 실패는 로그에 남기고 서버 요청 처리까지 중단하지 않는다.
+ // 기존 업로드 파일을 보관함에 편입한다. 사진 보관함에서 선택해 명시적으로 삭제하기 전까지 유지한다.
  @Scheduled(cron="${app.media-cleanup-cron:0 0 4 * * *}",zone="Asia/Seoul")
  public void scheduledPrune(){
-  try{synchronized(fileLock){if(Files.isDirectory(directory))pruneUnusedImagesLocked();}}
-  catch(Exception error){log.warn("Unused media cleanup failed; no referenced images were intentionally removed",error);}
+  try{synchronized(fileLock){library.backfill();library.removeDeletedFiles();}}
+  catch(Exception error){log.warn("Media library registration failed",error);}
  }
- // 저장 전 편집 중인 사진이 바로 사라지지 않도록 7일 유예한다.
- // 현재 콘텐츠와 가격 정책뿐 아니라 과거 저장본에 쓰인 사진도 복원용으로 보존한다.
- private void pruneUnusedImagesLocked()throws IOException{
-  Instant cutoff=Instant.now().minus(ORPHAN_GRACE);
-  List<Path> candidates=new ArrayList<>();
-  try(Stream<Path> paths=Files.list(directory)){
-   for(Path path:paths.toList())if(MEDIA_NAME.matcher(path.getFileName().toString()).matches()&&Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS)&&Files.getLastModifiedTime(path).toInstant().isBefore(cutoff))candidates.add(path);
-  }
-  if(candidates.isEmpty())return;
-  Set<String> referenced=referencedImages();
-  candidates.sort(Comparator.comparing(Path::toString));
-  for(Path path:candidates)if(!referenced.contains(path.getFileName().toString()))Files.deleteIfExists(path);
- }
- // 네 테이블의 현재/과거 JSON에서 /media/UUID 경로를 찾아 삭제 금지 집합을 만든다.
- private Set<String> referencedImages(){
-  Set<String> referenced=new HashSet<>();
-  for(String table:List.of("site_content","site_content_history","quote_config","config_history")){
-   db.query("SELECT payload FROM "+table,rs->{
-    String payload=rs.getString(1);
-    if(payload==null)return;
-    Matcher links=MEDIA_REFERENCE.matcher(payload);
-    while(links.find())referenced.add(links.group(1));
-   });
-  }
-  return referenced;
- }
-
  // 허용된 서버 생성 파일명과 실제 일반 파일만 공개한다. 브라우저에 MIME 추측을 허용하지 않는다.
  @GetMapping("/media/{fileName}") ResponseEntity<FileSystemResource> image(@PathVariable String fileName){
   if(!MEDIA_NAME.matcher(fileName).matches())throw new ApiException(404,"사진을 찾을 수 없습니다.");
+  if(library.deleted(fileName))throw new ApiException(404,"사진을 찾을 수 없습니다.");
   Path path=directory.resolve(fileName).normalize();
   if(!path.getParent().equals(directory)||!Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS))throw new ApiException(404,"사진을 찾을 수 없습니다.");
   String type=fileName.endsWith(".png")?"image/png":fileName.endsWith(".jpg")?"image/jpeg":"image/webp";

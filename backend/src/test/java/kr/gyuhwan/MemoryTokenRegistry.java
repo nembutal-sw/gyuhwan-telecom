@@ -13,12 +13,14 @@ class MemoryTokenRegistry implements TokenRegistry {
  private final ConcurrentHashMap<String,Token> tokens=new ConcurrentHashMap<>();
  private final ConcurrentHashMap<String,Counter> failedLogins=new ConcurrentHashMap<>();
  private final ConcurrentHashMap<String,Counter> uploads=new ConcurrentHashMap<>();
+ private final ConcurrentHashMap<String,Counter> interest=new ConcurrentHashMap<>();
  public void put(String jti,String account,Duration ttl){tokens.put(jti,new Token(account,Instant.now().plus(ttl)));}
  public String get(String jti){Token token=tokens.get(jti);return token!=null&&token.expiry().isAfter(Instant.now())?token.account():null;}
  public void remove(String jti){tokens.remove(jti);}
  public boolean loginAllowed(String address,String username){return reserve(failedLogins,loginKey(address,username),Duration.ofMinutes(10),20);}
  public void clearLoginFailures(String address,String username){failedLogins.remove(loginKey(address,username));}
  public boolean uploadAllowed(String accountId){return reserve(uploads,accountId,Duration.ofHours(1),30);}
+ public boolean interestAllowed(String address){return reserve(interest,address,Duration.ofMinutes(1),60)&&reserve(interest,"global",Duration.ofMinutes(1),2000);}
  int failedLoginCount(String address,String username){Counter counter=failedLogins.get(loginKey(address,username));return counter==null?0:counter.count();}
  private static String loginKey(String address,String username){return address+"\u0000"+username.toLowerCase(Locale.ROOT);}
  // 한 테스트 JVM의 동시 요청도 compute로 묶어 운영 Redis Lua의 원자적 예약을 흉내 낸다.

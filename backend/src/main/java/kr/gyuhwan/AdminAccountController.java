@@ -20,13 +20,13 @@ public class AdminAccountController {
  private final AdminAccountService accounts;
  private final boolean secure;
  public AdminAccountController(AdminAccountService accounts,@Value("${app.auth.cookie-secure:${COOKIE_SECURE:false}}") boolean secure){this.accounts=accounts;this.secure=secure;}
- record Create(String username,String password){}
- record Update(long revision,String username,String currentPassword,String newPassword){}
+ record Create(String username,String password,List<String> permissions,Boolean enabled,String currentPassword){}
+ record Update(long revision,String username,String currentPassword,String newPassword,List<String> permissions,Boolean enabled){}
  @GetMapping("/me") AdminAccountService.Account me(Authentication authentication){return accounts.me(authentication);}
  @GetMapping AdminAccountService.Account[] list(Authentication authentication){return accounts.list(authentication).toArray(AdminAccountService.Account[]::new);}
- @PostMapping AdminAccountService.Result create(Authentication authentication,@RequestBody Create input){return accounts.create(authentication,input.username(),input.password());}
- @PatchMapping("/me") AdminAccountService.Result self(Authentication authentication,@RequestBody Update input,HttpServletResponse response){return complete(accounts.changeSelf(authentication,input.revision(),input.username(),input.currentPassword(),input.newPassword()),response);}
- @PatchMapping("/{id}") AdminAccountService.Result other(Authentication authentication,@PathVariable String id,@RequestBody Update input,HttpServletResponse response){return complete(accounts.changeOther(authentication,id,input.revision(),input.username(),input.currentPassword(),input.newPassword()),response);}
+ @PostMapping AdminAccountService.Result create(Authentication authentication,@RequestBody Create input){return accounts.create(authentication,input.username(),input.password(),input.permissions(),input.enabled(),input.currentPassword());}
+ @PatchMapping("/me") AdminAccountService.Result self(Authentication authentication,@RequestBody Update input,HttpServletResponse response){return complete(accounts.changeSelf(authentication,input.revision(),input.username(),input.currentPassword(),input.newPassword(),input.permissions(),input.enabled()),response);}
+ @PatchMapping("/{id}") AdminAccountService.Result other(Authentication authentication,@PathVariable String id,@RequestBody Update input,HttpServletResponse response){return complete(accounts.changeOther(authentication,id,input.revision(),input.username(),input.currentPassword(),input.newPassword(),input.permissions(),input.enabled()),response);}
  // 본인 계정의 아이디나 비밀번호가 바뀌면 기존 JWT의 계정 revision이 더 이상 유효하지 않다.
  private AdminAccountService.Result complete(AdminAccountService.Result result,HttpServletResponse response){
   if(result.requiresLogin()){AdminTokenCookies.clear(response,secure);SecurityContextHolder.clearContext();}

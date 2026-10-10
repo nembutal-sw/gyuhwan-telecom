@@ -20,6 +20,8 @@ public class RedisTokenRegistry implements TokenRegistry {
  private static final DefaultRedisScript<Long> LOGIN_ATTEMPT=new DefaultRedisScript<>("local n=tonumber(redis.call('GET',KEYS[1]) or '0'); if n>=20 then return 0 end; n=redis.call('INCR',KEYS[1]); if n==1 then redis.call('EXPIRE',KEYS[1],600) end; return 1",Long.class);
  // 인증된 관리자의 사진 업로드는 계정별 30회/시간으로 제한한다.
  private static final DefaultRedisScript<Long> UPLOAD_ATTEMPT=new DefaultRedisScript<>("local n=tonumber(redis.call('GET',KEYS[1]) or '0'); if n>=30 then return 0 end; n=redis.call('INCR',KEYS[1]); if n==1 then redis.call('EXPIRE',KEYS[1],3600) end; return 1",Long.class);
+ // 같은 출처의 짧은 통계 요청만 받아 분산 인스턴스가 하나의 예산을 공유한다. 카운터는 60초 후 사라진다.
+ private static final DefaultRedisScript<Long> INTEREST_ATTEMPT=new DefaultRedisScript<>("local a=tonumber(redis.call('GET',KEYS[1]) or '0'); local b=tonumber(redis.call('GET',KEYS[2]) or '0'); if a>=60 or b>=2000 then return 0 end; for i=1,2 do local n=redis.call('INCR',KEYS[i]); if n==1 then redis.call('EXPIRE',KEYS[i],60) end end; return 1",Long.class);
  public RedisTokenRegistry(StringRedisTemplate redis,@Value("${app.auth.redis-prefix:gyuhwan:auth:}") String prefix){this.redis=redis;this.prefix=prefix;}
  // JWT 자체가 유효해도 이 JTI와 계정 ID가 Redis에 없으면 인증하지 않는다.
  public void put(String jti,String accountId,Duration ttl){redis.opsForValue().set(prefix+"token:"+jti,accountId,ttl);}
@@ -37,6 +39,7 @@ public class RedisTokenRegistry implements TokenRegistry {
   if(count==null)throw new DataAccessResourceFailureException("Upload limit is unavailable");
   return count==1;
  }
+ public boolean interestAllowed(String remoteAddress){Long count=redis.execute(INTEREST_ATTEMPT,List.of(prefix+"interest:"+digest(remoteAddress),prefix+"interest:global"));if(count==null)throw new DataAccessResourceFailureException("Interest limit is unavailable");return count==1;}
  // 계정명과 접속 주소는 Redis 키에 원문으로 남기지 않는다. 대소문자는 동일 계정으로 센다.
  private String loginKey(String remoteAddress,String username){
   return prefix+"login-attempt:"+digest(remoteAddress+"\u0000"+username.toLowerCase(Locale.ROOT));

@@ -26,7 +26,7 @@ export function calculateQuote(o={},discount='common',months=24){
 // 전체 설정 저장 전에 필드·범위·색상·이미지 용량과 계산 규칙을 최종 확인한다.
 export function validateConfig(c,ids){
  if(!c||typeof c!=='object'||!c.offers||!c.colors||Array.isArray(c.offers)||Array.isArray(c.colors))throw new Error('설정 형식을 확인해 주세요.');
- if(Object.keys(c.offers).length>1000)throw new Error('설정 개수 초과');
+ if(Object.keys(c.offers).length>5400)throw new Error('설정은 5,400개 조건까지 저장할 수 있습니다.');
  const fields=new Set([...amountFields,'planName','planDetails','addonDetails','addonSchedule','supportInquiry','penaltyDetails','terms']);
  for(const [key,o]of Object.entries(c.offers)){
  const [id,carrier,type,discount,...rest]=key.split('|');
@@ -40,7 +40,8 @@ export function validateConfig(c,ids){
  for(const [id,images] of Object.entries(c.colorImages)){
   if(!ids.includes(Number(id))||!images||typeof images!=='object'||Array.isArray(images)||Object.keys(images).length>30)throw new Error('색상 이미지 모델 오류');
   for(const [name,src] of Object.entries(images)){
-   if(!name.trim()||name.length>60||typeof src!=='string'||src.length>40000||!/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src))throw new Error('색상 이미지를 다시 등록해 주세요.');
+   const safePath=typeof src==='string'&&src.length<=2000&&!src.includes('..')&&!src.startsWith('//')&&/^\/?[A-Za-z0-9_%+./-]+\.(?:png|jpg|jpeg|webp|svg)$/.test(src);
+   if(!name.trim()||name.length>60||typeof src!=='string'||src.length>40000||!(/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)||safePath))throw new Error('색상 이미지를 다시 등록해 주세요.');
    total+=src.length;
   }
  }

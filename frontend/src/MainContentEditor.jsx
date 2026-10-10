@@ -2,6 +2,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from './api';
 import MainPagePreview from './MainPagePreview';
+import DraftBar,{useServerDraft} from './useServerDraft.jsx';
+import MediaPicker from './MediaPicker.jsx';
+import './operations.css';
 import SavedDataInfo, {savedAtLabel,historySavedAt} from './SavedDataInfo.jsx';
 import { contentRegions, regionForSection, sectionHints } from '../content-regions.js';
 import './visual-content-editor.css';
@@ -122,7 +125,7 @@ async function blobBase64(blob) {
 function friendlyFieldLabel(field) {
   return field.attribute === 'alt' ? '사진 설명' : field.attribute === 'title' ? '설명' : field.kind === 'image' ? '사진' : field.kind === 'video' ? '동영상 주소' : field.kind === 'url' ? '클릭하면 이동할 주소' : field.kind === 'product' ? '연결할 모델' : field.node && field.kind === 'text' ? /^제목/.test(field.label) ? '제목' : /^보조/.test(field.label) ? '안내 문구' : '문구' : shortLabel(field);
 }
-function ContentField({ field, displayLabel, value, products, disabled, uploading, onChange, onUpload }) {
+function ContentField({ field, displayLabel, value, products, disabled, uploading, onChange, onUpload, onPick, canUpload }) {
   const label = displayLabel || friendlyFieldLabel(field);
   const inputId = `main-content-${encodeURIComponent(field.id)}`;
   const modified = value !== fieldValue(field);
@@ -138,13 +141,14 @@ function ContentField({ field, displayLabel, value, products, disabled, uploadin
       {field.kind === 'image' && <ImagePreview value={value} label={label} />}
       {field.kind === 'video' && <VideoPreview value={value} label={label} />}
       <input id={inputId} inputMode="url" value={value} disabled={disabled} placeholder={field.kind === 'url' ? '연결 주소' : field.kind === 'video' ? 'https://youtu.be/… 또는 https://vimeo.com/…' : '파일 경로 또는 https:// 주소'} onChange={event => onChange(field.id, event.target.value)} />
-      {field.kind === 'image' && <label className="content-upload">새 사진 올리기 · PNG·JPG·WebP<input type="file" accept="image/png,image/jpeg,image/webp" disabled={disabled} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; onUpload(field, file); }} /><span className="hint">{uploading === field.id ? '사진 크기를 조정하고 올리는 중…' : '큰 사진은 가로·세로 최대 2,000px, 1.5MB 이하로 자동 조정합니다.'}</span></label>}
+      {field.kind === 'image' && <button className="media-select-inline" disabled={disabled} onClick={()=>onPick(field)}>사진 보관함에서 선택</button>}
+      {field.kind === 'image' && <label className="content-upload">새 사진 올리기 · PNG·JPG·WebP<input type="file" accept="image/png,image/jpeg,image/webp" disabled={disabled||!canUpload} onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; onUpload(field, file); }} /><span className="hint">{uploading === field.id ? '사진 크기를 조정하고 올리는 중…' : '큰 사진은 가로·세로 최대 2,000px, 1.5MB 이하로 자동 조정합니다.'}</span></label>}
       {field.kind === 'url' && previewSource(value) && <a className="content-url-preview" href={previewSource(value)} target="_blank" rel="noopener noreferrer">연결 주소 열기</a>}
     </>}
   </article>;
 }
 
-export default function MainContentEditor() {
+export default function MainContentEditor({canEdit=true,user,onRequireLogin}) {
   // data는 서버 저장본, drafts는 field.id별 미저장 값이다. 섹션을 옮겨도 drafts는 유지된다.
   const [data, setData] = useState(null);
   const [loadedAt, setLoadedAt] = useState(null);
@@ -161,7 +165,9 @@ export default function MainContentEditor() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [fieldSearch, setFieldSearch] = useState('');
   const [editor, setEditor] = useState(null);
-  const [editing, setEditing] = useState(true);
+  const [editing, setEditing] = useState(canEdit);
+  const [pickField,setPickField]=useState(null);
+  const canUpload=user?.owner||user?.permissions?.includes('MEDIA_EDIT');
   const [focusFieldId, setFocusFieldId] = useState('');
   const [locateTick, setLocateTick] = useState(0);
   const drawer = useRef(null);
@@ -172,13 +178,14 @@ export default function MainContentEditor() {
   const currentValue = field => Object.hasOwn(drafts, field.id) ? drafts[field.id] : fieldValue(field);
   const allChanges = (data?.sections || []).flatMap(item => item.fields.filter(field => currentValue(field) !== fieldValue(field)).map(field => ({ section: item, field, before: fieldValue(field), after: currentValue(field) })));
   const dirty = allChanges.length > 0;
-  const locked = busy || !!uploading || !!pending || !!confirmation || unauthorized;
+  const workspace=useServerDraft({kind:'content',ready:!!data,baseRevision:data?.revision,payload:drafts,dirty,canEdit,onRestore:(payload,base)=>{setDrafts(payload);if(base!==data.revision){setStale(true);setStatus('임시 작업의 기준 공개본이 바뀌었습니다. 최신 내용을 불러와 입력을 유지하고 비교하세요.');}},onDiscard:()=>setDrafts({})});
+  const locked = busy || !!uploading || !!pending || !!confirmation || unauthorized || !!workspace.pending || canEdit&&!workspace.initialized;
   // 서버 저장본에 초안만 덧씌운 사본을 iframe으로 보내며 저장 전에는 공개 API를 바꾸지 않는다.
   const previewSections = useMemo(() => (data?.sections || []).map(item => ({ ...item, fields: item.fields.map(field => Object.hasOwn(drafts, field.id) ? { ...field, value: drafts[field.id] } : field) })), [data, drafts]);
   const modifiedFieldIds = useMemo(() => (data?.sections || []).flatMap(item => item.fields.filter(field => Object.hasOwn(drafts, field.id) && drafts[field.id] !== fieldValue(field)).map(field => field.id)), [data, drafts]);
 
   function reportError(error) {
-    if (error.status === 401) setUnauthorized(true);
+    if (error.status === 401) {setUnauthorized(true);onRequireLogin?.();}
     setStatus(error.message || '요청을 처리하지 못했습니다. 입력한 내용은 유지됩니다.');
   }
   // 최신 저장본 수신 시 loadedAt은 조회 시각으로 새로 기록하고, 충돌 복구라면 초안을 보존한다.
@@ -201,7 +208,14 @@ export default function MainContentEditor() {
       setStatus(keepDrafts ? '최신 저장값을 불러왔습니다. 입력한 수정값을 유지했으니 변경 내용을 다시 확인해 주세요.' : '페이지에서 바꾸고 싶은 문구나 사진을 더블클릭해 주세요.');
     } catch (error) { reportError(error); } finally { setBusy(false); }
   }
-  useEffect(() => { load(); }, []);
+  const currentEditor=useRef(null);
+  currentEditor.current={dirty,revision:data?.revision};
+  useEffect(() => { load();const refresh=()=>Promise.all([api('/api/admin/catalog'),api('/api/admin/content')]).then(([models,latest])=>{
+    setProducts(models.products||[]);
+    if(latest.revision===currentEditor.current?.revision)return;
+    if(currentEditor.current?.dirty){setStale(true);setPending(null);setStatus('모델 관리에서 공개 내용이 변경되었습니다. 입력은 유지됩니다. 최신 내용을 불러와 비교하세요.');}
+    else acceptData(latest);
+  }).catch(reportError);window.addEventListener('catalog-updated',refresh);return()=>window.removeEventListener('catalog-updated',refresh); }, []);
   useEffect(() => {
     const beforeUnload = event => { if (dirty || uploading) { event.preventDefault(); event.returnValue = ''; } };
     window.addEventListener('beforeunload', beforeUnload);
@@ -234,7 +248,7 @@ export default function MainContentEditor() {
   }
   // iframe이 보낸 field ID를 현재 스키마에서 다시 찾아 해당 구역의 편집 서랍을 연다.
   function openContentEditor(message) {
-    if (locked || !editing) return;
+    if (locked || !editing || !canEdit) return;
     const requested = [...new Set(Array.isArray(message.fieldIds) ? message.fieldIds : message.fieldId ? [message.fieldId] : [])];
     const matches = data.sections.flatMap(item => item.fields.filter(field => requested.includes(field.id)).map(field => ({ field, section: item }))).sort((left, right) => requested.indexOf(left.field.id) - requested.indexOf(right.field.id));
     if (!matches.length) { openSectionEditor(message.sectionId); return; }
@@ -245,12 +259,12 @@ export default function MainContentEditor() {
   }
   function closeEditor() { if (uploading) return; setEditor(null); frameApi.current?.focusSelected?.(); }
   function editField(id, value) {
-    if (locked) return;
+    if (locked || !canEdit) return;
     setFocusFieldId(id); setDrafts(current => ({ ...current, [id]: value }));
   }
   // 파일 저장과 고객페이지 반영은 별개다. 반환된 URL을 초안에 넣고 최종 저장 때 공개한다.
   async function uploadImage(field, file) {
-    if (!file || locked) return;
+    if (!file || locked || !canEdit || !canUpload) return;
     setUploading(field.id);
     try {
       const image = await prepareImage(file);
@@ -263,7 +277,7 @@ export default function MainContentEditor() {
   }
   // 검토창에 보여 줄 변경값과 현재 revision을 묶어 저장 중 입력과 요청 내용을 고정한다.
   function prepareSave() {
-    if (locked || stale || !allChanges.length) return;
+    if (locked || stale || !allChanges.length || !canEdit) return;
     setPending({ revision: data.revision, changes: allChanges, values: Object.freeze(Object.fromEntries(allChanges.map(change => [change.field.id, change.after]))) });
   }
   async function refreshHistory() {
@@ -277,7 +291,8 @@ export default function MainContentEditor() {
       const next = await api('/api/admin/content', { method: 'PUT', body: { revision: pending.revision, values: pending.values } });
       const count = pending.changes.length;
       acceptData(next); await refreshHistory();
-      setStatus(`${count}개 변경을 저장했습니다. 고객 메인페이지에 반영되었습니다.`);
+      setStatus(`${count}개 변경을 공개했습니다. 고객 메인페이지에 반영되었습니다.`);
+      await workspace.clear().catch(error=>setStatus(`공개는 완료됐지만 임시 작업 삭제를 확인하지 못했습니다. ${error.message}`));
     } catch (error) {
       if (error.status === 409) { setPending(null); setStale(true); setStatus('다른 관리자가 먼저 저장했습니다. 입력값은 유지됩니다. 최신 내용을 불러와 비교해 주세요.'); }
       else reportError(error);
@@ -299,18 +314,21 @@ export default function MainContentEditor() {
   }
   // 이전 저장본 적용 역시 새 저장 작업이다. 현재 revision을 함께 보내 충돌을 막는다.
   async function restoreVersion(targetRevision) {
-    setBusy(true);
-    try { acceptData(await api('/api/admin/content/restore', { method: 'POST', body: { revision: data.revision, targetRevision } })); await refreshHistory(); setStatus('선택한 저장본으로 되돌렸습니다. 고객 메인페이지에도 반영되었습니다.'); }
+    if(!canEdit)return;setBusy(true);
+    try { acceptData(await api('/api/admin/content/restore', { method: 'POST', body: { revision: data.revision, targetRevision } })); await refreshHistory(); setStatus('선택한 저장본으로 되돌렸습니다. 고객 메인페이지에도 반영되었습니다.'); await workspace.clear().catch(error=>setStatus(`복원은 완료됐지만 임시 작업 삭제를 확인하지 못했습니다. ${error.message}`)); }
     catch (error) { if (error.status === 409) setStale(true); reportError(error); }
     finally { setBusy(false); }
   }
   async function confirmAction() {
     const action = confirmation;
     if (!action || busy) return;
+    setBusy(true);
     setConfirmation(null);
-    if (action.kind === 'discard') { setDrafts({}); setStatus('변경을 취소했습니다. 저장된 페이지를 보여줍니다.'); }
-    if (action.kind === 'reload') await load();
+    try {
+    if (action.kind === 'discard') { await workspace.clear();setDrafts({}); setStatus('변경을 취소했습니다. 저장된 페이지를 보여줍니다.'); }
+    if (action.kind === 'reload') {if(dirty)await workspace.clear();await load();}
     if (action.kind === 'restore') await restoreVersion(action.targetRevision);
+    } catch (error) { reportError(error); } finally { setBusy(false); }
   }
   if (!data) return <section className="panel content-loading"><h1>메인페이지 편집</h1><p role="status">{status}</p>{unauthorized ? <a href="/admin_login">관리자 로그인</a> : <button disabled={busy} onClick={() => load()}>다시 불러오기</button>}</section>;
 
@@ -323,16 +341,17 @@ export default function MainContentEditor() {
   const changedSections = new Set(allChanges.map(change => regionForSection(change.section.id).id)).size;
   return <div className="visual-content-editor">
     <div className="page-heading"><div><p className="eyebrow">PAGE EDITOR</p><h1>메인페이지 편집</h1><p>문구·사진은 더블클릭, 메뉴·이동 버튼은 한 번 클릭해 수정하세요.</p></div><SavedDataInfo updatedAt={data.updatedAt} loadedAt={loadedAt} dirty={dirty}/></div>
+    <DraftBar workspace={workspace} dirty={dirty}/>
     <div className="visual-editor-toolbar">
-      <div className="visual-edit-toggle" aria-label="화면 모드"><button aria-pressed={editing} onClick={() => setEditing(true)}>직접 편집</button><button aria-pressed={!editing} onClick={() => { setEditing(false); setEditor(null); }}>미리보기</button></div>
+      <div className="visual-edit-toggle" aria-label="화면 모드"><button disabled={!canEdit} aria-pressed={editing} onClick={() => setEditing(true)}>직접 편집</button><button aria-pressed={!editing} onClick={() => { setEditing(false); setEditor(null); }}>미리보기</button></div>
       <label className="visual-region-picker">구역 이동<select value={sectionId} disabled={locked} onChange={event => chooseSection(event.target.value)}>{menuRegions.map(region => <optgroup key={region.id} label={region.title}>{region.items.map(item => <option key={item.id} value={item.id}>{region.title}{region.items.length > 1 ? ` · ${sectionHints[item.id] || item.title}` : ''}</option>)}</optgroup>)}</select></label>
       <button type="button" disabled={locked} onClick={() => openSectionEditor()}>이 구역의 모든 항목</button>
-      <div className="visual-save-tools"><span className={dirty ? 'visual-dirty-count' : 'hint'} aria-live="polite">{dirty ? `저장 전 변경 ${allChanges.length}개 · ${changedSections}개 구역` : '저장된 페이지'}</span><button type="button" disabled={!dirty || locked} onClick={discardChanges}>변경 취소</button><button type="button" className="primary" disabled={!dirty || locked || stale} onClick={prepareSave}>{busy ? '저장 중…' : '변경 내용 저장'}</button></div>
+      <div className="visual-save-tools"><span className={dirty ? 'visual-dirty-count' : 'hint'} aria-live="polite">{dirty ? `저장 전 변경 ${allChanges.length}개 · ${changedSections}개 구역` : '저장된 페이지'}</span><button type="button" disabled={!dirty || locked} onClick={discardChanges}>변경 취소</button><button type="button" className="primary" disabled={!dirty || locked || stale || !canEdit} onClick={prepareSave}>{busy ? '공개 중…' : '고객페이지에 공개'}</button></div>
     </div>
     <p role={unauthorized || stale ? 'alert' : 'status'} className={stale || unauthorized ? 'notice visual-status-error' : 'visual-editor-status'}>{status}{unauthorized && <> <a href="/admin_login">다시 로그인</a></>}</p>
     {stale && <div className="content-stale"><p>입력한 내용을 유지하며 최신 저장값을 불러옵니다.</p><button disabled={busy || !!uploading} onClick={() => load(true)}>최신 내용 불러오기 · 입력 유지</button></div>}
     <div className={`visual-editor-workspace${editor ? ' has-drawer' : ''}`}>
-      <MainPagePreview open embedded editMode={editing} editingDisabled={locked} sections={previewSections} sectionId={sectionId} focusFieldId={focusFieldId} selectedFieldId={focusFieldId} modifiedFieldIds={modifiedFieldIds} locateTick={locateTick} onSelectSection={chooseSection} onEditContent={openContentEditor} apiRef={frameApi} />
+      <MainPagePreview open embedded editMode={editing&&canEdit} editingDisabled={locked||!canEdit} sections={previewSections} sectionId={sectionId} focusFieldId={focusFieldId} selectedFieldId={focusFieldId} modifiedFieldIds={modifiedFieldIds} locateTick={locateTick} onSelectSection={chooseSection} onEditContent={openContentEditor} apiRef={frameApi} />
       {editor && <aside ref={drawer} className="visual-edit-drawer panel" aria-label="선택한 부분 수정" onKeyDown={event => { if (event.key === 'Escape' && !pending) { event.preventDefault(); closeEditor(); } }}>
         <div className="visual-drawer-heading"><div><p>{regionForSection(editor.sectionId).title}</p><h2>{editor.fieldIds ? '선택한 부분 수정' : '이 구역의 모든 항목'}</h2></div><button type="button" disabled={!!uploading} onClick={closeEditor} aria-label="편집창 닫기">닫기</button></div>
         <p className="hint">입력하면 옆 페이지에 바로 보입니다. 창을 닫거나 다른 곳을 선택해도 수정값은 유지됩니다.</p>
@@ -341,20 +360,20 @@ export default function MainContentEditor() {
           const related = visibleFields.filter(other => friendlyFieldLabel(other) === friendlyFieldLabel(field));
           const order = related.findIndex(other => other.id === field.id) + 1;
           const displayLabel = !editor.fieldIds ? shortLabel(field) : related.length > 1 ? `${friendlyFieldLabel(field)} · ${order}` : friendlyFieldLabel(field);
-          return <ContentField key={field.id} field={field} displayLabel={displayLabel} value={currentValue(field)} products={products} disabled={locked} uploading={uploading} onChange={editField} onUpload={uploadImage} />;
+          return <ContentField key={field.id} field={field} displayLabel={displayLabel} value={currentValue(field)} products={products} disabled={locked||!canEdit} uploading={uploading} onChange={editField} onUpload={uploadImage} onPick={setPickField} canUpload={canUpload} />;
         })}{!visibleFields.length && <p>일치하는 항목이 없습니다.</p>}</div>
         <div className="visual-drawer-footer"><button type="button" onClick={closeEditor} disabled={!!uploading}>편집 마치기</button><span className="hint">고객 페이지에는 저장 후 반영됩니다.</span></div>
       </aside>}
     </div>
-    <div className="visual-editor-bottom"><a href="/" target="_blank" rel="noopener noreferrer">고객 메인페이지 열기 ↗</a><button disabled={locked} onClick={reload}>고객페이지에 적용된 내용 다시 확인</button>{data.updatedAt && <span className="hint">마지막 저장 {dateLabel(data.updatedAt)}</span>}<details className="visual-history"><summary>이전 저장본으로 되돌리기</summary><div className="panel">{history.length ? history.map(item => <div className="history-row" key={item.revision}><span className="saved-snapshot"><strong>{dateLabel(historySavedAt(item))} 저장본</strong><small>메인페이지 모든 구역의 내용·사진·연결 주소</small></span><button disabled={locked || item.revision === data.revision || stale} onClick={() => restore(item.revision)}>이 저장본으로 되돌리기</button></div>) : <p>이전 저장본이 없습니다.</p>}</div></details></div>
+    <div className="visual-editor-bottom"><a href="/" target="_blank" rel="noopener noreferrer">고객 메인페이지 열기 ↗</a><button disabled={locked} onClick={reload}>고객페이지에 적용된 내용 다시 확인</button>{data.updatedAt && <span className="hint">마지막 저장 {dateLabel(data.updatedAt)}</span>}<details className="visual-history"><summary>이전 저장본으로 되돌리기</summary><div className="panel">{history.length ? history.map(item => <div className="history-row" key={item.revision}><span className="saved-snapshot"><strong>{dateLabel(historySavedAt(item))} 저장본</strong><small>메인페이지 모든 구역의 내용·사진·연결 주소</small></span><button disabled={locked || item.revision === data.revision || stale || !canEdit} onClick={() => restore(item.revision)}>이 저장본으로 되돌리기</button></div>) : <p>이전 저장본이 없습니다.</p>}</div></details></div>
+    {pickField&&<MediaPicker user={user} onRequireLogin={onRequireLogin} onClose={()=>setPickField(null)} onSelect={url=>{editField(pickField.id,url);setPickField(null);}}/>}
     {pending && <dialog ref={review} className="visual-save-dialog" aria-labelledby="visual-save-title" onCancel={event => { event.preventDefault(); if (!busy) setPending(null); }}>
       <div className="visual-save-dialog-heading"><div><h2 id="visual-save-title">변경 내용을 저장할까요?</h2><p>{new Set(pending.changes.map(change => regionForSection(change.section.id).id)).size}개 구역의 {pending.changes.length}개 변경을 한 번에 저장합니다.</p></div><button type="button" disabled={busy} onClick={() => setPending(null)}>닫기</button></div>
       <div className="content-review-list">{pending.changes.map(change => <article key={change.field.id}><p className="content-region-location">{regionForSection(change.section.id).title}</p><h3>{shortLabel(change.field)}</h3><div className="content-review-values"><div><strong>저장된 내용</strong>{change.field.kind === 'image' && <ImagePreview value={change.before} label="기존 사진" />}<pre>{change.before || '빈칸'}</pre></div><div><strong>바뀔 내용</strong>{change.field.kind === 'image' && <ImagePreview value={change.after} label="새 사진" />}<pre>{change.after || '빈칸'}</pre></div></div></article>)}</div>
-      <div className="visual-save-dialog-actions"><button disabled={busy} onClick={() => setPending(null)}>계속 수정</button><button className="primary" disabled={busy || !!uploading || stale} onClick={saveChanges}>{busy ? '저장 중…' : '고객 페이지에 저장'}</button></div>
+      <div className="visual-save-dialog-actions"><button disabled={busy} onClick={() => setPending(null)}>계속 수정</button><button className="primary" disabled={busy || !!uploading || stale} onClick={saveChanges}>{busy ? '공개 중…' : '확인한 내용 고객페이지에 공개'}</button></div>
     </dialog>}
     {confirmation && <dialog ref={confirmDialog} className="visual-save-dialog visual-confirm-dialog" aria-labelledby="visual-confirm-title" onCancel={event => { event.preventDefault(); setConfirmation(null); }}>
       <h2 id="visual-confirm-title">{confirmation.title}</h2><p>{confirmation.message}</p><div className="visual-save-dialog-actions"><button onClick={() => setConfirmation(null)}>계속 수정</button><button className="primary" onClick={confirmAction}>{confirmation.action}</button></div>
     </dialog>}
   </div>;
 }
-

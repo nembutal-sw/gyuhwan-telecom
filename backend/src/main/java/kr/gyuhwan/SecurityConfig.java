@@ -3,12 +3,14 @@ package kr.gyuhwan;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +43,13 @@ public class SecurityConfig {
    .authorizeHttpRequests(authorize->authorize
     .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
     .requestMatchers("/actuator/health/**","/api/auth/csrf","/api/auth/login","/api/auth/logout","/api/public/**","/","/admin_login","/admin","/index.html","/site.html","/privacy","/privacy.html","/purchase-guide","/purchase-guide.html","/*.css","/*.js","/*.mjs","/*.json","/fonts/**","/core/**","/media/**","/assets/**","/official/**","/products/**","/color-swatches/**","/gyuhwan-logo.png","/gyuhwan-site-qr.png","/gyuhwan-store-map.png","/manufacturer-samsung-user.png","/manufacturer-apple-user.png","/carrier-kt-official.png","/carrier-skt-official.png","/carrier-lgu-transparent.png","/carrier-lgu-supplied.png","/favicon.svg","/favicon.ico").permitAll()
+    // 인증된 직원도 맡은 업무의 쓰기 요청만 실행한다. 조회용 가격표·메인 콘텐츠·사진 목록은 공통 열람이다.
+    .requestMatchers(request->writeTo(request,"/api/admin/content/images","/api/admin/media")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"MEDIA_EDIT")))
+    .requestMatchers(request->writeTo(request,"/api/admin/config","/api/admin/policies","/api/admin/schedules","/api/admin/workspaces/price")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"PRICE_EDIT")))
+    .requestMatchers(request->writeTo(request,"/api/admin/content","/api/admin/workspaces/content")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"CONTENT_EDIT")))
+    .requestMatchers(request->writeTo(request,"/api/admin/catalog","/api/admin/models")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"CATALOG_EDIT")))
+    .requestMatchers("/api/admin/audit","/api/admin/audit/**").access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"AUDIT_VIEW")))
+    .requestMatchers("/api/admin/interest","/api/admin/stats","/api/admin/stats/**").access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"STATS_VIEW")))
     // 로그인 화면은 공개하지만 편집용 미리보기와 관리자 데이터는 인증을 요구한다.
     .requestMatchers("/api/admin/**","/api/auth/me","/admin_preview").hasRole("ADMIN")
     .anyRequest().denyAll())
@@ -58,5 +67,11 @@ public class SecurityConfig {
    .requestCache(cache->cache.disable())
    .addFilterAfter(new JwtAuthenticationFilter(tokens,mapper,secure),SecurityContextHolderFilter.class)
    .build();
+ }
+ private static boolean writeTo(HttpServletRequest request,String... prefixes){
+  if(request.getMethod().equals("GET")||request.getMethod().equals("HEAD")||request.getMethod().equals("OPTIONS"))return false;
+  String path=request.getRequestURI().substring(request.getContextPath().length());
+  for(String prefix:prefixes)if(path.equals(prefix)||path.startsWith(prefix+"/"))return true;
+  return false;
  }
 }

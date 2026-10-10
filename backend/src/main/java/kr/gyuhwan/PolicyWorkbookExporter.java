@@ -39,9 +39,9 @@ public class PolicyWorkbookExporter {
     static final String[] MODEL_HEADERS = {
             "ID", "제조사", "모델명", "모델코드", "네트워크", "등록 색상", "색상 기준",
             "기본 이미지 경로", "SKT 모델코드", "KT 모델코드", "LG U+ 모델코드",
-            "SKT 이미지 경로", "KT 이미지 경로", "LG U+ 이미지 경로"
+            "SKT 이미지 경로", "KT 이미지 경로", "LG U+ 이미지 경로", "용량 (GB)", "판매 상태", "고객 페이지 숨김", "색상별 판매 상태"
     };
-    private static final double[] MODEL_WIDTHS = {9, 12, 27, 25, 13, 58, 16, 48, 25, 25, 25, 48, 48, 48};
+    private static final double[] MODEL_WIDTHS = {9, 12, 27, 25, 13, 58, 16, 48, 25, 25, 25, 48, 48, 48, 14, 16, 18, 58};
     private final SiteContentService content;
     private final JsonNode defaultColors;
 
@@ -100,7 +100,7 @@ public class PolicyWorkbookExporter {
             List<Cell> model = identifiers(product);
             JsonNode configured = config.path("colors").path(id);
             boolean useConfigured = configured.isArray() && !configured.isEmpty();
-            JsonNode colors = useConfigured ? configured : defaultColors.path(id).path("colors");
+            JsonNode colors = useConfigured ? configured : product.path("colors").isArray() ? product.path("colors") : defaultColors.path(id).path("colors");
             List<String> names = new ArrayList<>();
             if (colors.isArray()) colors.forEach(color -> names.add(color.asText()));
             model.add(text(String.join(" / ", names)));
@@ -108,6 +108,11 @@ public class PolicyWorkbookExporter {
             model.add(text(value(product.path("image"))));
             for (String carrier : CARRIERS) model.add(text(value(product.path("carrierCodes").path(carrier))));
             for (String carrier : CARRIERS) model.add(text(value(product.path("carrierImages").path(carrier))));
+            model.add(text(value(product.path("capacity"))));
+            model.add(text(statusName(product.path("sellingStatus").asText("selling"))));
+            model.add(text(product.path("hidden").asBoolean()?"예":"아니오"));
+            List<String> colorStates=new ArrayList<>();product.path("colorStatuses").fields().forEachRemaining(e->colorStates.add(e.getKey()+": "+statusName(e.getValue().asText())));
+            model.add(text(String.join(" / ",colorStates)));
             models.add(model);
         }
         // Excel이 요구하는 워크북·관계·스타일·시트 XML을 메모리에서 ZIP으로 묶는다.
@@ -146,6 +151,7 @@ public class PolicyWorkbookExporter {
         row.add(text(value(product.path("network"))));
         return row;
     }
+    private static String statusName(String status){return Map.of("selling","판매 중","sold_out","품절","incoming","입고 예정","discontinued","판매 종료").getOrDefault(status,status);}
 
     private static String savedTime(String stamp) {
         try { return SAVED_TIME.format(Instant.parse(stamp)); }

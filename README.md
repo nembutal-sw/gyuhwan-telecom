@@ -16,6 +16,11 @@ Spring Boot 4.1.1 + React로 고객 메인 페이지와 관리자 화면을 함�
 - 누가 언제 무엇을 바꿨는지 변경 전후 기록과 검색; 금액·목록·안내 문구를 읽기 쉬운 형태로 표시
 - 고객 상담은 전화·카카오톡으로 연결하며 관리자 상담 기록 메뉴 제거
 - 서버 간 로그인 상태를 공유하는 JWT + Redis 인증
+- 계정별 서버 자동 임시 저장·복구, 선택한 가격 행의 일괄 값 지정·증감·요금제 복사
+- 한국 시간 기준 가격 정책 예약·기간 종료 복귀와 수동 변경 충돌 보호
+- 신규 모델 등록, 모델·색상별 판매 상태와 고객 목록 숨김; 최대 300개 모델 관리
+- 직원별 수정·조회 권한, 계정 사용 중지와 기존 로그인 무효화
+- 사진 보관함의 검색·재사용·사용 위치 확인, 익명 모델 조회·전화·카카오톡 클릭 통계
 
 공개 사이트의 이미지 58개(6,286,789바이트)와 Noto Sans KR 폰트 파일은 실행 파일에도 포함되어 있습니다. PNG/JPG/WebP 37개, 색상칩 SVG 20개, SVG 파비콘 1개입니다. `docs/site-images-manifest.json`에서 원본 URL과 SHA-256을 확인할 수 있습니다.
 
@@ -26,6 +31,9 @@ Spring Boot 4.1.1 + React로 고객 메인 페이지와 관리자 화면을 함�
 | 관리자 계정 | MySQL/MariaDB `admin_accounts` 행; 비밀번호는 SHA-256 전처리 후 BCrypt 해시 |
 | 가격·메인 내용 | `quote_config`, `site_content`의 LONGTEXT 컬럼 안에 JSON과 별도 버전·수정 시각 |
 | 이전 버전 | `config_history`, `site_content_history` |
+| 계정별 임시 작업·예약 가격표 | `admin_workspaces`, `policy_schedules`의 JSON·기준 버전·기간·처리 상태 |
+| 신규 모델·판매 상태 | `catalog_model`의 JSON과 `catalog_state`의 모델 ID·버전 |
+| 사진 보관함·관심 통계 | `media_asset` 메타데이터, `interest_daily` 일별 모델·이벤트 집계 |
 | 변경 기록 | `audit_log` 행; 관리자·작업·대상·시각과 JSON 변경 전후 |
 | 로그인 상태·로그인 시도 제한·업로드 제한 | Redis; JWT의 고유 ID·계정 ID·만료 TTL과 요청 제한 카운터 |
 | 업로드 사진 | `MEDIA_PATH`, 기본 `data/media`; DB에는 사진 URL 저장 |
@@ -73,6 +81,7 @@ HS256 JWT를 HttpOnly·SameSite Strict 쿠키로 전달하며 기본 만료는 3
 ## 사용 안내·개발
 
 - [Git Flow 브랜치·PR 운영](docs/GIT_FLOW.md)
+- [매장 운영 기능 7개 사용 안내](docs/OPERATIONS.md)
 - [개발 인수인계·코드 흐름](docs/DEVELOPER_GUIDE.md)
 - [가격표 셀 편집·엑셀 관리](docs/POLICY_FILES.md)
 - [메인 페이지 직접 편집·미리보기](docs/MAIN_CONTENT.md)

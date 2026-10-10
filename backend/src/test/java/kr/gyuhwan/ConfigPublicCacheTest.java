@@ -15,7 +15,7 @@ class ConfigPublicCacheTest {
  @Autowired ConfigService configs;
 
  // 먼저 공개 캐시를 채운 뒤 저장해, 다음 공개 조회에서 이전 설정이 남지 않는지 확인한다.
- @Test @WithMockUser(roles="ADMIN") void successfulSaveImmediatelyInvalidatesPublicCache(){
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"}) void successfulSaveImmediatelyInvalidatesPublicCache(){
   var publicBefore=configs.read(false);
   var adminBefore=configs.read(true);
   long revision=((Number)adminBefore.get("revision")).longValue();
