@@ -94,6 +94,7 @@ public class SiteContentService {
  }
  // 필드 허용 목록과 값 종류를 검사한 뒤 조건부 UPDATE한다. 이전 저장본과 감사 기록도 함께 남긴다.
  private Map<String,Object> save(long expected,JsonNode patch,String action){
+  AdminAccess.requireIfAuthenticated("CONTENT_EDIT");
   if(expected<1||patch==null||!patch.isObject())throw new IllegalArgumentException("저장 버전과 수정 내용을 확인해 주세요.");
   media.validate(patch);
   Snapshot old=snapshot();

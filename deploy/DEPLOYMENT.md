@@ -10,7 +10,9 @@
 node deploy/generate-secrets.mjs --compose-env
 ```
 
-`deploy/secrets/`에 파일 5개, 루트에 `.env`가 생성됩니다. JWT 키는 무작위 32바이트의 base64 표현입니다. 관리자 비밀번호도 무작위로 생성됩니다. 파일 내용을 관리자에게 안전하게 전달하고 `.env`와 `deploy/secrets/`는 버전 관리에 넣지 않습니다. 이미 `.env`가 있다면 생성기를 옵션 없이 실행하고 필요한 값을 기존 환경에 반영합니다.
+`deploy/secrets/`에 파일 5개, 루트에 `.env`가 생성됩니다. JWT 키는 무작위 32바이트의 base64 표현입니다. 관리자 비밀번호는 8~128자 정책의 대문자·소문자·숫자·특수문자를 모두 포함하도록 생성합니다. 파일 내용을 관리자에게 안전하게 전달하고 `.env`와 `deploy/secrets/`는 버전 관리에 넣지 않습니다. 이미 `.env`가 있다면 생성기를 옵션 없이 실행하고 필요한 값을 기존 환경에 반영합니다. 기존 비밀 파일의 관리자 비밀번호가 새 정책에 맞지 않으면 생성기가 실패하며 파일을 자동으로 바꾸지 않습니다.
+
+이미 DB에 `admin/admin` 계정이 있다면 새 `ADMIN_PASSWORD` 환경 변수만 넣어서는 저장된 암호가 바뀌지 않습니다. 공개 전 앱 포트를 루프백에 둔 상태로 `docker compose up -d database redis` 후 `docker compose run --rm --service-ports -e SPRING_PROFILES_ACTIVE=local admin`을 실행합니다. `http://127.0.0.1:8080/admin_login`에서 기존 계정으로 로그인해 **관리자 계정** 화면에서 아이디와 암호를 **둘 다** 바꾸세요. 새 암호는 8자 이상이며 네 문자 종류를 모두 포함해야 합니다. 임시 앱을 종료한 뒤 공개 배포를 시작합니다. 공개 배포의 `SPRING_PROFILES_ACTIVE=prod`는 초기 자격 증명이 남은 계정의 시작을 거부합니다. 새 환경의 최초 계정은 위 생성 암호를 사용합니다.
 
 | 환경 변수 | 용도 |
 | --- | --- |
@@ -26,7 +28,9 @@ node deploy/generate-secrets.mjs --compose-env
 
 DB·Redis·JWT 키와 Redis 접두사는 모든 앱 인스턴스에서 동일하게 설정합니다. Redis는 로그인 상태와 로그인 시도 제한을 공유합니다. JWT 키를 바꾸면 기존 토큰으로 로그인 상태를 이어갈 수 없습니다.
 
-로그인 제한은 접속 IP별 10분에 20회입니다. HTTPS 프록시·Ingress 뒤에서는 `FORWARD_HEADERS_STRATEGY=native`, `TRUSTED_PROXY_REGEX`에 **실제 프록시 주소만** 일치하는 정규식을 설정하세요. 프록시가 전달하는 `X-Forwarded-For`를 이용합니다. 기본값 `none`은 전달 헤더를 신뢰하지 않아 프록시의 접속들이 한 IP로 묶입니다. 신뢰 범위를 전체 주소로 넓히지 말고 앱 접근도 해당 프록시로 제한하세요.
+로그인 제한은 접속 IP·계정별 10분에 20회입니다. 프록시가 있는 배포에서는 실제 프록시의 앱 접속 주소만 `TRUSTED_PROXY_REGEX`에 넣고 `FORWARD_HEADERS_STRATEGY=native`를 사용합니다. 같은 호스트의 Cloudflare Tunnel은 `CF-Connecting-IP`, 일반 프록시는 프록시가 직접 재작성한 클라이언트 IP 헤더를 사용합니다. 기본값 `none`은 전달 헤더를 신뢰하지 않으므로 모든 방문자가 프록시 한 주소로 묶일 수 있습니다. 출처를 확인하지 않은 헤더나 전체 주소를 신뢰하면 로그인 시도 제한을 우회할 수 있습니다.
+
+Tomcat은 요청 헤더 8KiB, 폼 1MiB, 연결 512개·처리 스레드 100개·대기 64개로 제한합니다. 애플리케이션은 JSON 등 요청 본문을 3MB에서 거부합니다. 공개 프록시에도 적절한 요청 크기와 연결 제한을 적용하세요.
 
 ## Compose · MySQL
 
@@ -44,16 +48,22 @@ Cloudflare가 방문자에게 제공하는 HTTPS와 Cloudflare에서 원본 서�
 
 이 프로젝트의 기본 Compose는 로컬 HTTP 확인을 위해 `127.0.0.1:8080`에만 바인딩하고 `COOKIE_SECURE=false`입니다. 같은 호스트에 `cloudflared`를 설치한다면 Cloudflare Tunnel의 공개 호스트 이름을 `http://127.0.0.1:8080`에 연결하고, 공개 배포에는 아래의 추가 설정을 사용합니다. Tunnel은 원본에서 Cloudflare로 나가는 연결을 만들므로 원본의 8080 인바운드 포트를 인터넷에 열지 않아도 됩니다. 브라우저 접속은 HTTPS이므로 앱과 Tunnel 사이가 로컬 HTTP여도 관리자 쿠키는 `Secure`로 설정합니다. [Cloudflare Tunnel 공개 애플리케이션](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/routing-to-tunnel/), [Tunnel 방화벽](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-with-firewall/)
 
+Tunnel 추가 설정은 `TRUSTED_PROXY_REGEX`가 없으면 시작 전에 실패합니다. 앱이 실제로 보는 같은 호스트의 접속 주소를 먼저 확인합니다. `.env`에서 `ACCESS_LOG_ENABLED=true`로 잠시 설정하고 기본 Compose를 실행한 뒤 호스트에서 `curl http://127.0.0.1:8080/actuator/health/liveness`를 호출합니다. `docker compose exec admin sh -c 'cat /tmp/access_log.*.log'`의 마지막 IP가 앱이 본 접속 주소입니다. 점을 `\.`로 이스케이프한 **그 주소 하나만** `.env`의 `TRUSTED_PROXY_REGEX`에 설정합니다(예: `172\.20\.0\.1`). 이 확인 과정에서 기본 Compose는 루프백에만 노출합니다. 확인 후 `ACCESS_LOG_ENABLED=false`로 되돌리고 아래 명령을 실행합니다. Docker 호스트·브리지 구성에 따라 실제 주소는 `127.0.0.1`과 다를 수 있습니다.
+
 ```sh
 docker compose -f compose.yml -f deploy/compose.cloudflare.yml config --quiet
 docker compose -f compose.yml -f deploy/compose.cloudflare.yml up --build -d
 ```
 
-Cloudflare 대시보드에서 이 호스트 이름에 **Always Use HTTPS**를 적용하고 Tunnel의 서비스 URL을 위 로컬 주소로 설정합니다. 연결 후 `https://실제-도메인/admin_login`에서 로그인 응답의 `Set-Cookie`에 `Secure`가 붙는지 확인합니다. Tunnel을 다른 호스트나 컨테이너에 둘 경우, HTTP 구간이 공용망을 지나지 않도록 내부 통신을 보호하고 해당 프록시만 앱에 접근하게 제한합니다. [Cloudflare Always Use HTTPS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/)
+Cloudflare 대시보드에서 **Always Use HTTPS**를 켜고 Tunnel의 서비스 URL을 위 로컬 주소로 설정합니다. Tunnel의 **HTTP Host Header** 재정의는 비워 공개 도메인의 `Host`가 앱까지 전달되게 합니다. HTTPS 응답을 확인한 뒤 **HTTP Strict Transport Security (HSTS)**도 켜고 처음에는 `max-age` 1개월, `includeSubDomains`와 `preload` 끔으로 시작합니다. 해당 구역의 모든 하위 도메인이 HTTPS를 지속적으로 지원할 때만 적용 범위를 넓히세요. 연결 후 `http://실제-도메인/admin_login`의 HTTPS 리다이렉트, HTTPS 응답의 `Strict-Transport-Security`, 로그인 응답 `Set-Cookie`의 `Secure`, 고객 화면의 통계 요청 성공을 확인합니다. Tunnel을 다른 호스트나 컨테이너에 둘 경우, HTTP 구간이 공용망을 지나지 않도록 내부 통신을 보호하고 해당 프록시만 앱에 접근하게 제한합니다. [Cloudflare Always Use HTTPS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/), [Cloudflare HSTS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/http-strict-transport-security/), [Tunnel 원본 설정](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/origin-parameters/)
+
+Tunnel 추가 설정은 실제 Tunnel 접속 주소에서만 Tomcat의 전달 헤더 처리를 켭니다. Cloudflare가 덮어쓰는 `CF-Connecting-IP`로 방문자별 로그인 제한을 적용하고 `X-Forwarded-Proto`로 원래 HTTPS 요청을 인식합니다. 그래야 HTTPS 페이지에서 오는 `/api/public/interest` 요청의 동일 출처 검사도 맞게 동작합니다. 앱 포트를 루프백 밖으로 게시하거나 프록시 주소 정규식을 넓히지 마세요. [Cloudflare HTTP 헤더](https://developers.cloudflare.com/fundamentals/reference/http-headers/), [Spring Boot 프록시 설정](https://docs.spring.io/spring-boot/how-to/webserver.html)
+
+Cloudflare **Security rules → Rate limiting rules**에서 `/api/auth/login` 경로에 방문자 IP 기준 제한을 추가해 원본 부하를 줄입니다. 예를 들어 1분 10회 초과 시 Managed Challenge를 시작점으로 삼고 실제 관리자·공유망 트래픽을 보며 조정합니다. 사용 중인 요금제에서 요청 메서드 조건을 지원하면 POST로 한정합니다. 애플리케이션의 계정별 제한도 유지됩니다. [Cloudflare 속도 제한 규칙](https://developers.cloudflare.com/waf/rate-limiting-rules/create-zone-dashboard/)
 
 Tunnel 대신 일반 Cloudflare 프록시 DNS로 공개한다면 원본 앞에 TLS 리버스 프록시와 유효한 인증서를 두고 Cloudflare **Full (strict)** 모드를 선택합니다. 앱 8080은 해당 프록시에서만 접근할 수 있게 방화벽으로 제한합니다. Cloudflare 인증서가 브라우저에 보인다는 사실만으로 원본 연결의 암호화 또는 직접 접속 차단이 보장되지는 않습니다. [Cloudflare Full (strict)](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/)
 
-프록시 뒤 로그인 시도 제한이 방문자별로 동작하도록 `FORWARD_HEADERS_STRATEGY=native`와 **실제 원본이 관찰한 프록시 접속 주소만** 허용하는 `TRUSTED_PROXY_REGEX`를 설정합니다. 임의 인터넷 주소 전체를 신뢰하면 클라이언트가 전달 헤더를 위조할 수 있습니다. 프록시의 실제 IP를 배포 환경에서 확인한 뒤 정규식을 설정하고, 원본에 직접 들어오는 트래픽을 차단하세요.
+일반 TLS 프록시·Ingress에서는 클라이언트가 보낸 `X-Forwarded-For`·`X-Forwarded-Proto`·`X-Forwarded-Host`를 그대로 넘기지 말고 프록시에서 검증한 원본 IP·HTTPS·공개 호스트 이름으로 재작성합니다. 원래 `Host`도 앱에 공개 호스트 이름으로 전달합니다. 앱은 `FORWARD_HEADERS_STRATEGY=native`와 **실제로 관찰한 프록시 접속 주소만** 허용하는 `TRUSTED_PROXY_REGEX`를 사용합니다. 해당 프록시만 앱에 접근하도록 제한하고, 앱에서 클라이언트별 제한과 HTTPS 동일 출처 요청을 검증하세요. 프록시의 HTTPS 응답에는 `Strict-Transport-Security: max-age=2592000`을 설정하고, 하위 도메인 전체의 HTTPS가 준비되기 전에는 `includeSubDomains`·`preload`를 넣지 않습니다.
 
 MySQL은 `database_mysql`, Redis는 `redis`, 업로드 사진은 `media` 볼륨에 저장합니다. `docker compose down`은 볼륨을 보존합니다. DB와 사진 볼륨은 함께 백업하고 복구 후 `/actuator/health/readiness`와 저장된 사진을 확인합니다. 태그를 갱신할 때 실제 운영 이미지의 버전과 digest를 기록합니다.
 

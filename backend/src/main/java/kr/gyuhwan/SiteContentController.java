@@ -14,8 +14,8 @@ public class SiteContentController {
  @GetMapping("/api/public/content/data/{resource}") JsonNode resource(@PathVariable String resource){return service.resource(resource);}
  // 부분 수정(values)도 revision을 요구해 동시 편집에서 덮어쓰기를 막는다.
  record Save(long revision,JsonNode values){}
- @PutMapping("/api/admin/content") Map<String,Object> save(@RequestBody Save input){return service.save(input.revision(),input.values());}
+ @PutMapping("/api/admin/content") Map<String,Object> save(@RequestBody Save input){AdminAccess.require("CONTENT_EDIT");return service.save(input.revision(),input.values());}
  @GetMapping("/api/admin/content/history") List<Map<String,Object>> history(){return service.history();}
  record Restore(long revision,long targetRevision){}
- @PostMapping("/api/admin/content/restore") Map<String,Object> restore(@RequestBody Restore input)throws Exception{return service.restore(input.revision(),input.targetRevision());}
+ @PostMapping("/api/admin/content/restore") Map<String,Object> restore(@RequestBody Restore input)throws Exception{AdminAccess.require("CONTENT_EDIT");return service.restore(input.revision(),input.targetRevision());}
 }

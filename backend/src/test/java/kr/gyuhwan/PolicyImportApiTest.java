@@ -30,7 +30,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@org.springframework.test.context.ActiveProfiles("test") @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:policy-import-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=test-only-admin-password-long","app.retention-cron=-"})
+@org.springframework.test.context.ActiveProfiles("test") @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:policy-import-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"})
 @AutoConfigureMockMvc
 /** 관리자 엑셀 가져오기의 미리보기, 부분 갱신, 입력 검증과 버전 충돌을 검증한다. */
 class PolicyImportApiTest {

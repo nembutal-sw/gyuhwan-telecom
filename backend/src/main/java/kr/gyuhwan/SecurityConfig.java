@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -18,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 /** 공개 화면과 관리자 API의 경계, CSRF, 쿠키·프레임 보안 헤더를 정의한다. */
 @Configuration
@@ -48,10 +51,17 @@ public class SecurityConfig {
     .requestMatchers(request->writeTo(request,"/api/admin/config","/api/admin/policies","/api/admin/schedules","/api/admin/workspaces/price")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"PRICE_EDIT")))
     .requestMatchers(request->writeTo(request,"/api/admin/content","/api/admin/workspaces/content")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"CONTENT_EDIT")))
     .requestMatchers(request->writeTo(request,"/api/admin/catalog","/api/admin/models")).access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"CATALOG_EDIT")))
+    // 초기 자격 증명을 쓰는 계정은 본인 정보와 자격 증명 변경만 가능하다.
+    // 이 두 경로는 아래의 일반 관리자 경로보다 먼저 검사한다.
+    .requestMatchers(HttpMethod.GET,"/api/admin/accounts/me").hasRole("ADMIN")
+    .requestMatchers(HttpMethod.PATCH,"/api/admin/accounts/me").hasRole("ADMIN")
+    .requestMatchers("/api/admin/inquiries","/api/admin/inquiries/**","/api/admin/consultations","/api/admin/consultations/**").access((authentication,context)->new AuthorizationDecision(AdminAccess.owner(authentication.get())))
     .requestMatchers("/api/admin/audit","/api/admin/audit/**").access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"AUDIT_VIEW")))
     .requestMatchers("/api/admin/interest","/api/admin/stats","/api/admin/stats/**").access((authentication,context)->new AuthorizationDecision(AdminAccess.can(authentication.get(),"STATS_VIEW")))
     // 로그인 화면은 공개하지만 편집용 미리보기와 관리자 데이터는 인증을 요구한다.
-    .requestMatchers("/api/admin/**","/api/auth/me","/admin_preview").hasRole("ADMIN")
+    .requestMatchers("/api/admin/**").access((authentication,context)->new AuthorizationDecision(adminAllowed(authentication.get())))
+    .requestMatchers("/api/auth/me").hasRole("ADMIN")
+    .requestMatchers("/admin_preview").access((authentication,context)->new AuthorizationDecision(adminAllowed(authentication.get())))
     .anyRequest().denyAll())
    .formLogin(login->login.disable())
    .logout(logout->logout.disable())
@@ -70,8 +80,15 @@ public class SecurityConfig {
  }
  private static boolean writeTo(HttpServletRequest request,String... prefixes){
   if(request.getMethod().equals("GET")||request.getMethod().equals("HEAD")||request.getMethod().equals("OPTIONS"))return false;
-  String path=request.getRequestURI().substring(request.getContextPath().length());
-  for(String prefix:prefixes)if(path.equals(prefix)||path.startsWith(prefix+"/"))return true;
+  // MVC와 같은 PathPattern parser를 사용해 %63onfig 같은 인코딩 경로도 검사한다.
+  for(String prefix:prefixes){
+   if(PathPatternRequestMatcher.pathPattern(prefix).matches(request)||PathPatternRequestMatcher.pathPattern(prefix+"/**").matches(request))return true;
+  }
   return false;
+ }
+ private static boolean adminAllowed(Authentication authentication){
+  return authentication!=null&&authentication.isAuthenticated()
+   &&authentication.getAuthorities().stream().anyMatch(authority->authority.getAuthority().equals("ROLE_ADMIN"))
+   &&!(authentication.getPrincipal() instanceof AdminPrincipal principal&&principal.mustChangeCredentials());
  }
 }

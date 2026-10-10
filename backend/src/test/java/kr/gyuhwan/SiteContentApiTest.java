@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 
-@org.springframework.test.context.ActiveProfiles("test") @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:content-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=test-only-admin-password-long","app.retention-cron=-","app.media-path=./target/content-test-media"})
+@org.springframework.test.context.ActiveProfiles("test") @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:content-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-","app.media-path=./target/content-test-media"})
 @AutoConfigureMockMvc
 /** 사이트 콘텐츠와 미디어 API의 권한, 버전·이력, 입력 검증 및 공개 리소스 동작을 검증한다. */
 class SiteContentApiTest {

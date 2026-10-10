@@ -19,11 +19,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /** CSRF 실패 요청이 로그인 제한에 포함되지 않고 공유 접속 주소의 다른 계정은 로그인되는지 확인한다. */
 @ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:login-limit-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=test-only-admin-password-long","app.retention-cron=-"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:login-limit-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"})
 @AutoConfigureMockMvc
 class LoginRateLimitApiTest {
  private static final String ADDRESS="203.0.113.219";
- private static final String PASSWORD="test-only-admin-password-long";
+ private static final String PASSWORD="Test-only-admin-password-long1!";
  @Autowired MockMvc mvc;
  @Autowired MemoryTokenRegistry registry;
  @Autowired JdbcTemplate db;

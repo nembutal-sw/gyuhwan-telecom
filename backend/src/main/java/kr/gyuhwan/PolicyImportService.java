@@ -64,11 +64,11 @@ public class PolicyImportService {
  public Preview preview(long revision,JsonNode policy){return prepare(revision,policy).preview();}
 
  // 미리보기는 검증과 차이 계산만 수행하며 DB 쓰기는 하지 않는다.
- public Preview previewExcel(long revision,String fileName,String base64){return preview(revision,excelPolicy(revision,fileName,base64));}
+ public Preview previewExcel(long revision,String fileName,String base64){AdminAccess.requireIfAuthenticated("PRICE_EDIT");return preview(revision,excelPolicy(revision,fileName,base64));}
 
  // 적용할 때 파일을 다시 읽고 현재 revision도 다시 확인한다. 미리보기 후 다른 저장이 생기면 409다.
  @Transactional
- public Result importExcel(long revision,String fileName,String base64){return importPolicy(revision,excelPolicy(revision,fileName,base64));}
+ public Result importExcel(long revision,String fileName,String base64){AdminAccess.requireIfAuthenticated("PRICE_EDIT");return importPolicy(revision,excelPolicy(revision,fileName,base64));}
 
  private JsonNode excelPolicy(long revision,String fileName,String base64){
   require(revision>=1,"저장 버전 오류");

@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,35 +27,53 @@ public class AdminAccountService implements UserDetailsService {
  private final JdbcTemplate db;
  private final PasswordEncoder passwords;
  private final AuditLogService audit;
+ private final Environment environment;
  private final String bootstrapUsername;
  private String bootstrapPassword;
 
- public AdminAccountService(JdbcTemplate db,PasswordEncoder passwords,AuditLogService audit,@Value("${app.admin-user}") String username,@Value("${app.admin-password}") String password){this.db=db;this.passwords=passwords;this.audit=audit;this.bootstrapUsername=username;this.bootstrapPassword=password;}
+ public AdminAccountService(JdbcTemplate db,PasswordEncoder passwords,AuditLogService audit,Environment environment,@Value("${app.admin-user}") String username,@Value("${app.admin-password}") String password){this.db=db;this.passwords=passwords;this.audit=audit;this.environment=environment;this.bootstrapUsername=username;this.bootstrapPassword=password;}
  // 초기 계정 비밀번호는 최초 생성에만 사용하고 이 서비스의 참조를 해제한다.
- @PostConstruct void seed(){bootstrap(bootstrapUsername,bootstrapPassword);bootstrapPassword=null;}
+ @PostConstruct void seed(){try{bootstrap(bootstrapUsername,bootstrapPassword);upgradeDefaultCredentials();}finally{bootstrapPassword=null;}}
 
  /** 계정이 이미 있으면 환경 변수의 초기 자격 증명으로 기존 계정을 덮어쓰지 않는다. */
  public void bootstrap(String username,String password){
   if(db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class)>0)return;
-  validateUsername(username);validatePassword(password);
+  validateUsername(username);
+  boolean initialDefault=isInitialDefault(username,password);
+  if(initialDefault&&production())throw new IllegalStateException("운영 환경에서 기본 관리자 자격 증명을 사용할 수 없습니다. 공개 전에 아이디와 비밀번호를 변경하세요.");
+  if(!initialDefault)validatePassword(password);
   String stamp=Times.stamp(Instant.now());
-  try{db.update("INSERT INTO admin_accounts(id,username,username_key,password_hash,is_owner,owner_slot,revision,created_at,updated_at) VALUES(?,?,?,?,TRUE,1,1,?,?)",UUID.randomUUID().toString(),username,key(username),passwords.encode(password),stamp,stamp);}
+  try{db.update("INSERT INTO admin_accounts(id,username,username_key,password_hash,is_owner,owner_slot,revision,created_at,updated_at,must_change_credentials) VALUES(?,?,?,?,TRUE,1,1,?,?,?)",UUID.randomUUID().toString(),username,key(username),passwords.encode(password),stamp,stamp,initialDefault);}
   catch(DuplicateKeyException e){if(db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class)==0)throw e;}
  }
 
- public record Account(String id,String username,boolean owner,long revision,boolean enabled,List<String> permissions){}
+ /** 이전 버전에서 생성된 admin/admin만 확인한다. 이미 변경한 계정에는 영향을 주지 않는다. */
+ private void upgradeDefaultCredentials(){
+  record Candidate(String id,String hash,long revision,boolean flagged){}
+  List<Candidate> candidates=db.query("SELECT id,password_hash,revision,must_change_credentials FROM admin_accounts WHERE is_owner=TRUE AND username_key='admin'",(rs,n)->new Candidate(rs.getString(1),rs.getString(2),rs.getLong(3),rs.getBoolean(4)));
+  for(Candidate candidate:candidates){
+   if(!passwords.matches("admin",candidate.hash()))continue;
+   if(production())throw new IllegalStateException("운영 환경에서 기본 관리자 자격 증명을 사용할 수 없습니다. 공개 전에 아이디와 비밀번호를 변경하세요.");
+   if(candidate.flagged())continue;
+   db.update("UPDATE admin_accounts SET must_change_credentials=TRUE,revision=revision+1,updated_at=? WHERE id=? AND revision=? AND password_hash=? AND must_change_credentials=FALSE",Times.stamp(Instant.now()),candidate.id(),candidate.revision(),candidate.hash());
+  }
+ }
+ private boolean production(){return environment.acceptsProfiles(Profiles.of("prod"));}
+ private static boolean isInitialDefault(String username,String password){return "admin".equalsIgnoreCase(username)&&"admin".equals(password);}
+
+ public record Account(String id,String username,boolean owner,long revision,boolean enabled,List<String> permissions,boolean mustChangeCredentials){}
  public record Result(String id,String username,boolean owner,long revision,boolean requiresLogin,boolean enabled,List<String> permissions){}
 
  // username_key를 통해 아이디 대소문자를 구분하지 않되 입력 형식은 먼저 제한한다.
  @Override public AdminPrincipal loadUserByUsername(String username)throws UsernameNotFoundException{
   if(username==null||!username.matches("[A-Za-z0-9._-]{3,50}"))throw new UsernameNotFoundException("관리자 계정을 찾을 수 없습니다.");
-  List<AdminPrincipal> found=db.query("SELECT id,username,password_hash,is_owner,revision,enabled,permissions FROM admin_accounts WHERE username_key=?",(rs,n)->new AdminPrincipal(rs.getString(1),rs.getString(2),rs.getString(3),rs.getBoolean(4),rs.getLong(5),rs.getBoolean(6),storedPermissions(rs.getString(7))),key(username));
+  List<AdminPrincipal> found=db.query("SELECT id,username,password_hash,is_owner,revision,enabled,permissions,must_change_credentials FROM admin_accounts WHERE username_key=?",(rs,n)->new AdminPrincipal(rs.getString(1),rs.getString(2),rs.getString(3),rs.getBoolean(4),rs.getLong(5),rs.getBoolean(6),storedPermissions(rs.getString(7)),rs.getBoolean(8)),key(username));
   if(found.isEmpty())throw new UsernameNotFoundException("관리자 계정을 찾을 수 없습니다.");
   return found.get(0);
  }
 
  public AdminPrincipal principalById(String id){
-  List<AdminPrincipal> found=db.query("SELECT id,username,password_hash,is_owner,revision,enabled,permissions FROM admin_accounts WHERE id=?",(rs,n)->new AdminPrincipal(rs.getString(1),rs.getString(2),rs.getString(3),rs.getBoolean(4),rs.getLong(5),rs.getBoolean(6),storedPermissions(rs.getString(7))),id);
+  List<AdminPrincipal> found=db.query("SELECT id,username,password_hash,is_owner,revision,enabled,permissions,must_change_credentials FROM admin_accounts WHERE id=?",(rs,n)->new AdminPrincipal(rs.getString(1),rs.getString(2),rs.getString(3),rs.getBoolean(4),rs.getLong(5),rs.getBoolean(6),storedPermissions(rs.getString(7)),rs.getBoolean(8)),id);
   if(found.isEmpty())throw new UsernameNotFoundException("관리자 계정을 찾을 수 없습니다.");
   return found.get(0);
  }
@@ -63,16 +83,13 @@ public class AdminAccountService implements UserDetailsService {
  public Account me(Authentication authentication){return account(actor(authentication));}
  public List<Account> list(Authentication authentication){
   owner(authentication);
-  return db.query("SELECT id,username,is_owner,revision,enabled,permissions FROM admin_accounts ORDER BY is_owner DESC,username_key",(rs,n)->new Account(rs.getString(1),rs.getString(2),rs.getBoolean(3),rs.getLong(4),rs.getBoolean(5),rs.getBoolean(3)?AdminAccess.ALL:storedPermissions(rs.getString(6))));
+  return db.query("SELECT id,username,is_owner,revision,enabled,permissions,must_change_credentials FROM admin_accounts ORDER BY is_owner DESC,username_key",(rs,n)->new Account(rs.getString(1),rs.getString(2),rs.getBoolean(3),rs.getLong(4),rs.getBoolean(5),rs.getBoolean(3)?AdminAccess.ALL:storedPermissions(rs.getString(6)),rs.getBoolean(7)));
  }
 
  /** 대표 관리자만 추가할 수 있다. 감사 기록 저장에 실패하면 계정 생성도 롤백한다. */
- @Transactional public Result create(Authentication authentication,String username,String password){
-  return create(authentication,username,password,null,null,null);
- }
  @Transactional public Result create(Authentication authentication,String username,String password,List<String> requestedPermissions,Boolean requestedEnabled,String currentPassword){
   AdminPrincipal actor=owner(authentication);validateUsername(username);validatePassword(password);
-  if(requestedPermissions!=null||requestedEnabled!=null)verifyCurrent(actor,currentPassword);
+  verifyCurrent(actor,currentPassword);
   List<String> permissions=requestedPermissions==null?AdminAccess.ALL:validatePermissions(requestedPermissions);
   boolean enabled=requestedEnabled==null||requestedEnabled;
   String id=UUID.randomUUID().toString(),stamp=Times.stamp(Instant.now());
@@ -105,6 +122,7 @@ public class AdminAccountService implements UserDetailsService {
  // 입력 revision과 DB 조건을 함께 검사해 다른 관리자의 동시 변경을 덮어쓰지 않는다.
  // 비밀번호 원문과 해시는 감사 기록에 남기지 않는다.
  private Result change(AdminPrincipal actor,AdminPrincipal target,long revision,String username,String currentPassword,String newPassword,List<String> requestedPermissions,Boolean requestedEnabled){
+  if(actor.mustChangeCredentials()&&!target.id().equals(actor.id()))throw new ApiException(403,"먼저 기본 관리자 아이디와 비밀번호를 변경하세요.");
   if(revision<1)throw new IllegalArgumentException("계정 버전 오류");
   if(target.revision()!=revision)throw conflict();
   verifyCurrent(actor,currentPassword);validateUsername(username);
@@ -116,10 +134,11 @@ public class AdminAccountService implements UserDetailsService {
   boolean hasPassword=newPassword!=null&&!newPassword.isEmpty();
   if(hasPassword)validatePassword(newPassword);
   boolean renamed=!target.getUsername().equals(username),passwordChanged=hasPassword&&!passwords.matches(newPassword,target.getPassword());
+  if(target.mustChangeCredentials()&&(!target.id().equals(actor.id())||key(target.getUsername()).equals(key(username))||!passwordChanged))throw new IllegalArgumentException("기본 관리자 아이디와 비밀번호를 모두 새로운 값으로 변경하세요.");
   if(!renamed&&!passwordChanged&&!permissionChanged&&!enabledChanged)return new Result(target.id(),target.getUsername(),target.owner(),target.revision(),false,target.isEnabled(),target.permissions());
   String hash=passwordChanged?passwords.encode(newPassword):target.getPassword();
   try{
-   if(db.update("UPDATE admin_accounts SET username=?,username_key=?,password_hash=?,permissions=?,enabled=?,revision=revision+1,updated_at=? WHERE id=? AND revision=?",username,key(username),hash,String.join(",",permissions),enabled,Times.stamp(Instant.now()),target.id(),revision)!=1)throw conflict();
+   if(db.update("UPDATE admin_accounts SET username=?,username_key=?,password_hash=?,permissions=?,enabled=?,must_change_credentials=FALSE,revision=revision+1,updated_at=? WHERE id=? AND revision=?",username,key(username),hash,String.join(",",permissions),enabled,Times.stamp(Instant.now()),target.id(),revision)!=1)throw conflict();
   }catch(DuplicateKeyException e){throw duplicate();}
   List<Map<String,Object>> changes=new ArrayList<>();
   if(renamed)changes.add(change("username","아이디",target.getUsername(),username));
@@ -138,15 +157,19 @@ public class AdminAccountService implements UserDetailsService {
   if(!stored.isEnabled()||stored.revision()!=principal.revision())throw new ApiException(401,"계정 정보가 변경되었습니다. 다시 로그인하세요.");
   return stored;
  }
- private AdminPrincipal owner(Authentication authentication){AdminPrincipal actor=actor(authentication);if(!actor.owner())throw new ApiException(403,"대표 관리자만 다른 관리자 계정을 관리할 수 있습니다.");return actor;}
+ private AdminPrincipal owner(Authentication authentication){AdminPrincipal actor=actor(authentication);if(actor.mustChangeCredentials())throw new ApiException(403,"먼저 기본 관리자 아이디와 비밀번호를 변경하세요.");if(!actor.owner())throw new ApiException(403,"대표 관리자만 다른 관리자 계정을 관리할 수 있습니다.");return actor;}
  private void verifyCurrent(AdminPrincipal actor,String current){if(current==null||current.length()>128||!passwords.matches(current,actor.getPassword()))throw new IllegalArgumentException("현재 비밀번호를 확인하세요.");}
- private static Account account(AdminPrincipal principal){return new Account(principal.id(),principal.getUsername(),principal.owner(),principal.revision(),principal.isEnabled(),principal.permissions());}
+ private static Account account(AdminPrincipal principal){return new Account(principal.id(),principal.getUsername(),principal.owner(),principal.revision(),principal.isEnabled(),principal.permissions(),principal.mustChangeCredentials());}
  // 빈 목록은 조회 전용 계정이다. 저장 순서를 고정해 같은 권한 배열의 순서 차이는 변경으로 보지 않는다.
  private static List<String> validatePermissions(List<String> permissions){if(permissions.size()>AdminAccess.ALL.size()||permissions.stream().anyMatch(permission->permission==null||!AdminAccess.ALL.contains(permission))||permissions.stream().distinct().count()!=permissions.size())throw new IllegalArgumentException("알 수 없거나 중복된 업무 권한입니다.");return AdminAccess.ALL.stream().filter(permissions::contains).toList();}
  private static List<String> storedPermissions(String permissions){if(permissions==null||permissions.isEmpty())return List.of();List<String> values=Arrays.asList(permissions.split(","));return AdminAccess.ALL.stream().filter(values::contains).toList();}
  private static List<String> permissionLabels(List<String> permissions){return permissions.stream().map(permission->switch(permission){case "PRICE_EDIT"->"가격표 수정";case "CONTENT_EDIT"->"메인페이지 수정";case "CATALOG_EDIT"->"모델 등록·판매 상태";case "MEDIA_EDIT"->"사진 보관함 수정";case "STATS_VIEW"->"관심 통계 조회";case "AUDIT_VIEW"->"수정 기록 조회";default->permission;}).toList();}
  private static void validateUsername(String username){if(username==null||!username.matches("[A-Za-z0-9._-]{3,50}"))throw new IllegalArgumentException("아이디는 영문·숫자·점·밑줄·하이픈 3~50자로 입력하세요.");}
- private static void validatePassword(String password){if(password==null||password.length()<16||password.length()>128||password.isBlank())throw new IllegalArgumentException("비밀번호는 16~128자로 입력하세요.");}
+ private static void validatePassword(String password){
+  boolean upper=false,lower=false,digit=false,special=false;
+  if(password!=null)for(int i=0;i<password.length();i++){char c=password.charAt(i);upper|=c>='A'&&c<='Z';lower|=c>='a'&&c<='z';digit|=c>='0'&&c<='9';special|=(c>=33&&c<=47)||(c>=58&&c<=64)||(c>=91&&c<=96)||(c>=123&&c<=126);}
+  if(password==null||password.length()<8||password.length()>128||!upper||!lower||!digit||!special)throw new IllegalArgumentException("비밀번호는 8~128자이며 영문 대문자·소문자·숫자·영문 키보드 특수문자를 각각 1자 이상 포함해야 합니다.");
+ }
  private static String key(String username){return username.toLowerCase(Locale.ROOT);}
  private static String target(String id,String username){return "관리자 계정 #"+id+" · "+username;}
  private static Map<String,Object> change(String field,String label,Object before,Object after){Map<String,Object> change=new LinkedHashMap<>();change.put("field",field);change.put("label",label);change.put("before",before);change.put("after",after);return change;}

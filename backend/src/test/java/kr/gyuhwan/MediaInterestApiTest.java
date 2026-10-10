@@ -17,7 +17,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 /** 사진 복원에 필요한 참조 보존과 비개인 통계의 이벤트·출처·권한 경계를 검증한다. */
 @org.springframework.test.context.ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:media-interest;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=test-only-admin-password-long","app.retention-cron=-","app.media-path=./target/media-interest-test"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:media-interest;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-","app.media-path=./target/media-interest-test"})
 @AutoConfigureMockMvc
 class MediaInterestApiTest {
  @Autowired MockMvc mvc;@Autowired JdbcTemplate db;@Autowired ObjectMapper mapper;@Autowired SiteContentService content;@Autowired CatalogService catalog;@Autowired InterestService interest;

@@ -21,9 +21,9 @@ import static org.mockito.Mockito.doThrow;
 
 /** 감사 기록 저장에 실패했을 때 계정 변경도 함께 롤백되는지 검증한다. */
 @ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:account-rollback-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=test-only-admin-password-long","app.retention-cron=-"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:account-rollback-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"})
 class AdminAccountRollbackTest {
- private static final String PASSWORD="test-only-admin-password-long";
+ private static final String PASSWORD="Test-only-admin-password-long1!";
  @Autowired JdbcTemplate db;
  @Autowired AdminAccountService accounts;
  @MockitoSpyBean AuditLogService audit;
@@ -38,12 +38,12 @@ class AdminAccountRollbackTest {
  @AfterEach void clean(){SecurityContextHolder.clearContext();}
 
  @Test void failedAuditRollsBackAdministratorCreation(){
-  assertThrows(DataAccessResourceFailureException.class,()->accounts.create(owner,"new-admin","new-admin-test-password-long"));
+  assertThrows(DataAccessResourceFailureException.class,()->accounts.create(owner,"new-admin","New-admin-test-password-long1!",null,null,PASSWORD));
   assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
  }
  @Test void failedAuditRollsBackUsernamePasswordAndCredentialVersionTogether(){
   Map<String,Object> before=db.queryForMap("SELECT * FROM admin_accounts");
-  assertThrows(DataAccessResourceFailureException.class,()->accounts.changeSelf(owner,1,"renamed-owner",PASSWORD,"new-owner-test-password-long"));
+  assertThrows(DataAccessResourceFailureException.class,()->accounts.changeSelf(owner,1,"renamed-owner",PASSWORD,"New-owner-test-password-long1!"));
   assertEquals(before,db.queryForMap("SELECT * FROM admin_accounts"));
   assertTrue(accounts.current((AdminPrincipal)owner.getPrincipal()));
  }

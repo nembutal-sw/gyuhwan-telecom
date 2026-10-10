@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockCookie;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,15 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /** 실제 로그인·계정 API에서 권한, CSRF, 비밀번호 변경 뒤 JWT 무효화와 감사 기록 마스킹을 확인한다. */
 @ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:accounts-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=test-only-admin-password-long","app.retention-cron=-"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:accounts-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"})
 @AutoConfigureMockMvc
 class AdminAccountApiTest {
- private static final String OWNER_PASSWORD="test-only-admin-password-long",STAFF_PASSWORD="test-only-staff-password-long",NEW_PASSWORD="new-test-only-password-long";
+ private static final String OWNER_PASSWORD="Test-only-admin-password-long1!",STAFF_PASSWORD="Test-only-staff-password-long1!",NEW_PASSWORD="New-test-only-password-long1!";
  private static final AtomicInteger LOGIN_REQUEST=new AtomicInteger();
  @Autowired MockMvc mvc;
  @Autowired ObjectMapper mapper;
  @Autowired JdbcTemplate db;
  @Autowired AdminAccountService accounts;
+ @Autowired PasswordEncoder passwords;
+ @Autowired AuditLogService audit;
 
  @BeforeEach void reset(){db.update("DELETE FROM admin_accounts");accounts.bootstrap("admin",OWNER_PASSWORD);}
 
@@ -42,12 +46,74 @@ class AdminAccountApiTest {
   Map<String,Object> before=db.queryForMap("SELECT * FROM admin_accounts");
   String hash=String.valueOf(before.get("password_hash"));
   assertTrue(hash.startsWith("{bcrypt-sha256}$2"));assertFalse(hash.contains(OWNER_PASSWORD));
-  accounts.bootstrap("different-owner","changed-environment-password-long");
+  accounts.bootstrap("different-owner","Changed-environment-password-long1!");
   accounts.bootstrap("","");
   assertEquals(before,db.queryForMap("SELECT * FROM admin_accounts"));
   assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
   Cookie owner=login("ADMIN",OWNER_PASSWORD);
   mvc.perform(get("/api/auth/me").cookie(owner)).andExpect(status().isOk()).andExpect(jsonPath("$.username").value("admin")).andExpect(jsonPath("$.owner").value(true)).andExpect(jsonPath("$.revision").value(1));
+  assertFalse(accounts.loadUserByUsername("admin").mustChangeCredentials());
+ }
+
+ @Test void initialAdminMustChangeBothCredentialsBeforeUsingAdminApis()throws Exception{
+  db.update("DELETE FROM admin_accounts");accounts.bootstrap("admin","admin");
+  Cookie initial=login("admin","admin");
+  mvc.perform(get("/api/auth/me").cookie(initial)).andExpect(status().isOk()).andExpect(jsonPath("$.mustChangeCredentials").value(true));
+  mvc.perform(get("/api/admin/accounts/me").cookie(initial)).andExpect(status().isOk()).andExpect(jsonPath("$.mustChangeCredentials").value(true));
+  mvc.perform(get("/api/admin/config").cookie(initial)).andExpect(status().isForbidden());
+  mvc.perform(patch("/api/admin/accounts/me").cookie(initial).with(realCsrf()).contentType("application/json").content(update(1,"admin","admin","Aa1!bbbb"))).andExpect(status().isBadRequest());
+  mvc.perform(patch("/api/admin/accounts/me").cookie(initial).with(realCsrf()).contentType("application/json").content(update(1,"ADMIN","admin","Aa1!bbbb"))).andExpect(status().isBadRequest());
+  mvc.perform(patch("/api/admin/accounts/me").cookie(initial).with(realCsrf()).contentType("application/json").content(update(1,"new-admin","admin",null))).andExpect(status().isBadRequest());
+  var changed=mvc.perform(patch("/api/admin/accounts/me").cookie(initial).with(realCsrf()).contentType("application/json").content(update(1,"new-admin","admin","Aa1!bbbb"))).andExpect(status().isOk()).andExpect(jsonPath("$.requiresLogin").value(true)).andReturn();
+  assertEquals(0,accessCookie(changed).getMaxAge());
+  mvc.perform(get("/api/auth/me").cookie(initial)).andExpect(status().isUnauthorized());
+  rejectedLogin("admin","admin");
+  Cookie rotated=login("new-admin","Aa1!bbbb");
+  mvc.perform(get("/api/auth/me").cookie(rotated)).andExpect(status().isOk()).andExpect(jsonPath("$.mustChangeCredentials").value(false));
+  mvc.perform(get("/api/admin/config").cookie(rotated)).andExpect(status().isOk());
+ }
+
+ @Test void olderAdminPasswordIsFlaggedWithoutLockingAnAlreadyRotatedOwner()throws Exception{
+  accounts.seed();
+  assertFalse(accounts.loadUserByUsername("admin").mustChangeCredentials());
+  db.update("UPDATE admin_accounts SET password_hash=?,must_change_credentials=FALSE WHERE username_key='admin'",passwords.encode("admin"));
+  accounts.seed();
+  AdminPrincipal upgraded=accounts.loadUserByUsername("admin");
+  assertTrue(upgraded.mustChangeCredentials());assertEquals(2,upgraded.revision());
+  accounts.seed();assertEquals(2,accounts.loadUserByUsername("admin").revision());
+ }
+
+ @Test void productionRefusesAnExistingDefaultOwnerBeforeServingRequests(){
+  db.update("DELETE FROM admin_accounts");
+  MockEnvironment productionEnvironment=new MockEnvironment();productionEnvironment.setActiveProfiles("prod");
+  var production=new AdminAccountService(db,passwords,audit,productionEnvironment,"admin","admin");
+  assertThrows(IllegalStateException.class,production::seed);
+  assertEquals(0,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
+  accounts.bootstrap("admin","admin");
+  assertThrows(IllegalStateException.class,production::seed);
+  assertTrue(accounts.loadUserByUsername("admin").mustChangeCredentials());
+ }
+
+ @Test void passwordPolicyAcceptsEightCharactersAndRejectsMissingGroups()throws Exception{
+  Cookie owner=login("admin",OWNER_PASSWORD);
+  for(String invalid:List.of("Aa1!bbb","aaaaaaaa1!","AAAAAAAA1!","Aaaaaaaa!","Aaaaaaaa1","Aa1 bbbb","Aa1!"+"b".repeat(125))){
+   mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","candidate","password",invalid,"currentPassword",OWNER_PASSWORD)))).andExpect(status().isBadRequest());
+  }
+  assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
+  JsonNode created=create(owner,"candidate","Aa1!bbbb");
+  Cookie staff=login("candidate","Aa1!bbbb");
+  mvc.perform(patch("/api/admin/accounts/me").cookie(staff).with(realCsrf()).contentType("application/json").content(update(1,"candidate","Aa1!bbbb","Aa1 bbbb"))).andExpect(status().isBadRequest());
+  assertEquals(1,accounts.principalById(created.path("id").asText()).revision());
+  db.update("DELETE FROM admin_accounts");
+  assertThrows(IllegalArgumentException.class,()->accounts.bootstrap("admin","Aa1 bbbb"));
+  accounts.bootstrap("admin","Aa1!bbbb");
+  assertFalse(accounts.loadUserByUsername("admin").mustChangeCredentials());
+ }
+
+ @Test void everyAccountCreationRequiresCurrentPassword()throws Exception{
+  Cookie owner=login("admin",OWNER_PASSWORD);
+  mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","without-confirmation","password",STAFF_PASSWORD)))).andExpect(status().isBadRequest());
+  assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
  }
 
  // 대표 관리자는 계정을 추가할 수 있지만 일반 관리자는 타인의 계정을 바꿀 수 없다.
@@ -101,7 +167,7 @@ class AdminAccountApiTest {
   Map<String,Object> before=db.queryForMap("SELECT * FROM admin_accounts WHERE id=?",id);
   mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(update(1,"late-name",OWNER_PASSWORD,null))).andExpect(status().isConflict());
   mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(update(2,"ADMIN",OWNER_PASSWORD,null))).andExpect(status().isConflict());
-  mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","AdMiN","password",STAFF_PASSWORD)))).andExpect(status().isConflict());
+  mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","AdMiN","password",STAFF_PASSWORD,"currentPassword",OWNER_PASSWORD)))).andExpect(status().isConflict());
   mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","bad name","password",STAFF_PASSWORD)))).andExpect(status().isBadRequest());
   mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","valid-name","password","short")))).andExpect(status().isBadRequest());
   mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username","another-owner","password",STAFF_PASSWORD,"owner",true)))).andExpect(status().isBadRequest());
@@ -114,7 +180,7 @@ class AdminAccountApiTest {
  // 128자 비밀번호의 끝부분까지 검증하며 감사 기록에는 원문·해시를 남기지 않는다.
  @Test void fullLengthPasswordsAreVerifiedAndAuditContainsOnlyRedactedPasswordChanges()throws Exception{
   Cookie owner=login("admin",OWNER_PASSWORD);
-  String password="p".repeat(100)+"A".repeat(28),wrong="p".repeat(100)+"B".repeat(28);
+  String password="p".repeat(100)+"A".repeat(26)+"1!",wrong="p".repeat(100)+"B".repeat(26)+"1!";
   JsonNode created=create(owner,"long-password",password);String id=created.path("id").asText();
   login("long-password",password);rejectedLogin("long-password",wrong);
   mvc.perform(patch("/api/admin/accounts/"+id).cookie(owner).with(realCsrf()).contentType("application/json").content(update(1,"long-password",OWNER_PASSWORD,"x".repeat(129)))).andExpect(status().isBadRequest());
@@ -169,7 +235,7 @@ class AdminAccountApiTest {
    assertStableCsrfCookie(read);
   }
   for(int sequence=1;sequence<=2;sequence++){
-   var write=mvc.perform(post("/api/admin/accounts").cookie(owner,csrfCookie).header(header,token).contentType("application/json").content(json(Map.of("username","csrf-staff-"+sequence,"password",STAFF_PASSWORD)))).andExpect(status().isOk()).andReturn();
+   var write=mvc.perform(post("/api/admin/accounts").cookie(owner,csrfCookie).header(header,token).contentType("application/json").content(json(Map.of("username","csrf-staff-"+sequence,"password",STAFF_PASSWORD,"currentPassword",OWNER_PASSWORD)))).andExpect(status().isOk()).andReturn();
    assertStableCsrfCookie(write);
   }
   assertEquals(3,db.queryForObject("SELECT COUNT(*) FROM admin_accounts",Integer.class));
@@ -240,7 +306,7 @@ class AdminAccountApiTest {
   return cookie;
  }
  private void rejectedLogin(String username,String password)throws Exception{mvc.perform(post("/api/auth/login").with(realCsrf()).contentType("application/x-www-form-urlencoded").param("username",username).param("password",password).with(request->{request.setRemoteAddr("198.51.100."+LOGIN_REQUEST.incrementAndGet());return request;})).andExpect(status().isUnauthorized());}
- private JsonNode create(Cookie owner,String username,String password)throws Exception{return mapper.readTree(mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username",username,"password",password)))).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray());}
+ private JsonNode create(Cookie owner,String username,String password)throws Exception{return mapper.readTree(mvc.perform(post("/api/admin/accounts").cookie(owner).with(realCsrf()).contentType("application/json").content(json(Map.of("username",username,"password",password,"currentPassword",OWNER_PASSWORD)))).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray());}
  private JsonNode me(Cookie cookie)throws Exception{return mapper.readTree(mvc.perform(get("/api/admin/accounts/me").cookie(cookie)).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray());}
  private String update(long revision,String username,String current,String next)throws Exception{Map<String,Object> input=new LinkedHashMap<>();input.put("revision",revision);input.put("username",username);input.put("currentPassword",current);if(next!=null)input.put("newPassword",next);return json(input);}
  private String json(Object value)throws Exception{return mapper.writeValueAsString(value);}

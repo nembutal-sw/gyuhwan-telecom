@@ -17,13 +17,15 @@ for (const [name, filename] of Object.entries(files)) {
   try { values[name] = (await readFile(destination, 'utf8')).trim(); }
   catch (error) {
     if (error.code !== 'ENOENT') throw error;
-    values[name] = randomBytes(32).toString('base64');
+    values[name] = name === 'ADMIN_PASSWORD' ? `${randomBytes(32).toString('base64url')}Aa1!` : randomBytes(32).toString('base64');
     await writeFile(destination, values[name], { flag: 'wx', mode: 0o600 });
   }
   if (!values[name]) throw new Error(`Empty existing secret file: ${filename}`);
 }
 if (!/^[A-Za-z0-9+/]+={0,2}$/.test(values.JWT_SECRET) || Buffer.from(values.JWT_SECRET, 'base64').length < 32) throw new Error('JWT secret must contain at least 32 decoded bytes as base64.');
-if (values.ADMIN_PASSWORD.length < 16 || values.ADMIN_PASSWORD.length > 128) throw new Error('Admin password must contain 16–128 characters.');
+const adminPassword = values.ADMIN_PASSWORD;
+const hasSymbol = [...adminPassword].some(char => { const code = char.charCodeAt(0); return (code >= 33 && code <= 47) || (code >= 58 && code <= 64) || (code >= 91 && code <= 96) || (code >= 123 && code <= 126); });
+if (adminPassword.length < 8 || adminPassword.length > 128 || !/[A-Z]/.test(adminPassword) || !/[a-z]/.test(adminPassword) || !/[0-9]/.test(adminPassword) || !hasSymbol) throw new Error('Admin password must be 8–128 characters and include uppercase and lowercase Latin letters, a digit, and an ASCII symbol.');
 // 환경 파일은 템플릿의 빈 비밀 항목만 채우며 wx로 기존 .env 덮어쓰기를 막는다.
 if (process.argv.includes('--compose-env')) {
   const template = await readFile(path.join(project, 'deploy', 'compose.env.example'), 'utf8');

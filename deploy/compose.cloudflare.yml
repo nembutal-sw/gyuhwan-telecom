@@ -4,4 +4,9 @@
 services:
   admin:
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       COOKIE_SECURE: "true"
+      # Docker가 앱에 전달한 cloudflared의 실제 접속 주소만 일치시킨다.
+      FORWARD_HEADERS_STRATEGY: native
+      TRUSTED_PROXY_REGEX: ${TRUSTED_PROXY_REGEX:?Set a regex matching only the observed local Tunnel proxy address}
+      REMOTE_IP_HEADER: CF-Connecting-IP

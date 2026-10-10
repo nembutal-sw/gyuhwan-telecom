@@ -13,6 +13,10 @@
   <version>1.0.0</version>
   <properties>
     <java.version>17</java.version>
+    <!-- Boot 4.1.1의 BOM보다 최신 보안 수정 버전을 사용하고 같은 계열 내에서 관리한다. -->
+    <tomcat.version>11.0.26</tomcat.version>
+    <jackson-2-bom.version>2.21.7</jackson-2-bom.version>
+    <jackson-bom.version>3.1.7</jackson-bom.version>
   </properties>
   <dependencies>
     <dependency>

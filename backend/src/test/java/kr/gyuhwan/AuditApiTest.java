@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ActiveProfiles("test") @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:audit-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=test-only-admin-password-long","app.retention-cron=-"}) @AutoConfigureMockMvc
+@ActiveProfiles("test") @SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:audit-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"}) @AutoConfigureMockMvc
 /** 관리자 감사 로그의 기록, 조회 권한, 민감 정보 숨김과 저장 트랜잭션을 검증한다. */
 class AuditApiTest {
  @Autowired ConfigService configs;@Autowired SiteContentService content;@Autowired AuditLogService audit;@Autowired JdbcTemplate db;@Autowired ObjectMapper mapper;@Autowired MockMvc mvc;

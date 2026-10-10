@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { api } from './api';
 import { flushServerDrafts } from './useServerDraft.jsx';
+import { passwordHelp, passwordValid } from './passwordPolicy.js';
 import './account-audit.css';
 
 const permissionOptions = [['PRICE_EDIT', '가격표 수정', '가격 수정 · 엑셀 반영 · 예약 공개'], ['CONTENT_EDIT', '메인페이지 수정', '내용 · 링크 · 동영상 편집 및 공개'], ['CATALOG_EDIT', '모델 등록·판매 상태', '신규 모델 등록 · 색상별 품절 관리'], ['MEDIA_EDIT', '사진 보관함 수정', '사진 업로드 · 이름 변경 · 삭제'], ['STATS_VIEW', '관심 통계 조회', '모델 조회와 전화·카카오톡 클릭 통계'], ['AUDIT_VIEW', '수정 기록 조회', '직원별 변경 내용 열람']];
@@ -9,7 +10,6 @@ const allPermissions = permissionOptions.map(([key]) => key);
 const permissionNames = values => permissionOptions.filter(([key]) => values.includes(key)).map(([, name]) => name).join(' · ') || '조회 전용';
 const emptyForm = () => ({ username: '', currentPassword: '', newPassword: '', confirmPassword: '', permissions: [], enabled: true });
 const usernameValid = value => /^[A-Za-z0-9._-]{3,50}$/.test(value);
-const passwordValid = value => value.length >= 16 && value.length <= 128;
 
 export default function AccountManager({ onRequireLogin, onAccountChanged, onSessionBusy }) {
   const [me, setMe] = useState(null);
@@ -83,7 +83,7 @@ export default function AccountManager({ onRequireLogin, onAccountChanged, onSes
     if (!usernameValid(username)) return setError('아이디는 영문·숫자·점·밑줄·하이픈으로 3~50자 입력해 주세요.');
     if (!form.currentPassword) return setError('현재 로그인한 관리자 비밀번호를 입력해 주세요.');
     if (mode === 'create' && !form.newPassword) return setError('새 관리자 비밀번호를 입력해 주세요.');
-    if (form.newPassword && !passwordValid(form.newPassword)) return setError('새 비밀번호는 16~128자로 입력해 주세요.');
+    if (form.newPassword && !passwordValid(form.newPassword)) return setError(`새 비밀번호 조건을 확인해 주세요: ${passwordHelp}`);
     if (form.newPassword !== form.confirmPassword) return setError('새 비밀번호와 확인 입력이 일치하지 않습니다.');
     if (mode === 'edit' && !target) return setError('수정할 계정을 다시 선택해 주세요.');
     setReview({ mode, targetId: target?.id, revision: target?.revision,
@@ -142,7 +142,7 @@ export default function AccountManager({ onRequireLogin, onAccountChanged, onSes
       <fieldset disabled={blocked}>
         <label>로그인 아이디<input autoComplete={mode === 'create' ? 'off' : 'username'} autoCapitalize="none" spellCheck={false} required minLength={3} maxLength={50} pattern={'[A-Za-z0-9._\\-]{3,50}'} value={form.username} onChange={event => setForm(value => ({ ...value, username: event.target.value }))}/><span className="hint">영문·숫자·점·밑줄·하이픈 3~50자. 대소문자를 구분해 중복 계정을 만들 수는 없습니다.</span></label>
         <label>현재 로그인한 관리자 비밀번호<input type="password" autoComplete="current-password" required maxLength={128} value={form.currentPassword} onChange={event => setForm(value => ({ ...value, currentPassword: event.target.value }))}/><span className="hint">계정 추가와 정보·권한 변경을 확인하기 위해 내 비밀번호를 입력해 주세요.</span></label>
-        <div className="account-password-fields"><label><span className="account-field-label">{mode === 'create' ? '비밀번호' : '새 비밀번호 · 변경할 때 입력'}</span><input type="password" autoComplete="new-password" aria-describedby="account-password-help" required={mode === 'create'} minLength={16} maxLength={128} value={form.newPassword} onChange={event => setForm(value => ({ ...value, newPassword: event.target.value }))}/><span id="account-password-help" className="hint">16~128자{mode === 'edit' ? ' · 빈칸이면 현재 비밀번호 유지' : ''}</span></label><label><span className="account-field-label">{mode === 'create' ? '비밀번호 확인' : '새 비밀번호 확인'}</span><input type="password" autoComplete="new-password" aria-describedby="account-password-confirm-help" required={mode === 'create' || !!form.newPassword} minLength={form.newPassword ? 16 : undefined} maxLength={128} value={form.confirmPassword} onChange={event => setForm(value => ({ ...value, confirmPassword: event.target.value }))}/><span id="account-password-confirm-help" className="hint">위에 입력한 비밀번호를 한 번 더 입력해 주세요.</span></label></div>
+        <div className="account-password-fields"><label><span className="account-field-label">{mode === 'create' ? '비밀번호' : '새 비밀번호 · 변경할 때 입력'}</span><input type="password" autoComplete="new-password" aria-describedby="account-password-help" required={mode === 'create'} minLength={8} maxLength={128} value={form.newPassword} onChange={event => setForm(value => ({ ...value, newPassword: event.target.value }))}/><span id="account-password-help" className="hint">{passwordHelp}{mode === 'edit' ? ' · 빈칸이면 현재 비밀번호 유지' : ''}</span></label><label><span className="account-field-label">{mode === 'create' ? '비밀번호 확인' : '새 비밀번호 확인'}</span><input type="password" autoComplete="new-password" aria-describedby="account-password-confirm-help" required={mode === 'create' || !!form.newPassword} minLength={form.newPassword ? 8 : undefined} maxLength={128} value={form.confirmPassword} onChange={event => setForm(value => ({ ...value, confirmPassword: event.target.value }))}/><span id="account-password-confirm-help" className="hint">위에 입력한 비밀번호를 한 번 더 입력해 주세요.</span></label></div>
         {me.owner && (mode === 'create' || !target?.owner) && <section className="account-permissions" aria-labelledby="account-permissions-title">
           <h3 id="account-permissions-title">업무 권한</h3><p className="hint">기본 가격표·메인페이지·사진은 모든 직원이 열람할 수 있습니다. 필요한 수정 권한과 별도 조회 권한을 선택하세요.</p>
           <div className="account-presets"><button type="button" onClick={() => setForm(value => ({ ...value, permissions: [...allPermissions] }))}>전체 관리</button><button type="button" onClick={() => setForm(value => ({ ...value, permissions: ['PRICE_EDIT', 'CATALOG_EDIT'] }))}>가격 담당</button><button type="button" onClick={() => setForm(value => ({ ...value, permissions: ['CONTENT_EDIT', 'MEDIA_EDIT'] }))}>페이지 담당</button><button type="button" onClick={() => setForm(value => ({ ...value, permissions: [] }))}>조회 전용</button></div>

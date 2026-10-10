@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @org.springframework.test.context.ActiveProfiles("test") @SpringBootTest(properties = {
         "spring.datasource.url=jdbc:h2:mem:policy-export-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1",
-        "app.admin-password=test-only-admin-password-long", "app.retention-cron=-"
+        "app.admin-password=Test-only-admin-password-long1!", "app.retention-cron=-"
 })
 @AutoConfigureMockMvc
 /** 관리자 가격 정책 엑셀 내보내기의 권한, 셀 형식, 최신성 및 읽기 전용 동작을 검증한다. */

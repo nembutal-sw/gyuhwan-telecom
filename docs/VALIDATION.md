@@ -1,6 +1,20 @@
-# 검증 결과 — 2026-10-09~10
+# 검증 결과 — 2026-10-09~11
 
-## 현재 실행 파일
+## 2026-10-11 보안 의존성·저장소 설정
+
+- Vite를 8.0.16으로 고정하고 `npm ci` 감사 결과 취약점 0개, React/Vite 운영 빌드를 확인했습니다. [Vite 공식 보안 권고](https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff)의 패치 버전입니다.
+- Spring Boot 4.1.1의 관리 버전을 보안 수정 패치로 재정의했습니다. Maven 의존성 트리에서 `tomcat-embed-core` 11.0.26, Jackson 2 `core`·`databind` 2.21.7, Jackson 3 `core`·`databind` 3.1.7을 확인했습니다. [Tomcat 공식 보안 목록](https://tomcat.apache.org/security-11), [Jackson databind 권고](https://github.com/FasterXML/jackson-databind/security/advisories/GHSA-cxp5-3px4-pw24), [Jackson core 권고](https://github.com/FasterXML/jackson-core/security/advisories/GHSA-7hhh-6rmp-j9qf)
+- GitHub 저장소는 공개이며 활성 ruleset 2개가 PR·CI와 `main`·`develop` 삭제 금지를 적용합니다. API 재조회에서 Dependabot 취약점 알림·자동 보안 업데이트, secret scanning·push protection이 켜진 것을 확인했습니다.
+- Cloudflare Tunnel 추가 설정은 실제 프록시 주소 정규식이 없으면 시작 전에 실패하도록 했습니다. `CF-Connecting-IP`와 `X-Forwarded-Proto`는 해당 프록시에서만 신뢰하고, 배포 안내에 HTTPS·HSTS·edge 속도 제한 확인 절차를 추가했습니다. 실제 Cloudflare 도메인과 Docker 배포 검증은 수행하지 않았습니다.
+
+## 2026-10-11 보안 수정 통합 확인
+
+- Java 17에서 Maven `verify` 전체 **100개 테스트 통과**, 실패·오류·생략 0. 인코딩된 관리자 쓰기 URL, 초기 계정 제한, 직원 권한, 이전 문의·상담 접근, 알 수 없는 길이의 3MB 초과 JSON 거부를 포함합니다.
+- 추가 검토에서 예약 보존기간 정리의 내부 호출이 트랜잭션 프록시를 우회하는 문제를 발견했습니다. 명시적 트랜잭션으로 바꾼 뒤 감사 기록 저장 실패 시 문의·상담 삭제가 모두 롤백되는 별도 검사가 통과했습니다.
+- 최신 화면을 JAR에 포함해 재패키징했습니다. 실행 JAR 안의 Tomcat 11.0.26, Jackson 2.21.7·3.1.7과 관리자 화면 정적 파일을 확인했습니다.
+- 로컬 MySQL 백업 후 Flyway V10을 적용했습니다. MySQL 8.4.11·Redis 준비 상태 `UP`, 기존 `admin/admin` 로그인 204, 첫 로그인 변경 상태 표시, 내 계정 조회 200, 가격 관리와 관리자 미리보기 403을 실제 HTTP로 확인했습니다. 계정 자체는 변경하지 않아 운영자가 첫 로그인 절차를 직접 확인할 수 있습니다.
+
+## 2026-10-10 로컬 실행 파일 기준
 
 - Java 17 / Spring Boot 4.1.1 Maven `verify`: **90개 테스트 통과**, 실패·오류·생략 0. 최신 프런트엔드를 포함한 실행 JAR 패키징 성공.
 - React 19.2.6 / Vite 8.0.13 운영 빌드 성공. PC·모바일 미리보기 모듈이 실행 JAR에 포함됩니다.
