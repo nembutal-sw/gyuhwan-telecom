@@ -23,7 +23,7 @@ public class WorkspaceService {
  }
  private void checkKind(String kind){if(!Set.of("price","content").contains(kind))throw new IllegalArgumentException("임시 작업 종류를 확인하세요.");}
  public Map<String,Object> read(String kind){
-  checkKind(kind);String account=actor();
+  checkKind(kind);AdminAccess.require(kind.equals("price")?"PRICE_EDIT":"CONTENT_EDIT");String account=actor();
   var rows=db.query("SELECT base_revision,revision,payload,updated_at FROM admin_workspaces WHERE account_id=? AND kind=?",(rs,n)->{
    try{return Map.<String,Object>of("exists",true,"baseRevision",rs.getLong(1),"revision",rs.getLong(2),"payload",mapper.readTree(rs.getString(3)),"updatedAt",rs.getString(4));}
    catch(Exception e){throw new IllegalStateException(e);}

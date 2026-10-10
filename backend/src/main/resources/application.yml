@@ -2,11 +2,20 @@
 server:
   port: ${PORT:8080}
   address: ${BIND_ADDRESS:127.0.0.1}
+  max-http-request-header-size: 8KB
   # 전달 헤더는 기본적으로 신뢰하지 않는다. 배포 프록시의 실제 주소를 제한한 뒤 native를 사용한다.
   forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:none}
   tomcat:
+    connection-timeout: 10s
+    max-connections: 512
+    accept-count: 64
+    threads:
+      max: 100
+    max-swallow-size: 1MB
     max-http-form-post-size: 1MB
     remoteip:
+      remote-ip-header: ${REMOTE_IP_HEADER:x-forwarded-for}
+      protocol-header: x-forwarded-proto
       internal-proxies: ${TRUSTED_PROXY_REGEX:127\.0\.0\.1|::1}
   error:
     include-message: never

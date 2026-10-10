@@ -11,6 +11,8 @@ export const auditActions = {
   PRICE_SCHEDULE_CREATE: '가격표 적용 예약', PRICE_SCHEDULE_STATUS: '가격표 예약 상태 변경',
   PRICE_SCHEDULE_PUBLISH: '예약 가격표 공개', PRICE_SCHEDULE_RETURN: '예약 종료 후 기존 가격표 복귀',
   IMAGE_RENAME: '사진 이름 변경', IMAGE_DELETE: '사용하지 않는 사진 삭제',
+  LEGACY_INQUIRY_REPLY: '이전 문의 답변 수정', LEGACY_RECORD_DELETE: '이전 문의·상담 삭제',
+  LEGACY_RETENTION_PURGE: '이전 문의·상담 보존기간 정리',
 };
 const auditCategories = ['가격표', '가격표 예약', '메인페이지', '모델·판매 상태', '사진 보관함', '관리자 계정', '기타'];
 const category = action => action?.startsWith('PRICE_SCHEDULE_') ? '가격표 예약' : action?.startsWith('PRICE_') ? '가격표'

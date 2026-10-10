@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /** 새 상품이 공개 견적·가격 검증·엑셀에 같이 연결되고, 상태 변경·버전 충돌이 원자적인지 검사한다. */
 @org.springframework.test.context.ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:catalog-model-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=test-only-admin-password-long","app.retention-cron=-"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:catalog-model-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"})
 @AutoConfigureMockMvc
 class CatalogModelApiTest {
  @Autowired MockMvc mvc;@Autowired ObjectMapper mapper;@Autowired JdbcTemplate db;

@@ -17,11 +17,11 @@ public class PolicyImportController {
 
  // 이 경로는 검증·차이 계산만 하며 DB를 수정하지 않는다.
  @PostMapping("/import-excel/preview")
- PolicyImportService.Preview preview(@RequestBody JsonNode input){return service.previewExcel(revision(input),text(input,"fileName"),text(input,"base64"));}
+ PolicyImportService.Preview preview(@RequestBody JsonNode input){AdminAccess.require("PRICE_EDIT");return service.previewExcel(revision(input),text(input,"fileName"),text(input,"base64"));}
 
  // 동일 파일도 적용 시점의 revision을 다시 검사한 뒤 원자적으로 저장한다.
  @PostMapping("/import-excel")
- PolicyImportService.Result save(@RequestBody JsonNode input){return service.importExcel(revision(input),text(input,"fileName"),text(input,"base64"));}
+ PolicyImportService.Result save(@RequestBody JsonNode input){AdminAccess.require("PRICE_EDIT");return service.importExcel(revision(input),text(input,"fileName"),text(input,"base64"));}
 
  // 허용된 요청 필드만 받고 정수 revision을 강제한다.
  private long revision(JsonNode input){

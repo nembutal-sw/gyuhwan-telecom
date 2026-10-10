@@ -31,10 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /** 초안의 계정 격리와 공개본 보존, 예약의 경계 시각·경쟁 실행·수동 변경 보호를 확인한다. */
 @ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:workspace-schedule-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=test-only-owner-password-long","app.retention-cron=-","app.policy-schedule-delay-ms=3600000"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:workspace-schedule-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-user=admin","app.admin-password=Test-only-owner-password-long1!","app.retention-cron=-","app.policy-schedule-delay-ms=3600000"})
 @AutoConfigureMockMvc
 class WorkspaceScheduleApiTest {
- private static final String PASSWORD="test-only-owner-password-long",STAFF_PASSWORD="test-only-staff-password-long";
+ private static final String PASSWORD="Test-only-owner-password-long1!",STAFF_PASSWORD="Test-only-staff-password-long1!";
  @Autowired MockMvc mvc;
  @Autowired ObjectMapper mapper;
  @Autowired JdbcTemplate db;
@@ -84,7 +84,7 @@ class WorkspaceScheduleApiTest {
 
  @Test void readOnlyAndUnassignedEditorsCannotWriteDraftsOrCreateSchedules()throws Exception{
   Authentication viewer=staff("viewer",List.of()),pageEditor=staff("page-editor",List.of("CONTENT_EDIT"));
-  mvc.perform(get("/api/admin/workspaces/price").with(authentication(viewer))).andExpect(status().isOk());
+  mvc.perform(get("/api/admin/workspaces/price").with(authentication(viewer))).andExpect(status().isForbidden());
   putDraft(viewer,"price",0,1,mapper.createObjectNode()).andExpect(status().isForbidden());
   putDraft(viewer,"content",0,1,mapper.createObjectNode()).andExpect(status().isForbidden());
   putDraft(pageEditor,"price",0,1,mapper.createObjectNode()).andExpect(status().isForbidden());

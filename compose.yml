@@ -38,7 +38,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD with at least 16 characters}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD with at least 8 characters and all required character types}
       DB_URL: jdbc:mysql://database:3306/gyuhwan?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
       DB_USERNAME: gyuhwan
       DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
@@ -51,6 +51,11 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Set a base64 JWT_SECRET containing at least 32 random bytes}
       JWT_TTL_SECONDS: ${JWT_TTL_SECONDS:-1800}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      # 프록시 접속 주소를 확인하는 동안에만 /tmp에 IP 한 줄씩 기록한다.
+      SERVER_TOMCAT_ACCESSLOG_ENABLED: ${ACCESS_LOG_ENABLED:-false}
+      SERVER_TOMCAT_ACCESSLOG_DIRECTORY: /tmp
+      SERVER_TOMCAT_ACCESSLOG_BUFFERED: "false"
+      SERVER_TOMCAT_ACCESSLOG_PATTERN: '%a'
       BIND_ADDRESS: 0.0.0.0
       MEDIA_PATH: /app/data/media
     # 컨테이너 교체 후에도 DB와 연결된 사진 URL이 유효하도록 영구 볼륨을 사용한다.

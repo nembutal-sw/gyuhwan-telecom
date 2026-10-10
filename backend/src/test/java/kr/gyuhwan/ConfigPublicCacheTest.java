@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static org.junit.jupiter.api.Assertions.*;
 
 @org.springframework.test.context.ActiveProfiles("test")
-@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:config-cache-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=test-only-admin-password-long","app.retention-cron=-"})
+@SpringBootTest(properties={"spring.datasource.url=jdbc:h2:mem:config-cache-test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1","app.admin-password=Test-only-admin-password-long1!","app.retention-cron=-"})
 /** 관리자 저장 직후 공개 설정 캐시가 새 버전과 내용으로 갱신되는지 검증한다. */
 class ConfigPublicCacheTest {
  @Autowired ConfigService configs;
