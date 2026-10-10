@@ -57,7 +57,7 @@ class PolicyExportApiTest {
 
     // 모든 정책 조건과 모델 목록, 숫자·빈값·문자 셀을 확인하고 수식 주입과 저장 부작용을 막는다.
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
     void workbookContainsEveryConditionAndPreservesTypedValuesAndSafeText() throws Exception {
         ObjectNode config = fixture();
         configs.save(1, config);
@@ -128,7 +128,7 @@ class PolicyExportApiTest {
 
     // 매 다운로드는 현재 저장된 정책으로 생성하며, 다운로드 자체는 버전과 이력을 바꾸지 않는다.
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
     void eachDownloadUsesTheCurrentSavedPolicy() throws Exception {
         ObjectNode config = fixture();
         configs.save(1, config);

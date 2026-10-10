@@ -1,6 +1,8 @@
 package kr.gyuhwan;
 
 import java.util.Map;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,5 +46,13 @@ class AdminAccountRollbackTest {
   assertThrows(DataAccessResourceFailureException.class,()->accounts.changeSelf(owner,1,"renamed-owner",PASSWORD,"new-owner-test-password-long"));
   assertEquals(before,db.queryForMap("SELECT * FROM admin_accounts"));
   assertTrue(accounts.current((AdminPrincipal)owner.getPrincipal()));
+ }
+ @Test void failedAuditRollsBackPermissionsDisableAndRevisionTogether(){
+  String id=UUID.randomUUID().toString();AdminPrincipal principal=(AdminPrincipal)owner.getPrincipal();
+  db.update("INSERT INTO admin_accounts(id,username,username_key,password_hash,is_owner,owner_slot,revision,created_at,updated_at) VALUES(?,?,?,?,FALSE,NULL,1,?,?)",id,"staff","staff",principal.getPassword(),"2026-10-10T00:00:00Z","2026-10-10T00:00:00Z");
+  Map<String,Object> before=db.queryForMap("SELECT * FROM admin_accounts WHERE id=?",id);
+  assertThrows(DataAccessResourceFailureException.class,()->accounts.changeOther(owner,id,1,"staff",PASSWORD,null,List.of(),false));
+  assertEquals(before,db.queryForMap("SELECT * FROM admin_accounts WHERE id=?",id));
+  assertTrue(accounts.current(accounts.principalById(id)));
  }
 }

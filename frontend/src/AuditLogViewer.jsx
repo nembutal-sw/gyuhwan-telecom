@@ -7,7 +7,15 @@ export const auditActions = {
   PRICE_UPDATE: '가격표·구매 조건 수정', PRICE_EXCEL_IMPORT: '엑셀 가격표 적용', PRICE_RESTORE: '가격표 이전 내용으로 되돌림',
   CONTENT_UPDATE: '메인 페이지 수정', CONTENT_RESTORE: '메인 페이지 복원', IMAGE_UPLOAD: '사진 업로드',
   ACCOUNT_CREATE: '관리자 계정 추가', ACCOUNT_UPDATE: '관리자 계정 수정',
+  MODEL_CREATE: '신규 모델 등록', MODEL_UPDATE: '모델 정보·판매 상태 수정', MODEL_COLOR_UPDATE: '모델 색상을 가격표에 동기화',
+  PRICE_SCHEDULE_CREATE: '가격표 적용 예약', PRICE_SCHEDULE_STATUS: '가격표 예약 상태 변경',
+  PRICE_SCHEDULE_PUBLISH: '예약 가격표 공개', PRICE_SCHEDULE_RETURN: '예약 종료 후 기존 가격표 복귀',
+  IMAGE_RENAME: '사진 이름 변경', IMAGE_DELETE: '사용하지 않는 사진 삭제',
 };
+const auditCategories = ['가격표', '가격표 예약', '메인페이지', '모델·판매 상태', '사진 보관함', '관리자 계정', '기타'];
+const category = action => action?.startsWith('PRICE_SCHEDULE_') ? '가격표 예약' : action?.startsWith('PRICE_') ? '가격표'
+  : action?.startsWith('CONTENT_') ? '메인페이지' : action?.startsWith('MODEL_') ? '모델·판매 상태'
+  : action?.startsWith('IMAGE_') ? '사진 보관함' : action?.startsWith('ACCOUNT_') ? '관리자 계정' : '기타';
 const timestamp = value => {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? String(value || '') : date.toLocaleString('ko-KR', {
@@ -23,7 +31,15 @@ const valueLabels = {
   name: '이름', title: '제목', description: '설명', url: '이동 주소', image: '사진 주소', imageUrl: '사진 주소',
   src: '파일 주소', alt: '사진 설명', enabled: '사용 여부', username: '로그인 아이디', owner: '대표 관리자 여부',
   passwordChanged: '비밀번호 변경 여부', month: '개월차', months: '이용 기간', fee: '요금', amount: '금액',
+  model: '모델 정보', brand: '제조사', code: '모델코드', network: '네트워크', capacity: '용량', imageAlt: '사진 설명',
+  sellingStatus: '모델 판매 상태', hidden: '고객 페이지 숨김', colorStatuses: '색상별 판매 상태',
+  carrierCodes: '통신사별 모델코드', carrierImages: '통신사별 사진', permissions: '업무 권한',
+  period: '적용 기간', start: '시작 시각', end: '종료 시각', startsAt: '시작 시각', endsAt: '종료 시각',
+  status: '예약 상태', createdBy: '예약자', bytes: '파일 용량', catalogUpdatedAt: '모델 수정 시각',
 };
+const sellingLabels = { selling: '판매 중', sold_out: '품절', incoming: '입고 예정', discontinued: '판매 종료' };
+const scheduleLabels = { pending: '적용 예정', active: '적용 중', completed: '기간 종료', cancelled: '취소됨', conflict: '운영자 확인 필요', expired: '기간 지나 적용 안 함' };
+const permissionLabels = { PRICE_EDIT: '가격표 수정', CONTENT_EDIT: '메인페이지 수정', CATALOG_EDIT: '모델 등록·판매 상태', MEDIA_EDIT: '사진 보관함 수정', STATS_VIEW: '관심 통계 조회', AUDIT_VIEW: '수정 기록 조회' };
 const moneyFields = new Set(['retail', 'common', 'support', 'planFee', 'addonFee', 'discountBase', 'installmentFee', 'fee', 'amount']);
 const monthFields = new Set(['addonMonths', 'months']);
 const sensitive = field => /password|credential|secret/i.test(field);
@@ -38,10 +54,20 @@ function display(value, field = '') {
   if (sensitive(field)) return value == null ? '해당 없음' : typeof value === 'boolean' ? value ? '변경함' : '변경 없음' : '변경 정보만 기록';
   if (value === null || value === undefined) return '미등록';
   if (value === '') return '빈칸';
-  if (typeof value === 'boolean') return value ? '예' : '아니오';
+  const key = fieldKey(field);
+  if (typeof value === 'boolean') return key === 'hidden' ? value ? '고객 페이지에서 숨김' : '고객 페이지에 표시'
+    : key === 'enabled' ? value ? '사용 허용' : '사용 중지' : key === 'owner' ? value ? '대표 관리자' : '일반 관리자' : value ? '예' : '아니오';
   if (typeof value === 'string' && /^data:image\//i.test(value)) return '등록 이미지 데이터';
+  if (typeof value === 'string') {
+    if (key === 'sellingStatus' || /(?:^|\.)colorStatuses(?:\.|$)/.test(field)) return sellingLabels[value] || value;
+    if (key === 'status') return scheduleLabels[value] || sellingLabels[value] || value;
+    if (key === 'permissions') return permissionLabels[value] || value;
+    if (['start', 'end', 'startsAt', 'endsAt', 'catalogUpdatedAt'].includes(key) && /^\d{4}-\d{2}-\d{2}T/.test(value)) return timestamp(value);
+    if (key === 'capacity') return /^\d+$/.test(value) ? `${value} GB` : value === '1T' ? '1 TB' : value;
+  }
   if (typeof value === 'number') {
-    const key = fieldKey(field);
+    if (key === 'bytes') return value >= 1048576 ? `${(value / 1048576).toLocaleString('ko-KR', { maximumFractionDigits: 2 })} MB`
+      : value >= 1024 ? `${(value / 1024).toLocaleString('ko-KR', { maximumFractionDigits: 1 })} KB` : `${value.toLocaleString('ko-KR')}바이트`;
     return `${value.toLocaleString('ko-KR')}${moneyFields.has(key) ? '원' : monthFields.has(key) ? '개월' : key === 'month' ? '개월차' : ''}`;
   }
   return String(value);
@@ -49,13 +75,19 @@ function display(value, field = '') {
 // 배열과 객체는 중첩된 변경값으로 펼쳐 보여 주되 민감 필드는 재귀 탐색 전에 가린다.
 function AuditValue({ value, field = '' }) {
   if (!sensitive(field) && value && typeof value === 'object') {
-    if (Array.isArray(value)) return value.length ? <ul className="audit-value-list">{value.map((item, index) => <li key={index}><AuditValue value={item} field={field}/></li>)}</ul> : <span className="audit-empty-value">등록 항목 없음</span>;
+    if (Array.isArray(value)) return value.length ? <ul className="audit-value-list">{value.map((item, index) => <li key={index}>{fieldKey(field) === 'addonSchedule' ? <>{index + 1}개월차 · <AuditValue value={item} field="fee"/></> : <AuditValue value={item} field={field}/>}</li>)}</ul> : <span className="audit-empty-value">{fieldKey(field) === 'permissions' ? '조회 전용' : '등록 항목 없음'}</span>;
     const entries = Object.entries(value);
-    return entries.length ? <dl className="audit-value-object">{entries.map(([key, item]) => <div key={key}><dt>{valueLabels[key] || key}</dt><dd><AuditValue value={item} field={key}/></dd></div>)}</dl> : <span className="audit-empty-value">등록 항목 없음</span>;
+    // 부모 경로를 이어 색상명처럼 임의 키 아래의 판매 상태도 한글로 표시한다.
+    return entries.length ? <dl className="audit-value-object">{entries.map(([key, item]) => <div key={key}><dt>{valueLabels[key] || key}</dt><dd><AuditValue value={item} field={field ? `${field}.${key}` : key}/></dd></div>)}</dl> : <span className="audit-empty-value">등록 항목 없음</span>;
   }
   return <div className="audit-value-text">{display(value, field)}</div>;
 }
 function entryTitle(item) {
+  if (item.action === 'PRICE_SCHEDULE_CREATE' || item.action === 'PRICE_SCHEDULE_STATUS') return `가격표 예약 · ${item.target || '예약 변경'}`;
+  if (item.action === 'PRICE_SCHEDULE_PUBLISH' || item.action === 'PRICE_SCHEDULE_RETURN') return auditActions[item.action];
+  if (item.action === 'MODEL_COLOR_UPDATE') return '모델 선택 색상·가격표 연결';
+  if (item.action?.startsWith('MODEL_')) return item.target ? `모델 · ${item.target}` : '모델·판매 상태';
+  if (item.action?.startsWith('IMAGE_')) return '사진 보관함';
   if (item.action?.startsWith('PRICE_')) return '가격표';
   if (item.action?.startsWith('CONTENT_')) return '메인페이지 내용';
   if (item.action?.startsWith('ACCOUNT_')) {
@@ -107,13 +139,13 @@ export default function AuditLogViewer({ onRequireLogin }) {
     <div className="page-heading"><div><p className="eyebrow">CHANGE HISTORY</p><h1>수정 기록</h1><p>누가 어떤 내용을 수정했는지 최신 기록부터 확인합니다. 시간은 한국 시간입니다.</p></div><button type="button" disabled={busy} onClick={() => load()}>새로고침</button></div>
     <form className="audit-panel audit-filters" onSubmit={event => { event.preventDefault(); setLoaded(false); setFilters({ q: search.trim(), action }); }}>
       <label>관리자 아이디 · 대상 · 작업 검색<input type="search" maxLength={100} value={search} onChange={event => setSearch(event.target.value)} placeholder="아이디 또는 수정 대상"/></label>
-      <label>작업 종류<select value={action} onChange={event => setAction(event.target.value)}><option value="">전체 작업</option>{options.map(value => <option key={value} value={value}>{auditActions[value] || value}</option>)}</select></label>
+      <label>구역별 작업 종류<select value={action} onChange={event => setAction(event.target.value)}><option value="">전체 작업</option>{auditCategories.map(group => { const values = options.filter(value => category(value) === group); return values.length ? <optgroup key={group} label={group}>{values.map(value => <option key={value} value={value}>{auditActions[value] || value}</option>)}</optgroup> : null; })}</select></label>
       <div className="audit-filter-actions"><button type="submit" className="primary" disabled={busy}>검색</button><button type="button" disabled={busy} onClick={() => { setSearch(''); setAction(''); setLoaded(false); setFilters({ q: '', action: '' }); }}>초기화</button></div>
     </form>
     {error && <p className="audit-error" role="alert">{error}</p>}
     <p className="audit-status" role="status">{busy ? '수정 기록을 불러오는 중…' : loaded ? `불러온 기록 ${items.length}건` : '수정 기록 연결 확인 중…'}</p>
     {loaded && !items.length && !busy && <p className="audit-empty">{filters.q || filters.action ? '검색 조건에 맞는 수정 기록이 없습니다.' : '수정 기록이 없습니다.'}</p>}
-    <div className="audit-list">{items.map(item => <article key={item.id} className="audit-panel audit-entry"><div className="audit-entry-heading"><div><span className="audit-action">{auditActions[item.action] || item.action}</span><h2>{entryTitle(item)}</h2><p><strong>{item.actor || '알 수 없음'}</strong><span> · </span><time dateTime={item.createdAt}>{timestamp(item.createdAt)}</time></p></div><span className="audit-change-count">{item.changes?.length || 0}개 항목 수정</span></div><details className="audit-changes"><summary>무엇이 바뀌었나요? · 변경 전후 확인</summary>{item.changes?.length ? <div className="audit-table-wrap"><table><thead><tr><th scope="col">수정한 항목</th><th scope="col">수정 전</th><th scope="col">수정 후</th></tr></thead><tbody>{item.changes.map((change, index) => <tr key={`${change.field}-${index}`}><th scope="row">{friendlyLabel(change.label || change.field)}{change.field && <details className="audit-field-details"><summary>항목 코드</summary><code className="audit-field-path">{change.field}</code></details>}</th><td><AuditValue value={change.before} field={change.field}/></td><td><AuditValue value={change.after} field={change.field}/></td></tr>)}</tbody></table></div> : <p className="hint">상세 변경 항목이 없습니다.</p>}<details className="audit-record-details"><summary>기록 식별 정보</summary><p className="audit-record-id">기록 ID: {item.id}</p>{item.target && <p className="audit-record-id">저장된 대상: {item.target}</p>}</details></details></article>)}</div>
+    <div className="audit-list">{items.map(item => <article key={item.id} className="audit-panel audit-entry"><div className="audit-entry-heading"><div><span className="audit-action">{category(item.action)} · {auditActions[item.action] || item.action}</span><h2>{entryTitle(item)}</h2><p><strong>{item.actor || '알 수 없음'}</strong><span> · </span><time dateTime={item.createdAt}>{timestamp(item.createdAt)}</time></p></div><span className="audit-change-count">{item.changes?.length || 0}개 항목 수정</span></div><details className="audit-changes"><summary>무엇이 바뀌었나요? · 변경 전후 확인</summary>{item.changes?.length ? <div className="audit-table-wrap"><table><thead><tr><th scope="col">수정한 항목</th><th scope="col">수정 전</th><th scope="col">수정 후</th></tr></thead><tbody>{item.changes.map((change, index) => <tr key={`${change.field}-${index}`}><th scope="row">{friendlyLabel(change.label || change.field)}{change.field && <details className="audit-field-details"><summary>항목 코드</summary><code className="audit-field-path">{change.field}</code></details>}</th><td><AuditValue value={change.before} field={change.field}/></td><td><AuditValue value={change.after} field={change.field}/></td></tr>)}</tbody></table></div> : <p className="hint">상세 변경 항목이 없습니다.</p>}<details className="audit-record-details"><summary>기록 식별 정보</summary><p className="audit-record-id">기록 ID: {item.id}</p>{item.target && <p className="audit-record-id">저장된 대상: {item.target}</p>}</details></details></article>)}</div>
     {hasMore && <div className="audit-pagination"><button type="button" disabled={busy} onClick={() => load(nextOffset)}>{busy ? '불러오는 중…' : '기록 더 보기'}</button></div>}
   </section>;
 }

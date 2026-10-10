@@ -22,6 +22,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -49,7 +50,7 @@ class PolicyImportApiTest {
  }
 
  // 내려받은 원본 파일을 다시 올리면 미리보기와 실제 가져오기 모두 변경 없이 끝난다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void downloadedWorkbookRoundTripsWithoutRevisionOrHistoryChanges()throws Exception{
   Map<String,Object> before=configs.read(true);
   byte[] workbook=mvc.perform(get("/api/admin/policies/export.xlsx")).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
@@ -62,7 +63,7 @@ class PolicyImportApiTest {
  }
 
  // 미리보기는 읽기 전용이며, 가격 한 칸만 바꾸면 다른 정책 필드와 색상·이미지는 보존한다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void previewIsReadOnlyAndPriceChangePreservesOtherPolicyFieldsColorsAndImages()throws Exception{
   ObjectNode fixture=current();
   fixture.withObject("/colors").putArray("16").add("블랙");
@@ -83,7 +84,7 @@ class PolicyImportApiTest {
  }
 
  // 빈 셀의 명시적 null과 필드 삭제를 구별하고, 해당 금액·일정만 비운다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void clearedAmountAndScheduleHaveExplicitPresenceAndClearOnlyThoseFields()throws Exception{
   ObjectNode before=current();
   byte[] workbook=cell(cell(workbook(),"J292",""),"T292","");
@@ -104,7 +105,7 @@ class PolicyImportApiTest {
  }
 
  // 음수 지원금 정규화와 할부액 계산을 확인하고, 동일 파일 재업로드는 이력을 늘리지 않는다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void negativeSubsidyAndExplicitFeeNormalizeAndRepeatedUploadDoesNotSaveAgain()throws Exception{
   byte[] negative=cell(workbook(),"L292","<v>-100000</v>");
   mvc.perform(post(IMPORT).with(csrf()).contentType("application/json").content(body(1,negative))).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(2));
@@ -120,7 +121,7 @@ class PolicyImportApiTest {
  }
 
  // Office 형식의 공유 문자열, 지수 표기, 쉼표 숫자를 원래 의미대로 읽는다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void officeSharedStringsAndRawStyledNumbersImportWithoutChangingTheirNumericMeaning()throws Exception{
   byte[] workbook=cell(workbook(),"J292","<v>1.254E6</v>");
   workbook=replaceCell(workbook,"K292","<c r=\"K292\" s=\"3\" t=\"inlineStr\"><is><t>500,000</t></is></c>");
@@ -140,7 +141,7 @@ class PolicyImportApiTest {
  }
 
  // 파일에 남은 미등록 행은 수정하지 않았다면 정책에 새로 만들지 않는다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void untouchedUnregisteredRowsStayAbsent()throws Exception{
   ObjectNode fixture=current();
   ((ObjectNode)fixture.path("offers")).remove("0|SKT|번호이동|common");
@@ -153,7 +154,7 @@ class PolicyImportApiTest {
  }
 
  // 손상·중복·수식·잘못된 값·외부 엔터티가 있는 파일은 통째로 거부하고 저장 상태를 보존한다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void malformedUnknownDuplicateFormulaAndInvalidAmountsAreAtomic()throws Exception{
   byte[] good=workbook();
   byte[][] invalid={
@@ -183,7 +184,7 @@ class PolicyImportApiTest {
  }
 
  // 변경 사항이 없어 보여도 요청 버전이 오래되면 미리보기와 저장 모두 충돌로 거부한다.
- @Test @WithMockUser(roles="ADMIN")
+ @Test @WithMockUser(authorities={"ROLE_ADMIN","PERM_PRICE_EDIT","PERM_CONTENT_EDIT","PERM_CATALOG_EDIT","PERM_MEDIA_EDIT","PERM_STATS_VIEW","PERM_AUDIT_VIEW"})
  void staleVersionsCannotPreviewCommitOrBypassGuardWithNoOpWorkbook()throws Exception{
   byte[] workbook=workbook();
   ObjectNode changed=current();
@@ -202,10 +203,11 @@ class PolicyImportApiTest {
   String request=body(1,exporter.export(configs.read(true)));
   mvc.perform(post(PREVIEW).with(csrf()).contentType("application/json").content(request)).andExpect(status().isUnauthorized());
   mvc.perform(post(IMPORT).with(csrf()).contentType("application/json").content(request)).andExpect(status().isUnauthorized());
-  mvc.perform(post(IMPORT).with(user("admin").roles("ADMIN")).contentType("application/json").content(request)).andExpect(status().isForbidden());
+  mvc.perform(post(IMPORT).with(user("admin").authorities(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("PERM_PRICE_EDIT"))).contentType("application/json").content(request)).andExpect(status().isForbidden());
+  mvc.perform(post(IMPORT).with(user("viewer").roles("ADMIN")).with(csrf()).contentType("application/json").content(request)).andExpect(status().isForbidden());
   mvc.perform(post(PREVIEW).with(user("ordinary").roles("USER")).with(csrf()).contentType("application/json").content(request)).andExpect(status().isForbidden());
   ObjectNode decimal=(ObjectNode)mapper.readTree(request);decimal.put("revision",1.5);
-  mvc.perform(post(IMPORT).with(user("admin").roles("ADMIN")).with(csrf()).contentType("application/json").content(decimal.toString())).andExpect(status().isBadRequest());
+  mvc.perform(post(IMPORT).with(user("admin").authorities(new SimpleGrantedAuthority("ROLE_ADMIN"),new SimpleGrantedAuthority("PERM_PRICE_EDIT"))).with(csrf()).contentType("application/json").content(decimal.toString())).andExpect(status().isBadRequest());
   assertEquals(1L,configs.read(true).get("revision"));
   assertTrue(configs.history().isEmpty());
  }

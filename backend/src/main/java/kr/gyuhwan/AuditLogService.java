@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 public class AuditLogService {
  private final JdbcTemplate db;
  private final ObjectMapper mapper;
- private final Map<String,String> models=new HashMap<>();
+ private final Map<String,String> models=new java.util.concurrent.ConcurrentHashMap<>();
+ // 신규 모델 등록·이름 변경 뒤 가격 기록에도 현재 모델명을 사용한다.
+ public void registerModelName(String id,String name){models.put(id,name);}
  public AuditLogService(JdbcTemplate db,ObjectMapper mapper){this.db=db;this.mapper=mapper;try(var in=getClass().getResourceAsStream("/products.json")){for(JsonNode product:mapper.readTree(in))models.put(product.path("id").asText(),product.path("name").asText());}catch(Exception e){throw new IllegalStateException("모델 정보를 불러올 수 없습니다.",e);}}
  // 변경 항목의 공통 형태. before/after는 사진 데이터가 감사 로그에 남지 않도록 safe()를 거친다.
  public static Map<String,Object> change(String field,String label,Object before,Object after){

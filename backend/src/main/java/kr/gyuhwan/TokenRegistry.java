@@ -10,4 +10,6 @@ public interface TokenRegistry {
  void clearLoginFailures(String remoteAddress,String username);
  // 인증된 관리자 계정별 업로드 한도를 원자적으로 검사하고 한 번 사용한다.
  boolean uploadAllowed(String accountId);
+ // 익명 관심 통계는 접속 주소별 60회/분, 서버 전체 2,000회/분으로 제한한다. 원문 주소는 저장하지 않는다.
+ boolean interestAllowed(String remoteAddress);
 }

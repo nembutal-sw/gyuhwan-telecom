@@ -40,6 +40,8 @@ jobs:
       - name: Validate price editing and page preview
         run: |
           node scripts/test-price-grid.mjs
+          node scripts/test-price-bulk.mjs
+          node scripts/test-catalog-status.mjs
           node scripts/test-main-preview.mjs
           node scripts/test-video-urls.mjs
       - name: Build frontend

@@ -62,8 +62,8 @@ public class AuthController {
  }
 
  @GetMapping("/me") public Map<String,Object> me(Authentication authentication){
-  if(authentication.getPrincipal() instanceof AdminPrincipal principal)return Map.of("id",principal.id(),"username",principal.getUsername(),"role","ADMIN","owner",principal.owner(),"revision",principal.revision());
+  if(authentication.getPrincipal() instanceof AdminPrincipal principal)return Map.of("id",principal.id(),"username",principal.getUsername(),"role","ADMIN","owner",principal.owner(),"revision",principal.revision(),"permissions",principal.permissions(),"enabled",principal.isEnabled());
   // 계정 API와 무관한 기존 통합 테스트의 모의 Principal도 응답할 수 있게 둔다.
-  return Map.of("id","","username",authentication.getName(),"role","ADMIN","owner",authentication.getAuthorities().stream().anyMatch(authority->authority.getAuthority().equals("ROLE_OWNER")),"revision",0);
+  return Map.of("id","","username",authentication.getName(),"role","ADMIN","owner",authentication.getAuthorities().stream().anyMatch(authority->authority.getAuthority().equals("ROLE_OWNER")),"revision",0,"permissions",AdminAccess.ALL.stream().filter(permission->AdminAccess.can(authentication,permission)).toList(),"enabled",true);
  }
 }

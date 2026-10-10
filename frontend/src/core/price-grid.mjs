@@ -7,7 +7,7 @@ export const TEXT_FIELDS = ['planName', 'planDetails', 'addonDetails', 'penaltyD
 const carriers = ['SKT', 'KT', 'LG U+'];
 const types = ['번호이동', '기기변경', '신규가입'];
 const discounts = ['common', 'choice'];
-const editableFields = new Set([...PRICE_FIELDS, ...TEXT_FIELDS, 'supportInquiry']);
+const editableFields = new Set([...PRICE_FIELDS, ...TEXT_FIELDS, 'supportInquiry', 'addonSchedule']);
 const principalFields = new Set(['retail', 'common', 'support']);
 const hasOwn = (value, key) => value != null && Object.hasOwn(value, key);
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -72,6 +72,9 @@ function applyOfferDraft(before, draft, key, addError) {
       else if (field === 'supportInquiry') {
         if (typeof raw !== 'boolean') throw Error('문의 표시는 체크 항목으로 입력해 주세요.');
         parsed[field] = raw;
+      } else if(field==='addonSchedule') {
+        if(raw!==null&&(!Array.isArray(raw)||raw.length!==24||raw.some(value=>!Number.isSafeInteger(value)||value<0||value>100000000)))throw Error('부가서비스 월별 금액 오류');
+        parsed[field]=raw===null?null:structuredClone(raw);
       } else {
         if (raw !== null && raw !== undefined && typeof raw !== 'string') throw Error('안내문은 문자열로 입력해 주세요.');
         const text = raw ?? '';
@@ -86,6 +89,7 @@ function applyOfferDraft(before, draft, key, addError) {
     else delete offer[field];
   };
   for (const [field, value] of Object.entries(parsed)) assign(field, value);
+  if(hasOwn(parsed,'addonSchedule')&&parsed.addonSchedule===null)delete offer.addonSchedule;
 
   // 문의 체크를 명시한 값이 우선한다. 새로 입력한 음수 지원금만 문의로 바꾸고
   // 손대지 않은 과거 저장값은 유지한다.
@@ -97,7 +101,7 @@ function applyOfferDraft(before, draft, key, addError) {
     assign('supportInquiry', false);
   }
 
-  if (['addonFee', 'addonMonths'].some(field => !equalField(field, before[field], offer[field])) && hasOwn(offer, 'addonSchedule')) delete offer.addonSchedule;
+  if (!hasOwn(parsed,'addonSchedule') && ['addonFee', 'addonMonths'].some(field => !equalField(field, before[field], offer[field])) && hasOwn(offer, 'addonSchedule')) delete offer.addonSchedule;
   if ([...principalFields].some(field => !equalField(field, before[field], offer[field]))) {
     const discount = key.split('|')[3];
     assign('installmentFee', calculateQuoteWithInterest(offer, discount, 24).installmentFee);

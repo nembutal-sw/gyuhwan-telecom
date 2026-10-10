@@ -117,5 +117,11 @@ for (const [model, images] of Object.entries(configResponse.config?.colorImages 
 
 records.sort((a, b) => a.path.localeCompare(b.path, 'en'));
 const manifest = {source: source.href, capturedAt: new Date().toISOString(), count: records.length, totalBytes: records.reduce((sum, record) => sum + record.bytes, 0), assets: records};
-await fs.writeFile(path.join(root, 'docs', 'site-images-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+// 수집 검증용 문서와 운영 사진 보관함은 같은 이미지 목록을 사용한다.
+const manifestText = JSON.stringify(manifest, null, 2) + '\n';
+await Promise.all([
+  fs.writeFile(path.join(root, 'docs', 'site-images-manifest.json'), manifestText),
+  fs.writeFile(path.join(publicDir, 'site-images-manifest.json'), manifestText),
+  fs.writeFile(path.join(staticDir, 'site-images-manifest.json'), manifestText)
+]);
 console.log(`Saved ${manifest.count} image files (${manifest.totalBytes.toLocaleString('en-US')} bytes) to frontend/public and backend static resources.`);

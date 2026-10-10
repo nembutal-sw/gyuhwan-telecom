@@ -17,11 +17,13 @@ public class SiteContentService {
  private final JdbcTemplate db;
  private final ObjectMapper mapper;
  private final AuditLogService audit;
+ private final CatalogService catalog;
+ private final MediaReferencesValidator media;
  private JsonNode template;
  private final Map<String,JsonNode> fields = new LinkedHashMap<>();
  private final Map<String,JsonNode> resources = new LinkedHashMap<>();
  private final Set<String> products = new HashSet<>();
- public SiteContentService(JdbcTemplate db,ObjectMapper mapper,AuditLogService audit){this.db=db;this.mapper=mapper;this.audit=audit;}
+ public SiteContentService(JdbcTemplate db,ObjectMapper mapper,AuditLogService audit,CatalogService catalog,MediaReferencesValidator media){this.db=db;this.mapper=mapper;this.audit=audit;this.catalog=catalog;this.media=media;}
 
  // 필드 ID와 공개 JSON 포인터를 시작 시 검증한다. 새 DB에만 초기값을 넣어 기존 운영 수정을 보존한다.
  @PostConstruct void seed() throws Exception {
@@ -66,13 +68,22 @@ public class SiteContentService {
    if(parent.isArray())((com.fasterxml.jackson.databind.node.ArrayNode)parent).set(Integer.parseInt(key),node);
    else ((ObjectNode)parent).set(key,node);
   }
+  // 기존 JSON Pointer 편집을 먼저 적용한 다음 신규 모델/판매 상태를 합친다.
+  if(name.equals("products.json"))return catalog.decorate(data);
+  if(name.equals("catalog.json"))return catalog.groups(data);
   return data;
  }
  // 관리자 편집기의 구역/필드 구조에 현재 저장값을 합쳐 반환한다.
  private Map<String,Object> response(Snapshot saved){
   JsonNode content=template.deepCopy();
+  Map<String,JsonNode> currentResources=new HashMap<>();
   for(JsonNode section:content.path("sections"))for(JsonNode field:section.path("fields")){
    JsonNode value=saved.values().get(field.path("id").asText());
+   String name=field.path("resource").asText();
+   if(name.equals("products.json")||name.equals("catalog.json")){
+    JsonNode live=currentResources.computeIfAbsent(name,this::resource).at(field.path("pointer").asText());
+    if(!live.isMissingNode())value=mapper.getNodeFactory().textNode(live.isNull()?"":live.asText());
+   }
    if(value!=null)((ObjectNode)field).put("value",value.asText());
   }
   return Map.of("revision",saved.revision(),"updatedAt",saved.updatedAt(),"sections",content.path("sections"));
@@ -84,6 +95,7 @@ public class SiteContentService {
  // 필드 허용 목록과 값 종류를 검사한 뒤 조건부 UPDATE한다. 이전 저장본과 감사 기록도 함께 남긴다.
  private Map<String,Object> save(long expected,JsonNode patch,String action){
   if(expected<1||patch==null||!patch.isObject())throw new IllegalArgumentException("저장 버전과 수정 내용을 확인해 주세요.");
+  media.validate(patch);
   Snapshot old=snapshot();
   if(old.revision()!=expected)throw conflict();
   ObjectNode next=old.values().deepCopy();
@@ -97,6 +109,8 @@ public class SiteContentService {
   String stamp=Times.stamp(Instant.now());
   if(db.update("UPDATE site_content SET payload=?,revision=revision+1,updated_at=? WHERE id='main' AND revision=?",next.toString(),stamp,expected)!=1)throw conflict();
   db.update("INSERT INTO site_content_history(revision,payload,updated_at) VALUES(?,?,?)",expected,old.values().toString(),old.updatedAt());
+  // 모델 관리와 직접 편집 화면이 같은 사진·이름을 표시하도록 동기화한다.
+  patch.fields().forEachRemaining(entry->{if(Objects.equals(old.values().get(entry.getKey()),next.get(entry.getKey())))return;JsonNode field=fields.get(entry.getKey());String name=field.path("resource").asText();if(name.equals("products.json")||name.equals("catalog.json"))catalog.applyContentField(name,field.path("pointer").asText(),entry.getValue().asText());});
   List<Map<String,Object>> changes=new ArrayList<>();
   for(JsonNode section:template.path("sections"))for(JsonNode field:section.path("fields")){String id=field.path("id").asText();if(!Objects.equals(old.values().get(id),next.get(id)))changes.add(AuditLogService.change(id,section.path("title").asText()+" · "+field.path("label").asText(),old.values().get(id),next.get(id)));}
   audit.record(action,"메인 페이지 · 버전 "+expected+" → "+(expected+1),changes);
@@ -112,7 +126,7 @@ public class SiteContentService {
    if(!value.matches("[0-9]{1,9}")||Long.parseLong(value)>100_000_000)throw new IllegalArgumentException("금액은 0~100,000,000 사이의 정수로 입력해 주세요.");
    return;
   }
-  if(kind.equals("product")){if(!products.contains(value))throw new IllegalArgumentException("등록된 모델을 선택해 주세요.");return;}
+  if(kind.equals("product")){try{if(!catalog.ids().contains(Integer.parseInt(value)))throw new IllegalArgumentException("등록된 모델을 선택해 주세요.");}catch(NumberFormatException e){throw new IllegalArgumentException("등록된 모델을 선택해 주세요.");}return;}
   if(!Set.of("url","image","video").contains(kind))return;
   if(value.isBlank()){if(kind.equals("url")||(field.path("nullable").asBoolean()&&value.isEmpty()))return;throw new IllegalArgumentException("사진과 영상 주소를 입력해 주세요.");}
   if(value.length()>2000||!value.equals(value.trim())||value.matches("(?s).*[\\x00-\\x20\\x7f].*"))throw new IllegalArgumentException("주소 형식을 확인해 주세요.");

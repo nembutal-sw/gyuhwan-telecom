@@ -11,6 +11,7 @@ import static org.mockito.Mockito.*;
 
 /** Redis 키가 계정·접속 주소별로 분리되고 원문 개인정보가 키에 남지 않는지 확인한다. */
 class RedisTokenRegistryLimitTest {
+ @Test void interestBudgetUsesExpiringSharedAddressAndGlobalKeysWithoutRawAddress(){StringRedisTemplate redis=mock(StringRedisTemplate.class);RedisTokenRegistry registry=new RedisTokenRegistry(redis,"installation:");when(redis.execute(any(RedisScript.class),anyList())).thenReturn(1L,0L);assertTrue(registry.interestAllowed("192.0.2.123"));assertFalse(registry.interestAllowed("192.0.2.123"));ArgumentCaptor<List<String>> keys=ArgumentCaptor.forClass(List.class);verify(redis,times(2)).execute(any(RedisScript.class),keys.capture());assertEquals(keys.getAllValues().get(0),keys.getAllValues().get(1));assertEquals(2,keys.getValue().size());assertFalse(keys.getValue().get(0).contains("192.0.2.123"));assertTrue(keys.getValue().get(1).endsWith("interest:global"));}
  @Test void loginFailuresAreScopedToAddressAndCaseInsensitiveAccountAndSuccessfulLoginClearsOnlyItsBucket(){
   StringRedisTemplate redis=mock(StringRedisTemplate.class);
   RedisTokenRegistry registry=new RedisTokenRegistry(redis,"installation:");

@@ -38,16 +38,14 @@ public class PolicyImportService {
  private final QuoteValidator validator;
  private final ObjectMapper mapper;
  private final SiteContentService content;
- private final Map<Integer,String> modelNames=new HashMap<>();
+ private final CatalogService catalog;
 
- public PolicyImportService(ConfigService configs,QuoteValidator validator,ObjectMapper mapper,SiteContentService content)throws IOException {
+ public PolicyImportService(ConfigService configs,QuoteValidator validator,ObjectMapper mapper,SiteContentService content,CatalogService catalog)throws IOException {
   this.configs=configs;
   this.validator=validator;
   this.mapper=mapper;
   this.content=content;
-  try(var input=getClass().getResourceAsStream("/products.json")){
-   for(JsonNode product:mapper.readTree(input))modelNames.put(product.path("id").asInt(),product.path("name").asText());
-  }
+  this.catalog=catalog;
  }
 
  public record FieldChange(String field,JsonNode before,JsonNode after,boolean beforePresent,boolean afterPresent){}
@@ -76,7 +74,7 @@ public class PolicyImportService {
   require(revision>=1,"저장 버전 오류");
   Map<String,Object> current=configs.read(true);
   if(((Number)current.get("revision")).longValue()!=revision)throw new ApiException(409,STALE);
-  return new ExcelReader(mapper,(JsonNode)current.get("config"),modelNames.keySet()).read(fileName,base64);
+  return new ExcelReader(mapper,(JsonNode)current.get("config"),catalog.ids()).read(fileName,base64);
  }
 
  // 여러 모델·조건을 한 번의 ConfigService.save()로 저장해 부분 반영을 방지한다.
@@ -205,7 +203,7 @@ public class PolicyImportService {
 
  // 엑셀 가격 정책 시트만 읽는다. 수식은 실행하지 않고 ZIP 경로를 파일 시스템에 풀지 않는다.
  private static class ExcelReader {
-  private static final int MAX_FILE_BYTES=1_500_000,MAX_XML_BYTES=12_000_000;
+  private static final int MAX_FILE_BYTES=1_500_000,MAX_XML_BYTES=40_000_000;
   private static final String[] FIELDS={"retail","common","support","supportInquiry","installmentFee","planName","planFee","discountBase","addonFee","addonMonths","addonSchedule","planDetails","addonDetails","penaltyDetails","terms"};
   private final ObjectMapper mapper;
   private final JsonNode current;
@@ -265,7 +263,7 @@ public class PolicyImportService {
    boolean header=false;
    int previousRow=0;
    var rows=sheet.getElementsByTagNameNS("*","row");
-   require(rows.getLength()<=2000,"엑셀의 가격 정책 행 수가 너무 많습니다.");
+   require(rows.getLength()<=CatalogService.MAX_OFFERS+3,"엑셀 가격 정책은 최대 5,400행까지 읽을 수 있습니다.");
    for(int i=0;i<rows.getLength();i++){
     Element row=(Element)rows.item(i);
     int number=row.hasAttribute("r")?integerAttribute(row.getAttribute("r")):previousRow+1;
